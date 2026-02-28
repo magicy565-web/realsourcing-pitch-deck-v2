@@ -3,226 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RealSourcing - Cover</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>RealSourcing - 智能采购操作系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
-        
-        .slide-container {
-            width: 1280px;
-            min-height: 720px;
-            position: relative;
-            background-color: #0A0A0F;
-            color: #FFFFFF;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Video Background */
-        .video-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-            opacity: 0.6; /* Adjust opacity for readability */
-        }
-
-        /* Overlay to ensure text readability */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%);
-            z-index: 1;
-        }
-
-        /* Content Container */
-        .content {
-            z-index: 2;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .logo-text {
-            font-size: 6rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #FFFFFF 0%, #A0A0A0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            opacity: 0;
-            animation: fadeInDown 1s ease-out forwards 0.5s;
-        }
-
-        .subtitle {
-            font-size: 1.8rem;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3rem;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards 0.8s;
-        }
-
-        /* Typewriter Effect Container */
-        .typewriter-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: flex-start;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem 3rem;
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards 1.2s;
-            min-width: 500px;
-        }
-
-        .typewriter-line {
-            font-size: 1.4rem;
-            color: #FFFFFF;
-            font-family: 'Noto Sans SC', monospace;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid transparent;
-            width: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .check-icon {
-            color: #4F6EF7;
-            font-size: 1.2rem;
-            opacity: 0;
-        }
-
-        /* Typewriter Animations */
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #4F6EF7; }
-        }
-        
-        @keyframes showIcon {
-            to { opacity: 1; }
-        }
-
-        .line-1 {
-            animation: 
-                typing 1.5s steps(30, end) forwards 1.5s,
-                blink-caret 0.75s step-end infinite;
-        }
-        .line-1 .check-icon { animation: showIcon 0.1s forwards 1.5s; }
-
-        .line-2 {
-            animation: 
-                typing 1.5s steps(30, end) forwards 3s,
-                blink-caret 0.75s step-end infinite;
-        }
-        .line-2 .check-icon { animation: showIcon 0.1s forwards 3s; }
-
-        .line-3 {
-            animation: 
-                typing 1.5s steps(30, end) forwards 4.5s,
-                blink-caret 0.75s step-end infinite;
-        }
-        .line-3 .check-icon { animation: showIcon 0.1s forwards 4.5s; }
-
-        /* Footer Pill */
-        .footer-pill {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.6);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards 2s;
-            z-index: 2;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #4F6EF7;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #4F6EF7;
-        }
-
-        /* General Animations */
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
+        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.2; }
+        .bg-gradient { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(79,110,247,0.12) 0%, transparent 70%),
+                        radial-gradient(ellipse 40% 40% at 15% 80%, rgba(16,185,129,0.08) 0%, transparent 60%),
+                        linear-gradient(180deg, rgba(5,5,16,0.7) 0%, rgba(5,5,16,0.95) 100%); }
+        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background-image: linear-gradient(rgba(79,110,247,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(79,110,247,0.04) 1px, transparent 1px);
+            background-size:80px 80px; }
+        .orb { position:absolute; border-radius:50%; z-index:1; filter:blur(60px); animation:orbFloat 8s ease-in-out infinite; }
+        .orb-1 { width:400px; height:400px; background:rgba(79,110,247,0.15); top:-100px; right:-80px; }
+        .orb-2 { width:300px; height:300px; background:rgba(139,92,246,0.10); bottom:-50px; left:-50px; animation-delay:3s; }
+        .orb-3 { width:200px; height:200px; background:rgba(16,185,129,0.08); top:200px; right:300px; animation-delay:5s; }
+        @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-20px) scale(1.05)} }
+        .content { position:absolute; top:0; left:0; width:100%; height:100%; z-index:10;
+            display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:0 100px; }
+        .os-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(79,110,247,0.12);
+            border:1px solid rgba(79,110,247,0.35); border-radius:100px; padding:6px 16px;
+            font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#8BA4FF;
+            margin-bottom:28px; opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.3s; }
+        .pulse-dot { width:6px; height:6px; border-radius:50%; background:#4F6EF7;
+            box-shadow:0 0 8px #4F6EF7; animation:pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+        .main-title { font-size:72px; font-weight:900; line-height:1.0; letter-spacing:-2px; margin-bottom:8px;
+            opacity:0; animation:fadeInUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.6s; }
+        .brand { color:#fff; }
+        .highlight { background:linear-gradient(135deg,#4F6EF7 0%,#8B5CF6 50%,#06B6D4 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .subtitle { font-size:22px; font-weight:400; color:rgba(255,255,255,0.55); letter-spacing:0.5px;
+            margin-bottom:48px; opacity:0; animation:fadeInUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.9s; }
+        .subtitle .em { color:rgba(255,255,255,0.85); font-weight:600; }
+        .feature-row { display:flex; gap:12px; margin-bottom:56px;
+            opacity:0; animation:fadeInUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards 1.2s; }
+        .feature-pill { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.10); border-radius:100px; padding:10px 20px;
+            font-size:14px; font-weight:500; color:rgba(255,255,255,0.75); }
+        .feature-pill .num { color:#4F6EF7; font-weight:700; }
+        .cta-row { display:flex; align-items:center; gap:24px;
+            opacity:0; animation:fadeInUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards 1.5s; }
+        .cta-btn { display:flex; align-items:center; gap:10px;
+            background:linear-gradient(135deg,#4F6EF7,#7C3AED); border:none; border-radius:12px;
+            padding:14px 28px; font-size:15px; font-weight:700; color:#fff;
+            box-shadow:0 8px 30px rgba(79,110,247,0.4); }
+        .seed-badge { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+            border-radius:100px; padding:10px 20px; font-size:13px; color:rgba(255,255,255,0.55);
+            display:flex; align-items:center; gap:8px; }
+        .seed-badge .amount { color:#fff; font-weight:700; }
+        .terminal { position:absolute; right:80px; top:50%; transform:translateY(-50%); width:420px;
+            background:rgba(10,10,20,0.85); border:1px solid rgba(255,255,255,0.10); border-radius:16px;
+            overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.6);
+            opacity:0; animation:fadeInRight 1s cubic-bezier(0.16,1,0.3,1) forwards 1.0s; z-index:10; }
+        .terminal-bar { background:rgba(255,255,255,0.04); border-bottom:1px solid rgba(255,255,255,0.06);
+            padding:12px 16px; display:flex; align-items:center; gap:8px; }
+        .t-dot { width:10px; height:10px; border-radius:50%; }
+        .t-dot-r { background:#FF5F57; } .t-dot-y { background:#FFBD2E; } .t-dot-g { background:#28CA41; }
+        .t-title { font-size:11px; color:rgba(255,255,255,0.4); margin-left:8px; font-family:'JetBrains Mono',monospace; }
+        .terminal-body { padding:20px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.8; }
+        .t-line { display:flex; gap:8px; opacity:0; }
+        .t-prompt { color:#4F6EF7; } .t-cmd { color:#E2E8F0; }
+        .t-out { color:#64748B; padding-left:16px; }
+        .t-success { color:#10B981; padding-left:16px; }
+        .t-warn { color:#F59E0B; padding-left:16px; }
+        .t-line-1{animation:fadeIn 0.3s forwards 1.5s} .t-line-2{animation:fadeIn 0.3s forwards 2.0s}
+        .t-line-3{animation:fadeIn 0.3s forwards 2.3s} .t-line-4{animation:fadeIn 0.3s forwards 2.6s}
+        .t-line-5{animation:fadeIn 0.3s forwards 3.0s} .t-line-6{animation:fadeIn 0.3s forwards 3.3s}
+        .t-line-7{animation:fadeIn 0.3s forwards 3.6s} .t-line-8{animation:fadeIn 0.3s forwards 4.0s}
+        .t-line-9{animation:fadeIn 0.3s forwards 4.3s} .t-line-10{animation:fadeIn 0.3s forwards 4.6s}
+        .t-line-11{animation:fadeIn 0.3s forwards 5.0s}
+        .t-cursor { display:inline-block; width:8px; height:14px; background:#4F6EF7;
+            animation:blink 1s infinite; vertical-align:middle; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:3px; z-index:20;
+            background:linear-gradient(90deg,#4F6EF7,#8B5CF6,#06B6D4,#10B981);
+            opacity:0; animation:fadeIn 1s forwards 2s; }
+        .slide-num { position:absolute; bottom:20px; right:40px; font-size:11px;
+            color:rgba(255,255,255,0.2); font-family:'JetBrains Mono',monospace; z-index:20; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInRight { from{opacity:0;transform:translate(30px,-50%)} to{opacity:1;transform:translate(0,-50%)} }
     </style>
 </head>
 <body>
-    <div class="slide-container">
-        <!-- Background Video -->
-        <video class="video-bg" autoplay loop muted playsinline>
-            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
-        </video>
-        <div class="overlay"></div>
-
-        <div class="content">
-            <h1 class="logo-text">RealSourcing</h1>
-            <p class="subtitle">连接全球买家与中国源头工厂的智能采购平台</p>
-
-            <div class="typewriter-container">
-                <div class="typewriter-line line-1">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span>15 分钟 · 智能匹配工厂</span>
-                </div>
-                <div class="typewriter-line line-2">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span>30 分钟 · 收到工厂报价</span>
-                </div>
-                <div class="typewriter-line line-3">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span>0 个中间商 · 直连源头</span>
-                </div>
-            </div>
+<div class="slide-container">
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    </video>
+    <div class="bg-gradient"></div>
+    <div class="grid-lines"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="content">
+        <div class="os-badge"><span class="pulse-dot"></span>Intelligent Sourcing OS &middot; 2026</div>
+        <div class="main-title">
+            <div class="brand">RealSourcing</div>
+            <div class="highlight">智能采购操作系统</div>
         </div>
-
-        <div class="footer-pill">
-            <span class="dot"></span>
-            <span>Seed Round · 2026 | 正在融资 ¥200万</span>
+        <p class="subtitle">引领 <span class="em">全球贸易 3.0</span> 时代 &middot; 让每家工厂都拥有 AI 外贸部</p>
+        <div class="feature-row">
+            <div class="feature-pill">&#9889; <span class="num">15</span> 分钟智能匹配</div>
+            <div class="feature-pill">&#128172; <span class="num">30</span> 分钟收到报价</div>
+            <div class="feature-pill">&#128279; <span class="num">0</span> 个中间商</div>
+            <div class="feature-pill">&#129302; AI Agent 全程托管</div>
+        </div>
+        <div class="cta-row">
+            <div class="cta-btn">&#128640; Seed Round &middot; 正在融资</div>
+            <div class="seed-badge">目标融资 <span class="amount">&yen; 200 万</span></div>
         </div>
     </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <div class="terminal">
+        <div class="terminal-bar">
+            <div class="t-dot t-dot-r"></div>
+            <div class="t-dot t-dot-y"></div>
+            <div class="t-dot t-dot-g"></div>
+            <span class="t-title">openclaw-agent &middot; live</span>
+        </div>
+        <div class="terminal-body">
+            <div class="t-line t-line-1"><span class="t-prompt">$</span><span class="t-cmd">openclaw start --rfq "500 custom tote bags"</span></div>
+            <div class="t-line t-line-2"><span class="t-out">&rsaquo; Parsing RFQ requirements...</span></div>
+            <div class="t-line t-line-3"><span class="t-out">&rsaquo; Scanning 1,247 verified factories</span></div>
+            <div class="t-line t-line-4"><span class="t-success">&#10003; AMR score computed for 89 matches</span></div>
+            <div class="t-line t-line-5"><span class="t-success">&#10003; Top 3 factories selected (AMR &ge; 92)</span></div>
+            <div class="t-line t-line-6"><span class="t-out">&rsaquo; Initiating auto-negotiation...</span></div>
+            <div class="t-line t-line-7"><span class="t-success">&#10003; Quote: Factory A &middot; &yen;8.5/pc &middot; 15 days</span></div>
+            <div class="t-line t-line-8"><span class="t-success">&#10003; Quote: Factory B &middot; &yen;7.8/pc &middot; 18 days</span></div>
+            <div class="t-line t-line-9"><span class="t-warn">&#9889; Time elapsed: 23 min 14 sec</span></div>
+            <div class="t-line t-line-10"><span class="t-success">&#10003; Buyer notified &middot; Deal ready to close</span></div>
+            <div class="t-line t-line-11"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
+        </div>
+    </div>
+    <div class="bottom-bar"></div>
+    <div class="slide-num">01 / 16</div>
+</div>
 </body>
 </html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - AI Gatekeeper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
+
+        /* Background */
+        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.1; }
+        .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(79,110,247,0.08) 0%, transparent 70%),
+                        linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.7) 50%, rgba(5,5,16,0.95) 100%); }
+        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background-image: linear-gradient(rgba(79,110,247,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(79,110,247,0.03) 1px, transparent 1px);
+            background-size:60px 60px; }
+
+        /* Header */
+        .header { position:absolute; top:36px; left:80px; z-index:10;
+            opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
+        .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+            color:#EF4444; margin-bottom:8px; }
+        .main-title { font-size:36px; font-weight:900; letter-spacing:-1px; }
+        .title-em { color:#EF4444; }
+        .subtitle-tag { font-size:14px; color:rgba(255,255,255,0.4); margin-top:6px; }
+
+        /* Main scene: 3 zones */
+        .scene { position:absolute; top:110px; left:0; right:0; bottom:80px; z-index:10;
+            display:grid; grid-template-columns:280px 1fr 280px; gap:0; padding:0 40px; align-items:center; }
+
+        /* Left: Factory Grid */
+        .factory-zone { display:flex; flex-direction:column; gap:12px; align-items:flex-end;
+            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
+        .factory-zone-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+            color:rgba(255,255,255,0.3); text-align:right; margin-bottom:4px; }
+        .factory-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; }
+        .factory-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center;
+            justify-content:center; font-size:20px; position:relative; }
+        .factory-blocked { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); }
+        .factory-blocked::after { content:'✕'; position:absolute; top:-6px; right:-6px;
+            background:#EF4444; color:#fff; font-size:9px; font-weight:900;
+            width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            line-height:16px; text-align:center; }
+        .factory-pass { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+            box-shadow:0 0 16px rgba(16,185,129,0.2); }
+        .factory-pass::after { content:'✓'; position:absolute; top:-6px; right:-6px;
+            background:#10B981; color:#fff; font-size:9px; font-weight:900;
+            width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            line-height:16px; text-align:center; }
+        .factory-label { font-size:11px; color:rgba(255,255,255,0.3); }
+        .factory-label-pass { color:#10B981; font-weight:600; }
+
+        /* Center: AI Gate */
+        .gate-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+            opacity:0; animation:fadeIn 1s ease-out forwards 0.8s; }
+        .gate-container { position:relative; display:flex; align-items:center; justify-content:center; }
+        .gate-ring { position:absolute; border-radius:50%; border:1px solid rgba(79,110,247,0.15);
+            animation:ringPulse 3s ease-in-out infinite; }
+        .gate-ring-1 { width:180px; height:180px; animation-delay:0s; }
+        .gate-ring-2 { width:220px; height:220px; animation-delay:0.5s; border-color:rgba(79,110,247,0.08); }
+        .gate-ring-3 { width:260px; height:260px; animation-delay:1s; border-color:rgba(79,110,247,0.04); }
+        @keyframes ringPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.03);opacity:0.6} }
+        .gate-core { width:140px; height:140px; border-radius:50%;
+            background:radial-gradient(circle, rgba(79,110,247,0.2) 0%, rgba(79,110,247,0.05) 70%, transparent 100%);
+            border:2px solid rgba(79,110,247,0.4);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            box-shadow:0 0 40px rgba(79,110,247,0.3), inset 0 0 30px rgba(79,110,247,0.1);
+            position:relative; z-index:2; }
+        .gate-logo { width:56px; height:56px; border-radius:50%;
+            background:#fff; display:flex; align-items:center; justify-content:center;
+            box-shadow:0 4px 20px rgba(0,0,0,0.5); margin-bottom:8px; overflow:hidden; }
+        .gate-logo img { width:40px; height:40px; object-fit:contain; }
+        .gate-label { font-size:11px; font-weight:700; color:#8BA4FF; letter-spacing:1px; }
+        .gate-sublabel { font-size:9px; color:rgba(255,255,255,0.3); margin-top:2px; }
+
+        /* Data stats below gate */
+        .gate-stats { display:flex; gap:16px; }
+        .gate-stat { text-align:center; padding:10px 16px;
+            background:rgba(79,110,247,0.06); border:1px solid rgba(79,110,247,0.12); border-radius:12px; }
+        .gate-stat-num { font-size:22px; font-weight:900; color:#4F6EF7; }
+        .gate-stat-label { font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px; }
+
+        /* Right: Buyer Zone */
+        .buyer-zone { display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 1.0s; }
+        .buyer-zone-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+            color:rgba(255,255,255,0.3); margin-bottom:4px; }
+        .buyer-icon-box { width:80px; height:80px; border-radius:50%;
+            background:rgba(16,185,129,0.08); border:2px solid rgba(16,185,129,0.3);
+            display:flex; align-items:center; justify-content:center; font-size:36px;
+            box-shadow:0 0 30px rgba(16,185,129,0.15); }
+        .buyer-label { font-size:14px; font-weight:700; color:#6EE7B7; }
+        .buyer-sublabel { font-size:11px; color:rgba(255,255,255,0.3); }
+        .buyer-sees { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15);
+            border-radius:12px; padding:12px 16px; }
+        .buyer-sees-title { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:8px; }
+        .buyer-sees-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+        .mini-factory { width:28px; height:28px; border-radius:6px;
+            background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3);
+            display:flex; align-items:center; justify-content:center; font-size:14px; }
+        .mini-factory-label { font-size:11px; color:#6EE7B7; }
+
+        /* Flow arrows */
+        .flow-arrow { position:absolute; top:50%; z-index:5; font-size:24px; color:rgba(79,110,247,0.4);
+            animation:arrowPulse 2s ease-in-out infinite; }
+        .arrow-left { left:310px; transform:translateY(-50%); }
+        .arrow-right { right:310px; transform:translateY(-50%) scaleX(-1); }
+        @keyframes arrowPulse { 0%,100%{opacity:0.4;transform:translateY(-50%) translateX(0)} 50%{opacity:0.8;transform:translateY(-50%) translateX(4px)} }
+        .arrow-right { animation-name:arrowPulseRight; }
+        @keyframes arrowPulseRight { 0%,100%{opacity:0.4;transform:translateY(-50%) scaleX(-1) translateX(0)} 50%{opacity:0.8;transform:translateY(-50%) scaleX(-1) translateX(4px)} }
+
+        /* Bottom Verdict */
+        .verdict { position:absolute; bottom:16px; left:0; right:0; text-align:center; z-index:10;
+            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.4s; }
+        .verdict-box { display:inline-flex; align-items:center; gap:12px;
+            background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
+            border-radius:100px; padding:12px 32px; }
+        .verdict-text { font-size:15px; font-weight:700; color:rgba(255,255,255,0.8); }
+        .verdict-em { color:#EF4444; font-size:16px; }
+
+        /* Slide num */
+        .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
+            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
+        .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
+            background:linear-gradient(90deg,#EF4444,#4F6EF7,#10B981); }
+
+        /* Animations */
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="section-tag">Problem &middot; 问题</div>
+        <div class="main-title">AI 已成为采购的 <span class="title-em">守门员</span></div>
+        <div class="subtitle-tag">工厂若无 AI 能力，将彻底"隐形"于全球买家视野之外</div>
+    </div>
+
+    <!-- Main Scene -->
+    <div class="scene">
+        <!-- Left: Factory Grid -->
+        <div class="factory-zone">
+            <div class="factory-zone-title">全球工厂</div>
+            <div class="factory-row">
+                <span class="factory-label">传统工厂 A</span>
+                <div class="factory-icon factory-blocked">&#127981;</div>
+            </div>
+            <div class="factory-row">
+                <span class="factory-label">传统工厂 B</span>
+                <div class="factory-icon factory-blocked">&#127981;</div>
+            </div>
+            <div class="factory-row">
+                <span class="factory-label">传统工厂 C</span>
+                <div class="factory-icon factory-blocked">&#127981;</div>
+            </div>
+            <div class="factory-row">
+                <span class="factory-label">传统工厂 D</span>
+                <div class="factory-icon factory-blocked">&#127981;</div>
+            </div>
+            <div class="factory-row">
+                <span class="factory-label factory-label-pass">AI 赋能工厂 E</span>
+                <div class="factory-icon factory-pass">&#127981;</div>
+            </div>
+            <div class="factory-row">
+                <span class="factory-label factory-label-pass">AI 赋能工厂 F</span>
+                <div class="factory-icon factory-pass">&#127981;</div>
+            </div>
+        </div>
+
+        <!-- Center: AI Gate -->
+        <div class="gate-zone">
+            <div class="gate-container">
+                <div class="gate-ring gate-ring-3"></div>
+                <div class="gate-ring gate-ring-2"></div>
+                <div class="gate-ring gate-ring-1"></div>
+                <div class="gate-core">
+                    <div class="gate-logo">
+                        <img src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/bVAGeIBavmFdBZLW.png" alt="ChatGPT">
+                    </div>
+                    <div class="gate-label">AI 守门员</div>
+                    <div class="gate-sublabel">AI Gatekeeper</div>
+                </div>
+            </div>
+            <div class="gate-stats">
+                <div class="gate-stat">
+                    <div class="gate-stat-num">90%</div>
+                    <div class="gate-stat-label">B2B 买家用 AI 采购</div>
+                </div>
+                <div class="gate-stat">
+                    <div class="gate-stat-num">45%</div>
+                    <div class="gate-stat-label">AI 为主要寻源方式</div>
+                </div>
+                <div class="gate-stat">
+                    <div class="gate-stat-num">94%</div>
+                    <div class="gate-stat-label">采购高管每周用 AI</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Buyer -->
+        <div class="buyer-zone">
+            <div class="buyer-zone-title">海外采购商</div>
+            <div class="buyer-icon-box">&#128722;</div>
+            <div>
+                <div class="buyer-label">只看到 AI 推荐的工厂</div>
+                <div class="buyer-sublabel">传统工厂已从视野中消失</div>
+            </div>
+            <div class="buyer-sees">
+                <div class="buyer-sees-title">&#10003; 进入视野的工厂</div>
+                <div class="buyer-sees-row">
+                    <div class="mini-factory">&#127981;</div>
+                    <span class="mini-factory-label">AI 赋能工厂 E &middot; AMR 94</span>
+                </div>
+                <div class="buyer-sees-row">
+                    <div class="mini-factory">&#127981;</div>
+                    <span class="mini-factory-label">AI 赋能工厂 F &middot; AMR 91</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flow Arrows -->
+    <div class="flow-arrow arrow-left">&#9654;</div>
+    <div class="flow-arrow arrow-right">&#9654;</div>
+
+    <!-- Bottom Verdict -->
+    <div class="verdict">
+        <div class="verdict-box">
+            <span>&#9888;</span>
+            <span class="verdict-text">2026 年的采购门槛：不是价格，不是质量，而是——</span>
+            <span class="verdict-em">你的工厂能被 AI 找到吗？</span>
+        </div>
+    </div>
+
+    <div class="bottom-bar"></div>
+    <div class="slide-num">03 / 16</div>
+</div>
+</body>
+</html>
