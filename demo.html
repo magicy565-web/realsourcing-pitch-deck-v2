@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .header {
+            z-index: 2;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .ui-mockup {
+            z-index: 2;
+            width: 1000px;
+            height: 480px;
+            margin: 0 auto;
+            background: #15151A;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards 0.3s;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #0F0F13;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-item.active {
+            background: rgba(79, 110, 247, 0.1);
+            color: #FFF;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .chat-area {
+            flex: 1;
+            background: #15151A;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .message-content {
+            background: #25252B;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #E0E0E0;
+        }
+
+        .message.buyer { align-self: flex-end; flex-direction: row-reverse; }
+        .message.buyer .message-content { background: #4F6EF7; color: #FFF; }
+        
+        .message.ai .message-content {
+            background: rgba(142, 68, 173, 0.1);
+            border: 1px solid rgba(142, 68, 173, 0.3);
+            color: #D2B4DE;
+        }
+
+        /* AI Breathing Effect */
+        .ai-breathing {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4F6EF7;
+            border-radius: 50%;
+            animation: breathe 1.5s ease-in-out infinite;
+            margin-right: 5px;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .quote-panel {
+            width: 300px;
+            background: #1A1A20;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transform: translateX(100%);
+            animation: slideInRight 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards 2.5s;
+        }
+
+        .quote-header {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quote-status {
+            font-size: 0.7rem;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ECC71;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .quote-detail {
+            background: #25252B;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-label { color: rgba(255, 255, 255, 0.5); }
+        .detail-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+        /* Number Counter Animation */
+        .counter {
+            display: inline-block;
+            font-weight: 700;
+            color: #4F6EF7;
+        }
+
+        .btn-accept {
+            background: #4F6EF7;
+            color: #FFF;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .process-bar {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 2;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.3;
+            transition: opacity 0.5s;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FFF;
+        }
+
+        .step-text { font-size: 0.9rem; }
+
+        .msg-1 { animation: fadeInUp 0.5s ease-out forwards 1.0s; }
+        .msg-2 { animation: fadeInUp 0.5s ease-out forwards 1.5s; }
+        .msg-3 { animation: fadeInUp 0.5s ease-out forwards 2.0s; }
+
+        .step-1 { animation: highlightStep 0.1s forwards 1.0s; }
+        .step-2 { animation: highlightStep 0.1s forwards 1.5s; }
+        .step-3 { animation: highlightStep 0.1s forwards 2.0s; }
+        .step-4 { animation: highlightStep 0.1s forwards 2.5s; }
+
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { to { transform: translateX(0); } }
+        @keyframes highlightStep { to { opacity: 1; color: #4F6EF7; } }
+        @keyframes highlightDot { to { background: #4F6EF7; box-shadow: 0 0 10px #4F6EF7; } }
+        
+        .step-1 .step-dot { animation: highlightDot 0.1s forwards 1.0s; }
+        .step-2 .step-dot { animation: highlightDot 0.1s forwards 1.5s; }
+        .step-3 .step-dot { animation: highlightDot 0.1s forwards 2.0s; }
+        .step-4 .step-dot { animation: highlightDot 0.1s forwards 2.5s; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="header">
+            <div class="section-tag">PRODUCT DEMO</div>
+            <h1 class="main-title">一个房间，买家见工厂，AI 处理一切</h1>
+        </div>
+
+        <div class="ui-mockup">
+            <div class="sidebar">
+                <div class="sidebar-item active">
+                    <div class="avatar" style="background: #E67E22;">F</div>
+                    <span>Foshan Furniture Co.</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="avatar" style="background: #2ECC71;">S</div>
+                    <span>Shaoxing Textile</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="avatar" style="background: #9B59B6;">Y</div>
+                    <span>Yiwu Goods Ltd.</span>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <div class="message buyer msg-1">
+                    <div class="message-content">
+                        我们需要采购 500 件人体工学椅，要求网布材质，黑色，带头枕。能否提供报价？
+                    </div>
+                    <div class="avatar" style="background: #3498DB;">Me</div>
+                </div>
+
+                <div class="message msg-2">
+                    <div class="avatar" style="background: #E67E22;">F</div>
+                    <div class="message-content">
+                        收到需求。我们有现货，支持定制 Logo。已授权 AI 助手生成报价。
+                    </div>
+                </div>
+
+                <div class="message ai msg-3">
+                    <div class="avatar" style="background: #8E44AD;"><i class="fas fa-robot"></i></div>
+                    <div class="message-content">
+                        <span class="ai-breathing"></span>OpenClaw Agent<br>
+                        已检索工厂 ERP 数据。报价单已生成。
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-panel">
+                <div class="quote-header">
+                    <span>报价单 #RFQ-2026</span>
+                    <span class="quote-status">Ready</span>
+                </div>
+                <div class="quote-detail">
+                    <div class="detail-row">
+                        <span class="detail-label">产品</span>
+                        <span class="detail-value">ErgoChair Pro</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">单价</span>
+                        <span class="detail-value">$<span class="counter" data-target="12.50">0.00</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">MOQ</span>
+                        <span class="detail-value"><span class="counter" data-target="500">0</span> Units</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">交期</span>
+                        <span class="detail-value"><span class="counter" data-target="7">0</span> Days</span>
+                    </div>
+                </div>
+                <div class="btn-accept">接受报价</div>
+                <div style="text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 10px;">
+                    SLA: &lt; 30 mins
+                </div>
+            </div>
+        </div>
+
+        <div class="process-bar">
+            <div class="process-step step-1">
+                <div class="step-dot"></div>
+                <span class="step-text">提交 RFQ</span>
+            </div>
+            <div class="process-step step-2">
+                <div class="step-dot"></div>
+                <span class="step-text">工厂握手</span>
+            </div>
+            <div class="process-step step-3">
+                <div class="step-dot"></div>
+                <span class="step-text">AI 生成报价</span>
+            </div>
+            <div class="process-step step-4">
+                <div class="step-dot"></div>
+                <span class="step-text">报价送达</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Counter Animation Function
+        function animateCounter(element, target, duration = 1000) {
+            const start = parseFloat(element.textContent) || 0;
+            const startTime = Date.now();
+            
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = start + (target - start) * progress;
+                
+                if (target % 1 === 0) {
+                    element.textContent = Math.floor(current);
+                } else {
+                    element.textContent = current.toFixed(2);
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            update();
+        }
+
+        // Trigger counters when quote panel appears (2.5s + delay)
+        setTimeout(() => {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute('data-target'));
+                animateCounter(counter, target, 800);
+            });
+        }, 2700);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

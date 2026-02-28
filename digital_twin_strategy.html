@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老板的数字分身</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at 20% 50%, #1a2744 0%, #0F172A 60%);
+            color: #F8FAFC;
+            overflow: hidden;
+        }
+        .phone-shell {
+            width: 220px;
+            height: 470px;
+            background: #111;
+            border-radius: 34px;
+            border: 5px solid #2a3a52;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 60px rgba(59,130,246,0.08);
+            position: relative;
+            overflow: hidden;
+            transform: rotate(-3deg);
+            flex-shrink: 0;
+        }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            border-radius: 29px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .wechat-nav {
+            background: #ededed;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-bottom: 1px solid #d8d8d8;
+            flex-shrink: 0;
+        }
+        .wechat-list { flex: 1; overflow: hidden; background: #f5f5f5; }
+        .chat-item {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            padding: 7px 10px;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            color: #fff;
+            font-weight: 700;
+        }
+        .red-dot {
+            position: absolute;
+            top: 5px;
+            left: 34px;
+            background: #f00;
+            color: #fff;
+            font-size: 6px;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 1px 3px;
+            min-width: 13px;
+            text-align: center;
+            line-height: 11px;
+        }
+        .chat-info { flex: 1; min-width: 0; }
+        .chat-name { font-size: 8.5px; font-weight: 600; color: #1a1a1a; }
+        .chat-msg  { font-size: 7.5px; color: #888; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-time { font-size: 6.5px; color: #bbb; flex-shrink: 0; }
+        .wechat-bottom {
+            height: 34px;
+            background: #f7f7f7;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .wechat-tab { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+        .wechat-tab-icon { font-size: 13px; }
+        .wechat-tab-label { font-size: 6.5px; color: #888; }
+
+        /* ── Timeline Bubble ── */
+        .decision-bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: default;
+        }
+        .bubble-label {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 9px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .time-tick {
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container flex flex-col" style="padding: 36px 48px 28px 48px;">
+
+    <!-- ── Header ── -->
+    <div class="flex justify-between items-start" style="margin-bottom: 20px;">
+        <div>
+            <h1 style="font-size:30px; font-weight:700; letter-spacing:-0.5px; color:#fff; margin:0;">
+                老板是最忙的 <span style="color:#f97316;">业务员</span>
+            </h1>
+            <p style="color:#64748b; margin-top:5px; font-size:14px;">
+                信息爆炸 + 决策过载 &nbsp;=&nbsp; 公司的天花板
+            </p>
+        </div>
+        <div style="text-align:right; color:#334155; font-size:11px; font-family:'JetBrains Mono',monospace;">
+            <div>Pain Point</div>
+            <div>Factory Owner</div>
+        </div>
+    </div>
+
+    <!-- ── Main Row ── -->
+    <div style="flex:1; display:flex; gap:32px; align-items:flex-start;">
+
+        <!-- Left: WeChat Phone -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:10px; flex-shrink:0;">
+            <div class="phone-shell">
+                <div class="phone-screen">
+                    <div style="height:20px; display:flex; justify-content:space-between; align-items:center; padding:0 12px; font-size:7px; color:#333; background:#fff; flex-shrink:0; padding-top:6px;">
+                        <span style="font-weight:700;">9:41</span>
+                        <div style="display:flex; gap:3px;">5G 🔋</div>
+                    </div>
+                    <div class="wechat-nav">
+                        <span style="font-size:11px; font-weight:700; color:#1a1a1a;">微信</span>
+                        <div style="display:flex; gap:10px; font-size:13px; color:#555;"><span>🔍</span><span>＋</span></div>
+                    </div>
+                    <div style="background:#fff; margin:5px 8px; border-radius:5px; height:20px; display:flex; align-items:center; padding:0 8px; gap:4px; flex-shrink:0;">
+                        <span style="font-size:8px; color:#aaa;">🔍 搜索</span>
+                    </div>
+                    <div class="wechat-list">
+                        <div class="chat-item"><div class="chat-avatar" style="background:#1677ff;">外</div><div class="red-dot">99+</div><div class="chat-info"><div class="chat-name">2024外贸客户群</div><div class="chat-msg">老板，美国客户催报价了！！</div></div><div class="chat-time">刚刚</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#52c41a;">供</div><div class="red-dot">47</div><div class="chat-info"><div class="chat-name">供应商报价跟进群</div><div class="chat-msg">今天能发货吗？客户在等</div></div><div class="chat-time">2分钟</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#722ed1;">HR</div><div class="red-dot">23</div><div class="chat-info"><div class="chat-name">HR招聘-销售岗</div><div class="chat-msg">这个候选人怎么样？</div></div><div class="chat-time">8分钟</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#fa8c16;">生</div><div class="red-dot">18</div><div class="chat-info"><div class="chat-name">生产进度日报</div><div class="chat-msg">3号线今天产能不足20%</div></div><div class="chat-time">15分钟</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#eb2f96;">关</div><div class="red-dot">12</div><div class="chat-info"><div class="chat-name">关务&amp;税务</div><div class="chat-msg">这批货HS编码有问题</div></div><div class="chat-time">22分钟</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#13c2c2;">王</div><div class="red-dot">8</div><div class="chat-info"><div class="chat-name">助理小王</div><div class="chat-msg">老板，有3件事需要您确认</div></div><div class="chat-time">30分钟</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#2f54eb;">物</div><div class="red-dot">6</div><div class="chat-info"><div class="chat-name">物流跟踪</div><div class="chat-msg">货柜到港，需安排清关</div></div><div class="chat-time">1小时</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#07c160;">企</div><div class="red-dot">5</div><div class="chat-info"><div class="chat-name">企业微信通知</div><div class="chat-msg">[新询盘] 有新的询盘待处理</div></div><div class="chat-time">2小时</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#d46b08;">产</div><div class="red-dot">3</div><div class="chat-info"><div class="chat-name">产品开发讨论</div><div class="chat-msg">新品打样出来了，请审核</div></div><div class="chat-time">3小时</div></div>
+                        <div class="chat-item"><div class="chat-avatar" style="background:#389e0d;">培</div><div class="red-dot">2</div><div class="chat-info"><div class="chat-name">销售培训群</div><div class="chat-msg">本周培训材料已上传</div></div><div class="chat-time">昨天</div></div>
+                    </div>
+                    <div class="wechat-bottom">
+                        <div class="wechat-tab"><div class="wechat-tab-icon">💬</div><div class="wechat-tab-label" style="color:#07c160;">微信</div></div>
+                        <div class="wechat-tab"><div class="wechat-tab-icon">👥</div><div class="wechat-tab-label">通讯录</div></div>
+                        <div class="wechat-tab"><div class="wechat-tab-icon">🔍</div><div class="wechat-tab-label">发现</div></div>
+                        <div class="wechat-tab"><div class="wechat-tab-icon">👤</div><div class="wechat-tab-label">我</div></div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <div style="font-size:12px; color:#94a3b8;">每天 <span style="color:#f97316; font-weight:700;">200+</span> 条未读消息</div>
+            </div>
+        </div>
+
+        <!-- Right: 24h Timeline -->
+        <div style="flex:1; display:flex; flex-direction:column; gap:14px; min-width:0;">
+
+            <div style="font-size:12px; color:#64748b; letter-spacing:0.06em; text-transform:uppercase; font-family:'JetBrains Mono',monospace;">老板的一天 — 决策密度热力图</div>
+
+            <!-- Timeline Container -->
+            <div style="position:relative; width:100%; height:340px;">
+
+                <!-- ── Background Zones ── -->
+                <!-- Early morning zone 07:00-09:00 (0%-12%) -->
+                <div style="position:absolute; left:0%; width:12%; top:0; height:280px; background:rgba(249,115,22,0.08); border-radius:6px 0 0 6px;"></div>
+                <!-- Night zone 18:00-24:00 (65%-100%) -->
+                <div style="position:absolute; left:65%; width:35%; top:0; height:280px; background:rgba(249,115,22,0.08); border-radius:0 6px 6px 0;"></div>
+                <!-- Work zone label -->
+                <div style="position:absolute; left:12%; width:53%; top:4px; text-align:center; font-size:10px; color:#334155; letter-spacing:0.05em;">— 正常工作时间 —</div>
+
+                <!-- Zone labels -->
+                <div style="position:absolute; left:1%; top:4px; font-size:9px; color:#f97316; font-weight:600;">🌅 早晨</div>
+                <div style="position:absolute; left:66%; top:4px; font-size:9px; color:#f97316; font-weight:600;">🌙 夜晚</div>
+
+                <!-- ── Timeline axis ── -->
+                <div style="position:absolute; left:0; right:0; top:280px; height:2px; background:rgba(255,255,255,0.12);"></div>
+
+                <!-- ── Time ticks ── -->
+                <!-- 07:00 = 0% -->
+                <div class="time-tick" style="left:0%;">
+                    <div style="width:1px; height:8px; background:rgba(249,115,22,0.6);"></div>
+                    <div style="font-size:9px; color:#f97316; font-family:'JetBrains Mono',monospace; margin-top:4px;">07:00</div>
+                </div>
+                <!-- 09:00 = 12% -->
+                <div class="time-tick" style="left:12%;">
+                    <div style="width:1px; height:8px; background:rgba(255,255,255,0.3);"></div>
+                    <div style="font-size:9px; color:#475569; font-family:'JetBrains Mono',monospace; margin-top:4px;">09:00</div>
+                </div>
+                <!-- 12:00 = 30% -->
+                <div class="time-tick" style="left:30%;">
+                    <div style="width:1px; height:8px; background:rgba(255,255,255,0.3);"></div>
+                    <div style="font-size:9px; color:#475569; font-family:'JetBrains Mono',monospace; margin-top:4px;">12:00</div>
+                </div>
+                <!-- 15:00 = 47% -->
+                <div class="time-tick" style="left:47%;">
+                    <div style="width:1px; height:8px; background:rgba(255,255,255,0.3);"></div>
+                    <div style="font-size:9px; color:#475569; font-family:'JetBrains Mono',monospace; margin-top:4px;">15:00</div>
+                </div>
+                <!-- 18:00 = 65% -->
+                <div class="time-tick" style="left:65%;">
+                    <div style="width:1px; height:8px; background:rgba(249,115,22,0.6);"></div>
+                    <div style="font-size:9px; color:#f97316; font-family:'JetBrains Mono',monospace; margin-top:4px;">18:00</div>
+                </div>
+                <!-- 21:00 = 82% -->
+                <div class="time-tick" style="left:82%;">
+                    <div style="width:1px; height:8px; background:rgba(249,115,22,0.6);"></div>
+                    <div style="font-size:9px; color:#f97316; font-family:'JetBrains Mono',monospace; margin-top:4px;">21:00</div>
+                </div>
+                <!-- 24:00 = 100% -->
+                <div class="time-tick" style="left:98%;">
+                    <div style="width:1px; height:8px; background:rgba(249,115,22,0.6);"></div>
+                    <div style="font-size:9px; color:#f97316; font-family:'JetBrains Mono',monospace; margin-top:4px;">24:00</div>
+                </div>
+
+                <!-- ── Connector dots on axis ── -->
+                <!-- Each bubble has a dot on the axis line -->
+
+                <!-- ══════════════════════════════════ -->
+                <!-- EARLY MORNING ZONE (07:00-09:00) -->
+                <!-- ══════════════════════════════════ -->
+
+                <!-- 07:15 供应商催款 -->
+                <div style="position:absolute; left:1.5%; top:280px; width:6px; height:6px; background:#f97316; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:1.5%; top:280px; width:1px; height:60px; background:rgba(249,115,22,0.4); transform:translateX(-50%); top:220px;"></div>
+                <div class="decision-bubble" style="width:56px; height:56px; left:1.5%; top:162px; transform:translateX(-50%); background:rgba(249,115,22,0.15); border:1.5px solid #f97316;">
+                    <div style="font-size:16px;">🏭</div>
+                    <div style="font-size:7.5px; color:#fb923c; font-weight:700; margin-top:1px;">供应商</div>
+                    <div style="font-size:7.5px; color:#fb923c;">催款</div>
+                </div>
+                <div style="position:absolute; left:1.5%; top:152px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">07:15</div>
+
+                <!-- 07:50 客户投诉 -->
+                <div style="position:absolute; left:6%; top:280px; width:6px; height:6px; background:#f87171; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:6%; width:1px; height:50px; background:rgba(248,113,113,0.4); transform:translateX(-50%); top:228px;"></div>
+                <div class="decision-bubble" style="width:52px; height:52px; left:6%; top:174px; transform:translateX(-50%); background:rgba(248,113,113,0.15); border:1.5px solid #f87171;">
+                    <div style="font-size:15px;">🤝</div>
+                    <div style="font-size:7.5px; color:#f87171; font-weight:700; margin-top:1px;">客户</div>
+                    <div style="font-size:7.5px; color:#f87171;">投诉</div>
+                </div>
+                <div style="position:absolute; left:6%; top:164px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">07:50</div>
+
+                <!-- 08:20 审核报价 -->
+                <div style="position:absolute; left:10%; top:280px; width:6px; height:6px; background:#10b981; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:10%; width:1px; height:70px; background:rgba(16,185,129,0.4); transform:translateX(-50%); top:208px;"></div>
+                <div class="decision-bubble" style="width:60px; height:60px; left:10%; top:146px; transform:translateX(-50%); background:rgba(16,185,129,0.15); border:1.5px solid #10b981;">
+                    <div style="font-size:17px;">💰</div>
+                    <div style="font-size:7.5px; color:#10b981; font-weight:700; margin-top:1px;">审核</div>
+                    <div style="font-size:7.5px; color:#10b981;">报价</div>
+                </div>
+                <div style="position:absolute; left:10%; top:136px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">08:20</div>
+
+                <!-- Annotation: 早晨 -->
+                <div style="position:absolute; left:0%; top:100px; width:12%; text-align:center;">
+                    <div style="font-size:9px; color:#f97316; font-weight:600; line-height:1.4;">还没到公司<br>已处理 5 条</div>
+                </div>
+
+                <!-- ══════════════════════════════════ -->
+                <!-- MORNING ZONE (09:00-12:00) -->
+                <!-- ══════════════════════════════════ -->
+
+                <!-- 09:30 人才招聘 -->
+                <div style="position:absolute; left:15%; top:280px; width:6px; height:6px; background:#a78bfa; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:15%; width:1px; height:90px; background:rgba(167,139,250,0.4); transform:translateX(-50%); top:188px;"></div>
+                <div class="decision-bubble" style="width:62px; height:62px; left:15%; top:124px; transform:translateX(-50%); background:rgba(167,139,250,0.15); border:1.5px solid #a78bfa;">
+                    <div style="font-size:17px;">👥</div>
+                    <div style="font-size:7.5px; color:#a78bfa; font-weight:700; margin-top:1px;">人才</div>
+                    <div style="font-size:7.5px; color:#a78bfa;">招聘</div>
+                </div>
+                <div style="position:absolute; left:15%; top:114px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">09:30</div>
+
+                <!-- 10:15 客户视频会议 -->
+                <div style="position:absolute; left:20%; top:280px; width:6px; height:6px; background:#f87171; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:20%; width:1px; height:110px; background:rgba(248,113,113,0.4); transform:translateX(-50%); top:168px;"></div>
+                <div class="decision-bubble" style="width:66px; height:66px; left:20%; top:100px; transform:translateX(-50%); background:rgba(248,113,113,0.15); border:1.5px solid #f87171;">
+                    <div style="font-size:18px;">🤝</div>
+                    <div style="font-size:7.5px; color:#f87171; font-weight:700; margin-top:1px;">客户</div>
+                    <div style="font-size:7.5px; color:#f87171;">管理</div>
+                </div>
+                <div style="position:absolute; left:20%; top:90px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">10:15</div>
+
+                <!-- 11:00 物流跟踪 -->
+                <div style="position:absolute; left:25%; top:280px; width:6px; height:6px; background:#4ade80; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:25%; width:1px; height:70px; background:rgba(74,222,128,0.4); transform:translateX(-50%); top:208px;"></div>
+                <div class="decision-bubble" style="width:58px; height:58px; left:25%; top:148px; transform:translateX(-50%); background:rgba(74,222,128,0.12); border:1.5px solid #4ade80;">
+                    <div style="font-size:16px;">🚢</div>
+                    <div style="font-size:7.5px; color:#4ade80; font-weight:700; margin-top:1px;">物流</div>
+                    <div style="font-size:7.5px; color:#4ade80;">信息</div>
+                </div>
+                <div style="position:absolute; left:25%; top:138px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">11:00</div>
+
+                <!-- 11:40 产品开发 -->
+                <div style="position:absolute; left:29%; top:280px; width:6px; height:6px; background:#22d3ee; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:29%; width:1px; height:85px; background:rgba(34,211,238,0.4); transform:translateX(-50%); top:193px;"></div>
+                <div class="decision-bubble" style="width:58px; height:58px; left:29%; top:133px; transform:translateX(-50%); background:rgba(34,211,238,0.12); border:1.5px solid #22d3ee;">
+                    <div style="font-size:16px;">🔧</div>
+                    <div style="font-size:7.5px; color:#22d3ee; font-weight:700; margin-top:1px;">产品</div>
+                    <div style="font-size:7.5px; color:#22d3ee;">开发</div>
+                </div>
+                <div style="position:absolute; left:29%; top:123px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">11:40</div>
+
+                <!-- ══════════════════════════════════ -->
+                <!-- LUNCH ZONE (12:00-14:00) -->
+                <!-- ══════════════════════════════════ -->
+
+                <!-- 12:30 关务信息 (lunch time!) -->
+                <div style="position:absolute; left:33%; top:280px; width:6px; height:6px; background:#fbbf24; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:33%; width:1px; height:55px; background:rgba(251,191,36,0.4); transform:translateX(-50%); top:223px;"></div>
+                <div class="decision-bubble" style="width:54px; height:54px; left:33%; top:167px; transform:translateX(-50%); background:rgba(251,191,36,0.12); border:1.5px solid #fbbf24;">
+                    <div style="font-size:15px;">📋</div>
+                    <div style="font-size:7.5px; color:#fbbf24; font-weight:700; margin-top:1px;">关务</div>
+                    <div style="font-size:7.5px; color:#fbbf24;">信息</div>
+                </div>
+                <div style="position:absolute; left:33%; top:157px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">12:30</div>
+
+                <!-- Annotation: 午休 -->
+                <div style="position:absolute; left:30%; top:56px; width:14%; text-align:center;">
+                    <div style="font-size:9px; color:#94a3b8; font-style:italic; line-height:1.4;">午休？<br>不存在的</div>
+                </div>
+
+                <!-- 13:30 税务信息 -->
+                <div style="position:absolute; left:38%; top:280px; width:6px; height:6px; background:#e879f9; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:38%; width:1px; height:65px; background:rgba(232,121,249,0.4); transform:translateX(-50%); top:213px;"></div>
+                <div class="decision-bubble" style="width:56px; height:56px; left:38%; top:155px; transform:translateX(-50%); background:rgba(232,121,249,0.12); border:1.5px solid #e879f9;">
+                    <div style="font-size:15px;">🧾</div>
+                    <div style="font-size:7.5px; color:#e879f9; font-weight:700; margin-top:1px;">税务</div>
+                    <div style="font-size:7.5px; color:#e879f9;">信息</div>
+                </div>
+                <div style="position:absolute; left:38%; top:145px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">13:30</div>
+
+                <!-- ══════════════════════════════════ -->
+                <!-- AFTERNOON ZONE (14:00-18:00) -->
+                <!-- ══════════════════════════════════ -->
+
+                <!-- 14:30 审核报价 -->
+                <div style="position:absolute; left:44%; top:280px; width:6px; height:6px; background:#10b981; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:44%; width:1px; height:100px; background:rgba(16,185,129,0.4); transform:translateX(-50%); top:178px;"></div>
+                <div class="decision-bubble" style="width:64px; height:64px; left:44%; top:112px; transform:translateX(-50%); background:rgba(16,185,129,0.15); border:1.5px solid #10b981;">
+                    <div style="font-size:18px;">💰</div>
+                    <div style="font-size:7.5px; color:#10b981; font-weight:700; margin-top:1px;">审核</div>
+                    <div style="font-size:7.5px; color:#10b981;">报价</div>
+                </div>
+                <div style="position:absolute; left:44%; top:102px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">14:30</div>
+
+                <!-- 15:30 供应商管理 -->
+                <div style="position:absolute; left:50%; top:280px; width:6px; height:6px; background:#3b82f6; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:50%; width:1px; height:80px; background:rgba(59,130,246,0.4); transform:translateX(-50%); top:198px;"></div>
+                <div class="decision-bubble" style="width:60px; height:60px; left:50%; top:136px; transform:translateX(-50%); background:rgba(59,130,246,0.15); border:1.5px solid #3b82f6;">
+                    <div style="font-size:16px;">🏭</div>
+                    <div style="font-size:7.5px; color:#3b82f6; font-weight:700; margin-top:1px;">供应商</div>
+                    <div style="font-size:7.5px; color:#3b82f6;">管理</div>
+                </div>
+                <div style="position:absolute; left:50%; top:126px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">15:30</div>
+
+                <!-- 16:30 销售培训 -->
+                <div style="position:absolute; left:56%; top:280px; width:6px; height:6px; background:#fb923c; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:56%; width:1px; height:65px; background:rgba(251,146,60,0.4); transform:translateX(-50%); top:213px;"></div>
+                <div class="decision-bubble" style="width:56px; height:56px; left:56%; top:155px; transform:translateX(-50%); background:rgba(251,146,60,0.12); border:1.5px solid #fb923c;">
+                    <div style="font-size:15px;">📚</div>
+                    <div style="font-size:7.5px; color:#fb923c; font-weight:700; margin-top:1px;">销售</div>
+                    <div style="font-size:7.5px; color:#fb923c;">培训</div>
+                </div>
+                <div style="position:absolute; left:56%; top:145px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">16:30</div>
+
+                <!-- 17:30 物流信息 -->
+                <div style="position:absolute; left:61%; top:280px; width:6px; height:6px; background:#4ade80; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:61%; width:1px; height:50px; background:rgba(74,222,128,0.4); transform:translateX(-50%); top:228px;"></div>
+                <div class="decision-bubble" style="width:52px; height:52px; left:61%; top:174px; transform:translateX(-50%); background:rgba(74,222,128,0.12); border:1.5px solid #4ade80;">
+                    <div style="font-size:14px;">🚢</div>
+                    <div style="font-size:7.5px; color:#4ade80; font-weight:700; margin-top:1px;">物流</div>
+                    <div style="font-size:7.5px; color:#4ade80;">跟踪</div>
+                </div>
+                <div style="position:absolute; left:61%; top:164px; transform:translateX(-50%); font-size:8px; color:#64748b; font-family:'JetBrains Mono',monospace; white-space:nowrap;">17:30</div>
+
+                <!-- ══════════════════════════════════ -->
+                <!-- NIGHT ZONE (18:00-24:00) -->
+                <!-- ══════════════════════════════════ -->
+
+                <!-- 18:30 美国客户询盘 -->
+                <div style="position:absolute; left:67%; top:280px; width:6px; height:6px; background:#f87171; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:67%; width:1px; height:95px; background:rgba(248,113,113,0.4); transform:translateX(-50%); top:183px;"></div>
+                <div class="decision-bubble" style="width:64px; height:64px; left:67%; top:117px; transform:translateX(-50%); background:rgba(248,113,113,0.18); border:1.5px solid #f87171;">
+                    <div style="font-size:17px;">🤝</div>
+                    <div style="font-size:7.5px; color:#f87171; font-weight:700; margin-top:1px;">客户</div>
+                    <div style="font-size:7.5px; color:#f87171;">询盘</div>
+                </div>
+                <div style="position:absolute; left:67%; top:107px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">18:30</div>
+
+                <!-- 19:45 欧洲客户跟进 -->
+                <div style="position:absolute; left:73%; top:280px; width:6px; height:6px; background:#a78bfa; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:73%; width:1px; height:115px; background:rgba(167,139,250,0.4); transform:translateX(-50%); top:163px;"></div>
+                <div class="decision-bubble" style="width:66px; height:66px; left:73%; top:95px; transform:translateX(-50%); background:rgba(167,139,250,0.18); border:1.5px solid #a78bfa;">
+                    <div style="font-size:17px;">💰</div>
+                    <div style="font-size:7.5px; color:#a78bfa; font-weight:700; margin-top:1px;">审核</div>
+                    <div style="font-size:7.5px; color:#a78bfa;">报价</div>
+                </div>
+                <div style="position:absolute; left:73%; top:85px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">19:45</div>
+
+                <!-- 21:00 审核明日计划 -->
+                <div style="position:absolute; left:82%; top:280px; width:6px; height:6px; background:#10b981; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:82%; width:1px; height:80px; background:rgba(16,185,129,0.4); transform:translateX(-50%); top:198px;"></div>
+                <div class="decision-bubble" style="width:60px; height:60px; left:82%; top:136px; transform:translateX(-50%); background:rgba(16,185,129,0.18); border:1.5px solid #10b981;">
+                    <div style="font-size:16px;">📋</div>
+                    <div style="font-size:7.5px; color:#10b981; font-weight:700; margin-top:1px;">明日</div>
+                    <div style="font-size:7.5px; color:#10b981;">计划</div>
+                </div>
+                <div style="position:absolute; left:82%; top:126px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">21:00</div>
+
+                <!-- 22:30 供应商问题 -->
+                <div style="position:absolute; left:88%; top:280px; width:6px; height:6px; background:#3b82f6; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:88%; width:1px; height:60px; background:rgba(59,130,246,0.4); transform:translateX(-50%); top:218px;"></div>
+                <div class="decision-bubble" style="width:56px; height:56px; left:88%; top:160px; transform:translateX(-50%); background:rgba(59,130,246,0.18); border:1.5px solid #3b82f6;">
+                    <div style="font-size:15px;">🏭</div>
+                    <div style="font-size:7.5px; color:#3b82f6; font-weight:700; margin-top:1px;">供应商</div>
+                    <div style="font-size:7.5px; color:#3b82f6;">问题</div>
+                </div>
+                <div style="position:absolute; left:88%; top:150px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">22:30</div>
+
+                <!-- 23:50 客户投诉 -->
+                <div style="position:absolute; left:95%; top:280px; width:6px; height:6px; background:#f87171; border-radius:50%; transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute; left:95%; width:1px; height:75px; background:rgba(248,113,113,0.4); transform:translateX(-50%); top:203px;"></div>
+                <div class="decision-bubble" style="width:58px; height:58px; left:95%; top:143px; transform:translateX(-50%); background:rgba(248,113,113,0.18); border:1.5px solid #f87171;">
+                    <div style="font-size:15px;">😤</div>
+                    <div style="font-size:7.5px; color:#f87171; font-weight:700; margin-top:1px;">客户</div>
+                    <div style="font-size:7.5px; color:#f87171;">投诉</div>
+                </div>
+                <div style="position:absolute; left:95%; top:133px; transform:translateX(-50%); font-size:8px; color:#f97316; font-family:'JetBrains Mono',monospace; white-space:nowrap;">23:50</div>
+
+                <!-- Night annotation -->
+                <div style="position:absolute; left:66%; top:40px; width:34%; text-align:center;">
+                    <div style="font-size:9px; color:#f97316; font-weight:600; line-height:1.5;">时差来了，欧美客户开始活跃<br>凌晨还在回消息</div>
+                </div>
+
+            </div><!-- end timeline container -->
+
+            <!-- ── Bottom Stats ── -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:4px;">
+                <div class="stat-card">
+                    <div style="font-size:22px; font-weight:700; color:#f97316;">16h+</div>
+                    <div style="font-size:11px; color:#64748b; margin-top:2px;">有效工作时长/天</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size:22px; font-weight:700; color:#f87171;">100+</div>
+                    <div style="font-size:11px; color:#64748b; margin-top:2px;">需拍板决策/天</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size:22px; font-weight:700; color:#94a3b8;">0</div>
+                    <div style="font-size:11px; color:#64748b; margin-top:2px;">真正属于自己的时间</div>
+                </div>
+            </div>
+
+        </div><!-- end right column -->
+    </div><!-- end main row -->
+</div>
+</body>
+</html>

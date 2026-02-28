@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商业模式：双边价值闭环</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            color: #F8FAFC;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at top right, #1E293B 0%, #0F172A 100%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .price-bar {
+            transition: width 1s ease-out;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.05) 100%);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-12">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-4xl font-bold text-white tracking-tight">商业模式 <span class="text-blue-500">Business Model</span></h1>
+                <p class="text-slate-400 mt-2 text-xl">买家免费引流，卖家订阅变现</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-slate-500">Revenue</div>
+                <div class="text-xs text-slate-600">SaaS + Marketplace</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex gap-8 min-h-0">
+            <!-- Left Column: Buyer Side (Free/Traffic) -->
+            <div class="w-1/3 glass-card rounded-2xl p-8 flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center text-2xl">🌍</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">买家端</h2>
+                        <div class="text-blue-400 text-sm">Traffic Engine</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6 flex-1">
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                        <div class="text-white font-bold mb-1">基础服务免费</div>
+                        <div class="text-slate-400 text-sm">发布询盘、AI 匹配、查看报价</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                        <div class="text-white font-bold mb-1">增值服务收费</div>
+                        <div class="text-slate-400 text-sm">验厂报告、资金托管、物流履约</div>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-slate-700">
+                    <div class="text-center text-slate-400 text-sm">
+                        "用极致效率换取海量流量"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Seller Side (SaaS/Subscription) -->
+            <div class="w-2/3 glass-card rounded-2xl p-8 flex flex-col relative overflow-hidden highlight-box">
+                <div class="absolute top-0 left-0 w-full h-1 bg-orange-500"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-orange-900/50 flex items-center justify-center text-2xl">🏭</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">卖家端 (工厂)</h2>
+                        <div class="text-orange-400 text-sm">Revenue Engine</div>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-white mb-6">付费逻辑：替代人力成本 (Cost Substitution)</h3>
+                    
+                    <!-- Cost Comparison Chart -->
+                    <div class="space-y-6">
+                        <!-- Traditional Team -->
+                        <div>
+                            <div class="flex justify-between text-sm text-slate-400 mb-2">
+                                <span>传统外贸团队 (5人)</span>
+                                <span>¥500,000 / 年</span>
+                            </div>
+                            <div class="h-12 bg-slate-700 rounded-lg relative overflow-hidden">
+                                <div class="absolute top-0 left-0 h-full bg-slate-500 w-full flex items-center px-4 text-white font-bold">
+                                    工资 + 社保 + 提成 + 管理成本
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RealSourcing -->
+                        <div>
+                            <div class="flex justify-between text-sm text-orange-400 mb-2">
+                                <span class="font-bold">RealSourcing Commander OS</span>
+                                <span class="font-bold">¥19,800 / 年</span>
+                            </div>
+                            <div class="h-12 bg-slate-800 rounded-lg relative overflow-hidden border border-orange-500/50">
+                                <div class="absolute top-0 left-0 h-full bg-orange-500 w-[4%] flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+                                </div>
+                                <div class="absolute top-0 left-[5%] h-full flex items-center text-orange-400 font-bold">
+                                    ← 仅需 4% 的成本
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 grid grid-cols-2 gap-4">
+                        <div class="bg-orange-900/20 p-4 rounded-xl border border-orange-500/20">
+                            <div class="text-2xl font-bold text-white mb-1">96%</div>
+                            <div class="text-slate-400 text-xs">成本节省 (Cost Saving)</div>
+                        </div>
+                        <div class="bg-orange-900/20 p-4 rounded-xl border border-orange-500/20">
+                            <div class="text-2xl font-bold text-white mb-1">10x</div>
+                            <div class="text-slate-400 text-xs">人效提升 (Efficiency)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+{
+  "project_info": {
+    "title": "RealSourcing - 智能采购平台",
+    "created": 1772191847.9469364,
+    "last_updated": 1772288535.959186,
+    "total_slides": 20
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "problem",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "market",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "talent_trends",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "digital_twin_strategy",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "commander_os_product",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "solution",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "factory_value",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "platform_overview",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "demo",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "product_demo",
+      "state": "edited",
+      "pageNum": 11
+    },
+    {
+      "id": "tech_architecture",
+      "state": "edited",
+      "pageNum": 12
+    },
+    {
+      "id": "ai_implementation",
+      "state": "edited",
+      "pageNum": 13
+    },
+    {
+      "id": "amr",
+      "state": "edited",
+      "pageNum": 14
+    },
+    {
+      "id": "business_model",
+      "state": "edited",
+      "pageNum": 15
+    },
+    {
+      "id": "traction",
+      "state": "edited",
+      "pageNum": 16
+    },
+    {
+      "id": "why_now",
+      "state": "edited",
+      "pageNum": 17
+    },
+    {
+      "id": "competition",
+      "state": "edited",
+      "pageNum": 18
+    },
+    {
+      "id": "team",
+      "state": "edited",
+      "pageNum": 19
+    },
+    {
+      "id": "ask_closing",
+      "state": "edited",
+      "pageNum": 20
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "RealSourcing - 智能采购平台",
+      "summary": "封面页，展示项目名称、副标题和核心价值主张，带打字机动效。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "problem",
+      "title": "问题：旧模式已失效",
+      "summary": "Bento三格布局展示传统采购痛点：信息不可信、速度慢、工厂傲慢。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "market",
+      "title": "市场：3650亿美元的机会",
+      "summary": "Bento四格数据展示Dropshipping市场规模，配合TAM/SAM/SOM同心圆动效。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "talent_trends",
+      "title": "外贸人才趋势：AI正在重塑行业",
+      "summary": "展示外贸业务员岗位下降、跨境电商运营增长、AI替代比例及一人+AI效率提升的四组动态数据。",
+      "image_plan": "无（使用Chart.js动态图表）",
+      "slide_template_key": ""
+    },
+    {
+      "id": "digital_twin_strategy",
+      "title": "老板的数字分身：复制大脑，武装团队",
+      "summary": "展示老板如何通过AI复制自己的认知，赋能小白团队，解决分身乏术的痛点。",
+      "image_plan": "无（使用CSS/SVG绘制）",
+      "slide_template_key": ""
+    },
+    {
+      "id": "commander_os_product",
+      "title": "Commander OS：老板的数字指挥中心",
+      "summary": "展示Commander OS的产品形态：视频询盘流、社媒托管、数字员工协同。",
+      "image_plan": "无（使用CSS/SVG绘制）",
+      "slide_template_key": ""
+    },
+    {
+      "id": "solution",
+      "title": "解决方案：直连·极速·可信赖",
+      "summary": "Bento三格展示核心功能：15分钟匹配、30分钟报价、Webinar直连，带浮入动效。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "factory_value",
+      "title": "工厂端价值：老板的数字分身",
+      "summary": "展示 RealSourcing 如何为工厂提供“数字外贸部”，解决招人难、时差苦、语言通的痛点，实现 0 成本全球接单。",
+      "image_plan": "A split-screen illustration. Left side: A stressed factory boss surrounded by clocks (time zones) and language dictionaries. Right side: A calm, futuristic digital avatar of the boss handling multiple screens/chats effortlessly.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "platform_overview",
+      "title": "平台全景：双核驱动的智能生态",
+      "summary": "展示平台连接买家（极致效率）和卖家（数字赋能）的双边价值模型，强调 RealSourcing 作为操作系统的核心地位。",
+      "image_plan": "A central platform hub connecting global buyers (left) and digital factory avatars (right). Data flows seamlessly between them. Visual style: High-tech, connected, ecosystem.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "demo",
+      "title": "产品演示：Sourcing Room",
+      "summary": "模拟Sourcing Room界面，展示从RFQ到报价的全流程MG动画。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "product_demo",
+      "title": "产品界面演示",
+      "summary": "展示RealSourcing Platform的真实产品界面截图，包括AI采购顾问、工厂大厅、Webinar等核心功能。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "tech_architecture",
+      "title": "技术架构与原理",
+      "summary": "展示OpenClaw Agent框架、AMR评估模型及AI自动报价链路的技术实现原理。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "ai_implementation",
+      "title": "AI实现方式",
+      "summary": "通俗解释AI如何听懂需求、匹配工厂及谈判报价，建立技术信任感。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "amr",
+      "title": "AMR：重新定义好工厂",
+      "summary": "展示AMR四维雷达图展开动效，对比传统评估标准。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "business_model",
+      "title": "商业模式：三条收入线",
+      "summary": "Bento三格展示买家订阅、工厂入驻、交易抽成，配合飞轮效应动效。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "traction",
+      "title": "牵引力：我们已经在动了",
+      "summary": "展示种子工厂、活跃买家、创始人经验等数据，数字滚动增长。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "why_now",
+      "title": "为什么是现在",
+      "summary": "Bento三格展示AI技术、阿里信任危机、敏捷商业浪潮三股力量汇聚。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "competition",
+      "title": "竞争格局：新的品类",
+      "summary": "对比矩阵展示RealSourcing与传统平台的差异，行列高亮动效。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "team",
+      "title": "团队：创始人与市场契合",
+      "summary": "展示创始人背景、时间线和技能标签，Bento卡片布局。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    },
+    {
+      "id": "ask_closing",
+      "title": "融资需求 & 结束语",
+      "summary": "展示资金用途饼图、里程碑进度条，以及结束语和联系方式。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": null
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Ask & Closing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+            padding: 40px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .header {
+            z-index: 2;
+            margin-bottom: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            z-index: 2;
+            flex: 1;
+            align-items: center;
+        }
+
+        /* Left: Funding */
+        .funding-card {
+            flex: 0.8;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInLeft 0.8s ease-out forwards 0.2s;
+        }
+
+        .chart-wrapper {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .legend { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        /* Right: Roadmap */
+        .roadmap-card {
+            flex: 1.2;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: slideInRight 0.8s ease-out forwards 0.4s;
+        }
+
+        .roadmap-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFF;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .roadmap-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(79, 110, 247, 0.1);
+            color: #4F6EF7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            z-index: 1;
+            border: 1px solid rgba(79, 110, 247, 0.3);
+        }
+
+        .step-content h4 { font-size: 1rem; font-weight: 600; color: #FFF; margin-bottom: 2px; }
+        .step-content p { font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); }
+
+        .step-line {
+            position: absolute;
+            left: 18px;
+            top: 36px;
+            height: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .roadmap-step:last-child .step-line { display: none; }
+
+        /* Footer */
+        .footer-closing {
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards 0.8s;
+            margin-top: 20px;
+        }
+
+        .closing-quote { font-size: 1.4rem; font-weight: 700; background: linear-gradient(90deg, #FFF, #A0A0A0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
+        .closing-sub { font-size: 1rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 15px; }
+        .contact-info { display: inline-flex; align-items: center; gap: 20px; background: rgba(79, 110, 247, 0.1); padding: 8px 25px; border-radius: 50px; border: 1px solid rgba(79, 110, 247, 0.3); }
+        .contact-item { display: flex; align-items: center; gap: 8px; color: #FFF; font-size: 0.9rem; }
+
+        @keyframes fadeInDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="header">
+            <div class="section-tag">THE ASK</div>
+            <h1 class="main-title">融资 ¥200 万：触发网络效应破窗点</h1>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Left: Funding Allocation -->
+            <div class="funding-card">
+                <div class="chart-wrapper">
+                    <canvas id="fundChart"></canvas>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                        <div style="font-size: 1.4rem; font-weight: 800;">¥200w</div>
+                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5);">Seed Round</div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background: #4F6EF7;"></div> 50% 工厂数据化与 Agent 部署</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #8E44AD;"></div> 30% 场景化产品开发</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #2ECC71;"></div> 20% 市场拓展</div>
+                </div>
+            </div>
+
+            <!-- Right: Roadmap -->
+            <div class="roadmap-card">
+                <div class="roadmap-title">12 个月工厂扩张路线图</div>
+                
+                <div class="roadmap-step">
+                    <div class="step-icon"><i class="fas fa-couch"></i></div>
+                    <div class="step-line"></div>
+                    <div class="step-content">
+                        <h4>Phase 1: 佛山家具产业带</h4>
+                        <p>拓展 50 家头部家具工厂，完成生产数据结构化。</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-step">
+                    <div class="step-icon"><i class="fas fa-bed"></i></div>
+                    <div class="step-line"></div>
+                    <div class="step-content">
+                        <h4>Phase 2: 南通家纺上游</h4>
+                        <p>拓展 50 家高质量家纺上游企业，深挖供应链深度。</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-step">
+                    <div class="step-icon"><i class="fas fa-home"></i></div>
+                    <div class="step-line"></div>
+                    <div class="step-content">
+                        <h4>Phase 3: 场景化集成采购</h4>
+                        <p>打通酒店、卧室、卫浴三大场景，每个场景集成 3-5 家核心供应商。</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-step">
+                    <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="step-content">
+                        <h4>Goal: 破窗效应</h4>
+                        <p>形成完整的场景化供应网络，触发买家侧自然增长。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-closing">
+            <div class="closing-quote">"下一代全球商业的基础设施，正在被建造。"</div>
+            <div class="closing-sub">我们正在为中国制造业打造最快、最可信的全球入口。</div>
+            <div class="contact-info">
+                <div class="contact-item"><i class="fas fa-user"></i> 杨尚坤</div>
+                <div class="contact-item"><i class="fas fa-envelope"></i> magicy565@gmail.com</div>
+                <div class="contact-item"><i class="fab fa-whatsapp"></i> +86 17357565975</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('fundChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['工厂数据化', '产品开发', '市场拓展'],
+                datasets: [{
+                    data: [50, 30, 20],
+                    backgroundColor: ['#4F6EF7', '#8E44AD', '#2ECC71'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: { legend: { display: false } },
+                animation: { animateScale: true, animateRotate: true, duration: 1500, easing: 'easeOutQuart' }
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

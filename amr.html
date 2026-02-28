@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - AMR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+            padding: 40px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .header {
+            z-index: 2;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #FFF, #CCC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 40px;
+            z-index: 2;
+            flex: 1;
+            align-items: center;
+        }
+
+        .chart-container {
+            flex: 1.2;
+            height: 400px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 0.5s;
+        }
+
+        /* Radar Sweep Effect */
+        .radar-sweep {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .sweep-line {
+            position: absolute;
+            width: 190px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4F6EF7, transparent);
+            top: 50%;
+            left: 50%;
+            transform-origin: left center;
+            animation: radarSweep 4s linear infinite 1.5s;
+            box-shadow: 0 0 10px #4F6EF7;
+        }
+
+        @keyframes radarSweep {
+            from { transform: translateY(-50%) rotate(0deg); }
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .comparison-col {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .comp-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .card-old { animation: slideInRight 0.8s ease-out forwards 0.8s; }
+        .card-new {
+            background: linear-gradient(145deg, rgba(79, 110, 247, 0.1) 0%, rgba(142, 68, 173, 0.05) 100%);
+            border-color: rgba(79, 110, 247, 0.3);
+            animation: slideInRight 0.8s ease-out forwards 1s;
+        }
+
+        .card-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            animation: scanLine 0.5s ease-out forwards;
+        }
+
+        .card-old .list-item:nth-child(1) { animation-delay: 0.9s; }
+        .card-old .list-item:nth-child(2) { animation-delay: 1.1s; }
+        .card-old .list-item:nth-child(3) { animation-delay: 1.3s; }
+
+        .card-new .list-item:nth-child(1) { animation-delay: 1.1s; }
+        .card-new .list-item:nth-child(2) { animation-delay: 1.3s; }
+        .card-new .list-item:nth-child(3) { animation-delay: 1.5s; }
+
+        @keyframes scanLine {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .icon-x { color: #E74C3C; width: 18px; text-align: center; }
+        .icon-check { color: #2ECC71; width: 18px; text-align: center; }
+
+        .footer-insight {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards 1.8s;
+        }
+        .footer-insight span { color: #FFF; font-weight: 600; }
+
+        @keyframes fadeInDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideInRight { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="header">
+            <div class="section-tag">AMR MODEL</div>
+            <h1 class="main-title">我们重新定义了"好工厂"的标准</h1>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="chart-container">
+                <!-- Radar Sweep Animation -->
+                <div class="radar-sweep">
+                    <div class="sweep-line"></div>
+                </div>
+                <div style="width: 380px; height: 380px;">
+                    <canvas id="amrChart"></canvas>
+                </div>
+            </div>
+
+            <div class="comparison-col">
+                <div class="comp-card card-old">
+                    <div class="card-header" style="color: #999;">
+                        <i class="fas fa-history"></i> 旧标准 (Alibaba)
+                    </div>
+                    <div class="list-item"><i class="fas fa-times icon-x"></i> 金牌供应商年限</div>
+                    <div class="list-item"><i class="fas fa-times icon-x"></i> 员工人数 (大不代表快)</div>
+                    <div class="list-item"><i class="fas fa-times icon-x"></i> 星级评分 (容易刷分)</div>
+                </div>
+
+                <div class="comp-card card-new">
+                    <div class="card-header" style="color: #4F6EF7;">
+                        <i class="fas fa-rocket"></i> AMR 新标准
+                    </div>
+                    <div class="list-item"><i class="fas fa-check icon-check"></i> 渠道能力 (Dropshipping)</div>
+                    <div class="list-item"><i class="fas fa-check icon-check"></i> 买家体感词云 (真实口碑)</div>
+                    <div class="list-item"><i class="fas fa-check icon-check"></i> AI 综合指数 (行为数据)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-insight">
+            传统平台评估工厂的过去。<span>我们评估工厂的未来。</span>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('amrChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(142, 68, 173, 0.5)');
+        gradient.addColorStop(1, 'rgba(41, 128, 185, 0.5)');
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['市场敏锐度', '渠道多元化', '信息敏捷度', '全球化广度'],
+                datasets: [{
+                    label: 'RealSourcing AMR Score',
+                    data: [90, 85, 95, 80],
+                    backgroundColor: gradient,
+                    borderColor: '#4F6EF7',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#FFF',
+                    pointBorderColor: '#4F6EF7'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: {
+                            color: '#FFF',
+                            font: { size: 12, family: "'Noto Sans SC', sans-serif", weight: 'bold' }
+                        },
+                        ticks: { display: false },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: { legend: { display: false } },
+                animation: { duration: 2000, easing: 'easeOutQuart' }
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

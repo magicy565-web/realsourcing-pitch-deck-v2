@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - AI Implementation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background: #0A0A0F;
+        }
+        /* Background Video Layer */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.1;
+            mix-blend-mode: screen;
+        }
+
+        /* Radar Chart Container */
+        .chart-container {
+            background: rgba(18, 18, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 20px;
+            position: relative;
+            height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Scenario Card */
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .slider-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .slider-fill {
+            height: 100%;
+            border-radius: 2px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .tag-pill {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex p-12 gap-12 items-center">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+
+        <!-- Left: Radar Chart -->
+        <div class="w-1/2 z-10 fade-in-up delay-100">
+            <div class="chart-container">
+                <canvas id="amrChart"></canvas>
+                <!-- Central Label -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white/10">AMR</div>
+                        <div class="text-xs text-white/20">SCORING</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 text-center">
+                <h3 class="text-xl font-bold text-white">AMR 动态评分模型</h3>
+                <p class="text-sm text-gray-400 mt-1">基于 5 大维度实时计算工厂匹配度</p>
+            </div>
+        </div>
+
+        <!-- Right: Dynamic Weighting Logic -->
+        <div class="w-1/2 z-10 flex flex-col justify-center h-full">
+            <div class="mb-8 fade-in-up delay-200">
+                <h2 class="text-3xl font-bold text-white mb-2">不仅仅是匹配</h2>
+                <p class="text-lg text-gray-300">AI 根据买家意图动态调整权重</p>
+            </div>
+
+            <!-- Scenario 1: Urgent Order -->
+            <div class="scenario-card fade-in-up delay-300">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                        <span class="font-bold text-white">场景 A：急单模式</span>
+                    </div>
+                    <span class="tag-pill">权重偏好：速度 > 价格</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>响应速度 (Response)</span>
+                            <span class="text-red-400">High (0.4)</span>
+                        </div>
+                        <div class="slider-track">
+                            <div class="slider-fill bg-red-500" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>制造产能 (Capacity)</span>
+                            <span class="text-red-400">High (0.3)</span>
+                        </div>
+                        <div class="slider-track">
+                            <div class="slider-fill bg-red-500" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario 2: Cost First -->
+            <div class="scenario-card fade-in-up delay-300" style="animation-delay: 0.4s;">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span class="font-bold text-white">场景 B：成本优先</span>
+                    </div>
+                    <span class="tag-pill">权重偏好：价格 > 配合度</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>价格竞争力 (Price)</span>
+                            <span class="text-blue-400">High (0.5)</span>
+                        </div>
+                        <div class="slider-track">
+                            <div class="slider-fill bg-blue-500" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>质量历史 (Quality)</span>
+                            <span class="text-blue-400">Medium (0.3)</span>
+                        </div>
+                        <div class="slider-track">
+                            <div class="slider-fill bg-blue-500" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Initialize Radar Chart
+        const ctx = document.getElementById('amrChart').getContext('2d');
+        
+        // Gradient for the dataset
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(139, 92, 246, 0.5)');
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    '响应速度 (Speed)',
+                    '制造能力 (Capacity)',
+                    '配合度 (Cooperation)',
+                    '质量历史 (Quality)',
+                    '价格竞争力 (Price)'
+                ],
+                datasets: [{
+                    label: 'Factory Score',
+                    data: [90, 85, 70, 88, 65],
+                    backgroundColor: gradient,
+                    borderColor: '#8B5CF6',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#8B5CF6',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#8B5CF6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        pointLabels: {
+                            color: '#ccc',
+                            font: {
+                                size: 12,
+                                family: "'Inter', sans-serif"
+                            }
+                        },
+                        ticks: {
+                            display: false,
+                            backdropColor: 'transparent'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

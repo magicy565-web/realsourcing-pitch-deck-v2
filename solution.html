@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Solution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+            padding: 40px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .header {
+            z-index: 2;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+            text-align: center;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #FFF, #A0A0A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 20px;
+            z-index: 2;
+            margin-bottom: 40px;
+            justify-content: center;
+            flex: 1;
+            align-items: center;
+        }
+
+        .feature-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4F6EF7, #8E44AD);
+            opacity: 0.8;
+        }
+
+        .feature-card:nth-child(1) { animation: fadeInUp 0.8s ease-out forwards 0.2s; }
+        .feature-card:nth-child(2) { animation: fadeInUp 0.8s ease-out forwards 0.4s; }
+        .feature-card:nth-child(3) { animation: fadeInUp 0.8s ease-out forwards 0.6s; }
+
+        .card-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: rgba(79, 110, 247, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #4F6EF7;
+            box-shadow: 0 0 20px rgba(79, 110, 247, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FFF;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .comparison-bar {
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 1s;
+            margin-top: auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .timeline-arrow {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+        }
+
+        .highlight-speed {
+            color: #2ECC71;
+            font-weight: 700;
+        }
+
+        @keyframes fadeInDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="header">
+            <div class="section-tag">THE SOLUTION</div>
+            <h1 class="main-title">直连 · 极速 · 可信赖</h1>
+        </div>
+
+        <div class="cards-container">
+            <div class="feature-card">
+                <div class="card-icon-wrapper"><i class="fas fa-search-location"></i></div>
+                <h2 class="card-title">15 分钟智能匹配</h2>
+                <p class="card-text">买家提交采购需求，AI 向量搜索引擎在 15 分钟内匹配最优工厂。无需手动浏览，无需猜测。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon-wrapper"><i class="fas fa-bolt"></i></div>
+                <h2 class="card-title">30 分钟自动报价</h2>
+                <p class="card-text">OpenClaw AI Agent 自动从工厂 ERP/飞书数据库提取报价，工厂一键确认。买家收到结构化报价卡。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon-wrapper"><i class="fas fa-video"></i></div>
+                <h2 class="card-title">Webinar 直连工厂</h2>
+                <p class="card-text">买家与工厂决策者预约视频会议，实时验厂、建立采购意向，AI 实时翻译全程对话。</p>
+            </div>
+        </div>
+
+        <div class="comparison-bar">
+            <div class="timeline-item">
+                <span style="color: #E74C3C;">传统平台: 3–7 天</span>
+            </div>
+            <i class="fas fa-chevron-right timeline-arrow"></i>
+            <div class="timeline-item">
+                <span>需求提交</span>
+            </div>
+            <i class="fas fa-chevron-right timeline-arrow"></i>
+            <div class="timeline-item">
+                <span class="highlight-speed">15 分钟匹配</span>
+            </div>
+            <i class="fas fa-chevron-right timeline-arrow"></i>
+            <div class="timeline-item">
+                <span class="highlight-speed">30 分钟报价</span>
+            </div>
+            <i class="fas fa-chevron-right timeline-arrow"></i>
+            <div class="timeline-item">
+                <span style="color: #4F6EF7; font-weight: bold;">直连工厂</span>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>
