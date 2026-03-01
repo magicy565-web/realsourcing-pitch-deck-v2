@@ -218,43 +218,57 @@
             animation: statusPulse 2s infinite;
         }
 
-        /* ── Sprite Sheet Animation ── */
+        /* ── Sprite Sheet Animation (background-position steps) ──
+         * Each sprite sheet: 2752x1536px, 4 frames side by side (688x1536 each)
+         * Display: panel ~300px wide, 200px tall
+         * bg-size: 1200px 670px  (scale frame to 300x670, 4 frames = 1200px wide)
+         * bg-position-x: animate 0 -> -900px in steps(4)
+         * bg-position-y: -153px (show from y=350 in original = character area)
+         */
         .sprite-panel {
             position: relative;
             flex: 1;
             overflow: hidden;
             background: #0a0d1a;
         }
-        /* Each sprite is a div with background-image = sprite sheet */
-        /* width = 1 frame = 25% of total sheet width */
+        /* The sprite div fills the panel and uses bg-position animation */
         .sprite-anim {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            /* height fills panel */
-            height: 100%;
-            /* width = 4x the panel width so we see 1 frame at a time */
-            width: 400%;
-            background-size: 100% 100%;
+            inset: 0;
             background-repeat: no-repeat;
+            /* bg-size and bg-position set per class below */
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
         .sprite-sarah {
             background-image: url('assets/sarah_sprite.png');
-            animation: spriteWalk 1.2s steps(4) infinite;
+            background-size: 1200px 670px;
+            background-position: 0px -250px;
+            animation: spriteFrameSarah 1.6s steps(4) infinite;
         }
         .sprite-mike {
             background-image: url('assets/mike_sprite.png');
-            animation: spriteWalk 2.4s steps(4) infinite;
+            background-size: 1200px 670px;
+            background-position: 0px -250px;
+            animation: spriteFrameMike 2.4s steps(4) infinite;
         }
         .sprite-data {
             background-image: url('assets/data_sprite.png');
-            animation: spriteWalk 3.2s steps(4) infinite;
+            background-size: 1200px 670px;
+            background-position: 0px -250px;
+            animation: spriteFrameData 3.2s steps(4) infinite;
         }
-        @keyframes spriteWalk {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-75%); }
+        @keyframes spriteFrameSarah {
+            from { background-position-x: 0px; }
+            to   { background-position-x: -900px; }
+        }
+        @keyframes spriteFrameMike {
+            from { background-position-x: 0px; }
+            to   { background-position-x: -900px; }
+        }
+        @keyframes spriteFrameData {
+            from { background-position-x: 0px; }
+            to   { background-position-x: -900px; }
         }
         /* Wood sign name badge */
         .wood-sign {
@@ -436,7 +450,7 @@
         <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
 
             <!-- Stardew Valley Style Sprite Sheet Animation Corridor -->
-            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:170px; display:flex; flex-direction:column;">
+            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:220px; display:flex; flex-direction:column;">
                 <!-- Top label bar -->
                 <div style="height:20px; background:rgba(10,13,26,0.95); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2); flex-shrink:0;">
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
