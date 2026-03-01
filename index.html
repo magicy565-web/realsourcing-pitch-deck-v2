@@ -208,7 +208,9 @@
         overlay.classList.add('active');
         setTimeout(() => {
             current = index;
-            frame.src = slides[current].file;
+            // Add cache-busting timestamp
+            const timestamp = new Date().getTime();
+            frame.src = slides[index].file + '?t=' + timestamp;
             updateNav();
             setTimeout(() => overlay.classList.remove('active'), 100);
         }, 200);
