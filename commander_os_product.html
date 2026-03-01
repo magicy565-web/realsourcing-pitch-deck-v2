@@ -218,11 +218,10 @@
             animation: statusPulse 2s infinite;
         }
 
-        /* ── Sprite Sheet Animation (background-position steps) ──
+        /* ── Sprite Sheet Animation (using <img> + clip-path) ──
          * Each sprite sheet: 2752x1536px, 4 frames side by side (688x1536 each)
-         * bg-size: 400% 100%  (stretches to fill container, 4 frames wide)
-         * bg-position-x: animate 0% -> -75% in steps(4)
-         * Reliable across all container widths
+         * Use object-fit: cover to fill container, then clip to show one frame at a time
+         * Animate object-position to shift the visible frame
          */
         .sprite-panel {
             position: relative;
@@ -230,38 +229,46 @@
             overflow: hidden;
             background: #0a0d1a;
         }
-        /* The sprite div fills the panel and uses bg-position animation */
-        .sprite-anim {
+        /* The sprite img fills the panel */
+        .sprite-img {
             position: absolute;
             inset: 0;
-            background-repeat: no-repeat;
-            background-size: 400% 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 0% center;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
-        .sprite-sarah {
-            background-image: url('assets/sarah_sprite.png?v=2');
+        .sprite-sarah-img {
             animation: spriteFrameSarah 1.6s steps(4) infinite;
         }
-        .sprite-mike {
-            background-image: url('assets/mike_sprite.png?v=2');
+        .sprite-mike-img {
             animation: spriteFrameMike 2.4s steps(4) infinite;
         }
-        .sprite-data {
-            background-image: url('assets/data_sprite.png?v=2');
+        .sprite-data-img {
             animation: spriteFrameData 3.2s steps(4) infinite;
         }
         @keyframes spriteFrameSarah {
-            from { background-position-x: 0%; }
-            to   { background-position-x: -75%; }
+            0%   { object-position: 0% center; }
+            25%  { object-position: 25% center; }
+            50%  { object-position: 50% center; }
+            75%  { object-position: 75% center; }
+            100% { object-position: 100% center; }
         }
         @keyframes spriteFrameMike {
-            from { background-position-x: 0%; }
-            to   { background-position-x: -75%; }
+            0%   { object-position: 0% center; }
+            25%  { object-position: 25% center; }
+            50%  { object-position: 50% center; }
+            75%  { object-position: 75% center; }
+            100% { object-position: 100% center; }
         }
         @keyframes spriteFrameData {
-            from { background-position-x: 0%; }
-            to   { background-position-x: -75%; }
+            0%   { object-position: 0% center; }
+            25%  { object-position: 25% center; }
+            50%  { object-position: 50% center; }
+            75%  { object-position: 75% center; }
+            100% { object-position: 100% center; }
         }
         /* Wood sign name badge */
         .wood-sign {
@@ -454,7 +461,7 @@
 
                     <!-- Sarah: Typing Reply -->
                     <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
-                        <div class="sprite-anim sprite-sarah"></div>
+                        <img src="assets/sarah_sprite.png?v=3" class="sprite-img sprite-sarah-img" alt="Sarah" />
                         <div class="wood-sign">
                             <span class="wood-sign-name">✦ Sarah</span>
                             <span class="wood-sign-role">Sales · 线索跟进中</span>
@@ -465,7 +472,7 @@
 
                     <!-- Mike: Deep Thinking → Eureka -->
                     <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
-                        <div class="sprite-anim sprite-mike"></div>
+                        <img src="assets/mike_sprite.png?v=3" class="sprite-img sprite-mike-img" alt="Mike" />
                         <div class="wood-sign" style="animation-delay:0.8s;">
                             <span class="wood-sign-name">✦ Mike</span>
                             <span class="wood-sign-role">Ops · 内容发布中</span>
@@ -476,7 +483,7 @@
 
                     <!-- Data: Coffee → Phone Call -->
                     <div class="sprite-panel">
-                        <div class="sprite-anim sprite-data"></div>
+                        <img src="assets/data_sprite.png?v=3" class="sprite-img sprite-data-img" alt="Data" />
                         <div class="wood-sign" style="animation-delay:1.6s;">
                             <span class="wood-sign-name">✦ Data</span>
                             <span class="wood-sign-role">AI · 线索扫描中</span>
