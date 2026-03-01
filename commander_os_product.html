@@ -46,12 +46,42 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            animation: taskSlideIn 0.6s ease-out forwards;
+            opacity: 0;
         }
+
+        @keyframes taskSlideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .task-card:nth-child(1) { animation-delay: 0s; }
+        .task-card:nth-child(2) { animation-delay: 0.1s; }
+        .task-card:nth-child(3) { animation-delay: 0.2s; }
+        .task-card:nth-child(4) { animation-delay: 0.3s; }
+        .task-card:nth-child(5) { animation-delay: 0.4s; }
         .progress-bar {
             height: 2px;
             background: #1e3050;
             border-radius: 2px;
             margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar > div {
+            animation: progressGrow 3s ease-out infinite;
+        }
+
+        .task-card:nth-child(1) .progress-bar > div { animation-delay: 0s; }
+        .task-card:nth-child(2) .progress-bar > div { animation-delay: 0.5s; }
+        .task-card:nth-child(3) .progress-bar > div { animation-delay: 1s; }
+        .task-card:nth-child(4) .progress-bar > div { animation-delay: 1.5s; }
+        .task-card:nth-child(5) .progress-bar > div { animation-delay: 2s; }
+
+        @keyframes progressGrow {
+            0% { width: 0% !important; }
+            50% { width: 100% !important; }
+            100% { width: 100% !important; }
         }
         .icon-meta     { background: linear-gradient(135deg,#0062E0,#19AFFF); }
         .icon-youtube  { background: #FF0000; }
@@ -127,6 +157,65 @@
             letter-spacing: 0.03em;
             margin-top: 3px;
             display: inline-block;
+            animation: statusBlink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Terminal Typewriter Effect */
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .log-body div {
+            animation: typewriter 0.5s ease-out forwards;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .log-body div:nth-child(1) { animation-delay: 0s; }
+        .log-body div:nth-child(2) { animation-delay: 0.1s; }
+        .log-body div:nth-child(3) { animation-delay: 0.2s; }
+        .log-body div:nth-child(4) { animation-delay: 0.3s; }
+        .log-body div:nth-child(5) { animation-delay: 0.4s; }
+        .log-body div:nth-child(6) { animation-delay: 0.5s; }
+        .log-body div:nth-child(7) { animation-delay: 0.6s; }
+        .log-body div:nth-child(8) { animation-delay: 0.7s; }
+        .log-body div:nth-child(9) { animation-delay: 0.8s; }
+        .log-body div:nth-child(10) { animation-delay: 0.9s; }
+        .log-body div:nth-child(11) { animation-delay: 1s; }
+        .log-body div:nth-child(12) { animation-delay: 1.1s; }
+        .log-body div:nth-child(13) { animation-delay: 1.2s; }
+        .log-body div:nth-child(14) { animation-delay: 1.3s; }
+        .log-body div:nth-child(15) { animation-delay: 1.4s; }
+
+        /* Terminal Cursor Blink */
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background: #3b82f6;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        /* Avatar Status Pulse */
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+
+        .avatar-card .ring-green {
+            animation: statusPulse 2s infinite;
         }
     </style>
 </head>
@@ -291,7 +380,7 @@
                         commander-agent &nbsp;·&nbsp; task #LT-2024-0892 &nbsp;·&nbsp; RUNNING
                     </div>
                 </div>
-                <div class="log-body">
+                <div class="log-body" id="terminal-log">
                     <div><span class="ts">[09:14:02]</span> <span class="tag-data">[Data]</span> <span class="val">初始化线索搜寻任务 <span style="color:#6366f1;">#LT-2024-0892</span></span></div>
                     <div><span class="ts">[09:14:03]</span> <span class="tag-data">[Data]</span> <span class="val">目标市场: <span style="color:#e2e8f0;">北美</span> &nbsp;|&nbsp; 关键词: <span style="color:#38bdf8;">"CNC machining supplier"</span></span></div>
                     <div><span class="ts">[09:14:05]</span> <span class="tag-data">[Data]</span> <span class="val">正在扫描 LinkedIn Sales Navigator... <span class="prog">(0 / 500 profiles)</span></span></div>
@@ -338,5 +427,28 @@
         </div>
     </div>
 </div>
+
+<script>
+// Terminal Typewriter Effect - Reset animation on page load
+function resetTerminalAnimation() {
+    const logBody = document.getElementById('terminal-log');
+    if (!logBody) return;
+    
+    const lines = logBody.querySelectorAll('div');
+    lines.forEach((line, index) => {
+        line.style.animation = 'none';
+        setTimeout(() => {
+            line.style.animation = `typewriter 0.5s ease-out forwards`;
+            line.style.animationDelay = (index * 0.1) + 's';
+        }, 10);
+    });
+}
+
+// Run on load
+window.addEventListener('load', resetTerminalAnimation);
+
+// Also run immediately for faster effect
+resetTerminalAnimation();
+</script>
 </body>
 </html>
