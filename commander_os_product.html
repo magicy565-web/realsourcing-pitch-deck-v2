@@ -217,6 +217,40 @@
         .avatar-card .ring-green {
             animation: statusPulse 2s infinite;
         }
+
+        /* ── Pixel Corridor Screen Glow Overlays ── */
+        .screen-glow {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            mix-blend-mode: screen;
+        }
+        /* Sarah's monitor glow - left */
+        .screen-glow-1 {
+            width: 120px; height: 80px;
+            left: 13%; top: 30%;
+            background: radial-gradient(ellipse, rgba(59,130,246,0.25) 0%, transparent 70%);
+            animation: glowPulse 2.8s ease-in-out infinite;
+        }
+        /* Mike's monitor glow - center */
+        .screen-glow-2 {
+            width: 120px; height: 80px;
+            left: 46%; top: 30%;
+            background: radial-gradient(ellipse, rgba(99,102,241,0.22) 0%, transparent 70%);
+            animation: glowPulse 3.2s ease-in-out infinite 0.4s;
+        }
+        /* Data's monitor glow - right */
+        .screen-glow-3 {
+            width: 120px; height: 80px;
+            left: 78%; top: 30%;
+            background: radial-gradient(ellipse, rgba(167,139,250,0.28) 0%, transparent 70%);
+            animation: glowPulse 2.5s ease-in-out infinite 0.8s;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
     </style>
 </head>
 <body>
@@ -336,14 +370,25 @@
         <!-- Right: Avatar Cards + Terminal -->
         <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
 
-            <!-- Stardew Valley Style Office Corridor -->
-            <div style="position:relative; border:1px solid rgba(99,102,241,0.25); border-radius:12px; overflow:hidden; background:#0a0d1a;">
+            <!-- Stardew Valley Style Office Corridor - AI Generated -->
+            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:170px;">
                 <!-- Top label bar -->
-                <div style="position:absolute; top:0; left:0; right:0; height:18px; background:rgba(10,13,26,0.85); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.15);">
+                <div style="position:absolute; top:0; left:0; right:0; height:20px; background:rgba(10,13,26,0.9); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2);">
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
-                    <span style="font-size:8px; color:#334155; font-family:'JetBrains Mono',monospace;">3 AGENTS ACTIVE</span>
+                    <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
                 </div>
-                <canvas id="corridorCanvas" style="display:block; image-rendering:pixelated; image-rendering:crisp-edges;"></canvas>
+                <!-- Pixel Scene Image -->
+                <img src="assets/pixel_corridor.png"
+                     style="width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block; image-rendering:pixelated; image-rendering:crisp-edges;"
+                     alt="AI Digital Team Office" />
+                <!-- Screen glow overlays (CSS animation) -->
+                <div class="screen-glow screen-glow-1"></div>
+                <div class="screen-glow screen-glow-2"></div>
+                <div class="screen-glow screen-glow-3"></div>
+                <!-- Scanline overlay for retro effect -->
+                <div style="position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px); pointer-events:none; z-index:5;"></div>
+                <!-- Vignette -->
+                <div style="position:absolute; inset:0; background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%); pointer-events:none; z-index:6;"></div>
             </div>
 
             <!-- Terminal Log -->
