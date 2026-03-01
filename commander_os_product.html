@@ -220,10 +220,9 @@
 
         /* ── Sprite Sheet Animation (background-position steps) ──
          * Each sprite sheet: 2752x1536px, 4 frames side by side (688x1536 each)
-         * Display: panel ~300px wide, 200px tall
-         * bg-size: 1200px 670px  (scale frame to 300x670, 4 frames = 1200px wide)
-         * bg-position-x: animate 0 -> -900px in steps(4)
-         * bg-position-y: -153px (show from y=350 in original = character area)
+         * bg-size: 400% 100%  (stretches to fill container, 4 frames wide)
+         * bg-position-x: animate 0% -> -75% in steps(4)
+         * Reliable across all container widths
          */
         .sprite-panel {
             position: relative;
@@ -236,39 +235,33 @@
             position: absolute;
             inset: 0;
             background-repeat: no-repeat;
-            /* bg-size and bg-position set per class below */
+            background-size: 400% 100%;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
         .sprite-sarah {
-            background-image: url('assets/sarah_sprite.png');
-            background-size: 1200px 670px;
-            background-position: 0px -250px;
+            background-image: url('assets/sarah_sprite.png?v=2');
             animation: spriteFrameSarah 1.6s steps(4) infinite;
         }
         .sprite-mike {
-            background-image: url('assets/mike_sprite.png');
-            background-size: 1200px 670px;
-            background-position: 0px -250px;
+            background-image: url('assets/mike_sprite.png?v=2');
             animation: spriteFrameMike 2.4s steps(4) infinite;
         }
         .sprite-data {
-            background-image: url('assets/data_sprite.png');
-            background-size: 1200px 670px;
-            background-position: 0px -250px;
+            background-image: url('assets/data_sprite.png?v=2');
             animation: spriteFrameData 3.2s steps(4) infinite;
         }
         @keyframes spriteFrameSarah {
-            from { background-position-x: 0px; }
-            to   { background-position-x: -900px; }
+            from { background-position-x: 0%; }
+            to   { background-position-x: -75%; }
         }
         @keyframes spriteFrameMike {
-            from { background-position-x: 0px; }
-            to   { background-position-x: -900px; }
+            from { background-position-x: 0%; }
+            to   { background-position-x: -75%; }
         }
         @keyframes spriteFrameData {
-            from { background-position-x: 0px; }
-            to   { background-position-x: -900px; }
+            from { background-position-x: 0%; }
+            to   { background-position-x: -75%; }
         }
         /* Wood sign name badge */
         .wood-sign {
