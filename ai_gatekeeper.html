@@ -2,152 +2,151 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RealSourcing - AI Gatekeeper</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
-        :root {
-            --bg-dark: #050510;
-            --accent-blue: #3B82F6;
-            --accent-purple: #8B5CF6;
-            --accent-green: #10B981;
-            --accent-red: #EF4444;
-            --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.6);
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
         body {
-            background: linear-gradient(135deg, #050510 0%, #0a0a1a 100%);
-            color: var(--text-main);
+            background: #050510;
+            color: #fff;
             font-family: 'Inter', -apple-system, sans-serif;
             width: 1280px;
             height: 720px;
             overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
         }
 
-        /* Background Glow */
+        /* Background radial glow */
         .bg-glow {
             position: absolute;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 50% 60%, rgba(59,130,246,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 300px 300px at 20% 70%, rgba(16,185,129,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 300px 300px at 80% 70%, rgba(16,185,129,0.05) 0%, transparent 60%);
             pointer-events: none;
-            z-index: 0;
         }
 
-        /* Header */
-        header {
-            padding: 40px 80px 0;
-            position: relative;
-            z-index: 10;
+        /* ─── HEADER ─── */
+        .header {
+            position: absolute;
+            top: 36px;
+            left: 80px;
+            right: 80px;
         }
 
         .tag {
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--accent-red);
+            letter-spacing: 2.5px;
+            color: #EF4444;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
+            margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 52px;
+            font-size: 50px;
             font-weight: 800;
-            margin-bottom: 12px;
-            line-height: 1.2;
+            line-height: 1.15;
+            margin-bottom: 10px;
         }
 
-        h1 span { color: var(--accent-red); }
+        h1 em { color: #EF4444; font-style: normal; }
 
         .subtitle {
-            font-size: 16px;
-            color: var(--text-dim);
-            max-width: 900px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.55);
             line-height: 1.6;
-            margin-bottom: 20px;
+            max-width: 820px;
         }
 
-        /* Main Content Container */
-        .main-content {
-            flex: 1;
+        /* ─── MAIN STAGE ─── */
+        .stage {
+            position: absolute;
+            top: 210px;
+            left: 0;
+            right: 0;
+            height: 370px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 80px;
-            position: relative;
-            z-index: 5;
-            gap: 40px;
+            padding: 0 60px;
+            gap: 0;
         }
 
-        /* Left Section: Factory List */
-        .factory-section {
-            flex: 0 0 280px;
+        /* ─── LEFT: Factory List ─── */
+        .factory-col {
+            flex: 0 0 260px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .factory-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 12px 14px;
+        .col-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .factory-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.4s ease;
+            padding: 9px 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(-16px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        .factory-item.active {
+        .factory-row.ai-enabled {
+            background: rgba(16,185,129,0.07);
+            border-color: rgba(16,185,129,0.25);
+        }
+
+        .factory-row.visible {
             opacity: 1;
             transform: translateX(0);
         }
 
-        .factory-item.success {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .factory-icon {
-            width: 32px;
-            height: 32px;
+        .factory-lottie {
+            width: 36px;
+            height: 36px;
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
         }
 
-        .factory-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .factory-text { flex: 1; min-width: 0; }
 
         .factory-name {
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
 
-        .factory-status {
-            font-size: 11px;
-            color: var(--text-dim);
+        .factory-row.ai-enabled .factory-name { color: #10B981; }
+
+        .factory-sub {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
         }
 
-        .status-badge {
-            width: 18px;
-            height: 18px;
+        .badge {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -157,20 +156,20 @@
             flex-shrink: 0;
         }
 
-        .status-badge.fail {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--accent-red);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+        .badge.fail {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.35);
+            color: #EF4444;
         }
 
-        .status-badge.pass {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+        .badge.pass {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.35);
+            color: #10B981;
         }
 
-        /* Center Section: AI Gatekeeper */
-        .center-section {
+        /* ─── CENTER: AI Gatekeeper ─── */
+        .center-col {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -179,107 +178,233 @@
             position: relative;
         }
 
-        .gatekeeper-visual {
-            position: relative;
+        /* Outer pulse rings */
+        .pulse-rings {
+            position: absolute;
             width: 280px;
             height: 280px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(59,130,246,0.2);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+
+        .ring:nth-child(1) { width: 280px; height: 280px; animation-delay: 0s; }
+        .ring:nth-child(2) { width: 240px; height: 240px; animation-delay: 0.4s; }
+        .ring:nth-child(3) { width: 200px; height: 200px; animation-delay: 0.8s; border-color: rgba(59,130,246,0.3); }
+
+        @keyframes ringPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Rotating scan arc */
+        .scan-arc {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: rgba(59,130,246,0.8);
+            border-right-color: rgba(59,130,246,0.3);
+            animation: spinArc 4s linear infinite;
+        }
+
+        @keyframes spinArc {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Lottie container */
+        .gate-lottie {
+            width: 160px;
+            height: 160px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gate-label {
+            text-align: center;
+            margin-top: 8px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1.2s;
+        }
+
+        .gate-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #3B82F6;
+        }
+
+        .gate-sub {
+            font-size: 10px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Flow arrows */
+        .arrow-left, .arrow-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
+            gap: 0;
         }
 
-        .gatekeeper-svg {
-            width: 100%;
+        .arrow-left { left: 260px; }
+        .arrow-right { right: 260px; }
+
+        .arrow-line {
+            height: 2px;
+            background: linear-gradient(90deg, rgba(59,130,246,0.1), rgba(59,130,246,0.6));
+            width: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arrow-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 40%;
             height: 100%;
-            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.2));
+            background: linear-gradient(90deg, transparent, #3B82F6, transparent);
+            animation: flowRight 1.5s linear infinite;
         }
 
-        .gatekeeper-label {
-            text-align: center;
-            animation: fadeIn 0.8s ease forwards 1.2s;
-            opacity: 0;
+        @keyframes flowRight {
+            to { left: 200%; }
         }
 
-        .gatekeeper-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            margin-bottom: 2px;
+        .arrow-head {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid rgba(59,130,246,0.7);
         }
 
-        .gatekeeper-desc {
-            font-size: 11px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Right Section: Buyer */
-        .buyer-section {
-            flex: 0 0 280px;
+        /* ─── RIGHT: Buyer ─── */
+        .buyer-col {
+            flex: 0 0 260px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            text-align: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeInRight 0.8s ease forwards 1.4s;
         }
 
-        .buyer-visual {
-            width: 160px;
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(16px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .buyer-lottie-wrap {
+            width: 200px;
             height: 160px;
+            border-radius: 16px;
+            background: rgba(16,185,129,0.06);
+            border: 1px solid rgba(16,185,129,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 50%;
-            opacity: 0;
-            animation: fadeIn 0.8s ease forwards 1.4s;
+            overflow: hidden;
+            animation: buyerGlow 3s ease-in-out infinite 2s;
         }
 
-        .buyer-svg {
-            width: 100%;
-            height: 100%;
+        @keyframes buyerGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16,185,129,0.1); }
+            50% { box-shadow: 0 0 40px rgba(16,185,129,0.25); }
         }
 
-        .buyer-info {
-            opacity: 0;
-            animation: fadeIn 0.8s ease forwards 1.6s;
-        }
+        .buyer-lottie { width: 200px; height: 160px; }
+
+        .buyer-info { text-align: center; }
 
         .buyer-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            color: var(--accent-green);
+            color: #10B981;
             margin-bottom: 4px;
         }
 
         .buyer-desc {
             font-size: 12px;
-            color: var(--text-dim);
+            color: rgba(255,255,255,0.4);
             line-height: 1.5;
         }
 
-        /* Stats Row */
-        .stats-row {
+        /* Visible factories card */
+        .visible-list {
+            width: 100%;
+            background: rgba(16,185,129,0.05);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .visible-list-title {
+            font-size: 10px;
+            color: #10B981;
+            font-weight: 600;
+            margin-bottom: 6px;
             display: flex;
-            justify-content: center;
-            gap: 40px;
-            padding: 0 80px 40px;
-            position: relative;
-            z-index: 5;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .visible-item {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .visible-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            position: absolute;
+            bottom: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 24px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
             border-radius: 12px;
-            padding: 16px 28px;
+            padding: 14px 24px;
             text-align: center;
-            min-width: 160px;
+            min-width: 150px;
             opacity: 0;
-            animation: fadeInUp 0.8s ease forwards;
+            animation: fadeInUp 0.7s ease forwards;
         }
 
         .stat-card:nth-child(1) { animation-delay: 1.8s; }
@@ -289,53 +414,37 @@
         .stat-value {
             font-size: 28px;
             font-weight: 800;
-            color: var(--accent-blue);
-            margin-bottom: 4px;
+            color: #3B82F6;
+            margin-bottom: 3px;
         }
 
         .stat-label {
             font-size: 11px;
-            color: var(--text-dim);
-            white-space: nowrap;
+            color: rgba(255,255,255,0.45);
         }
 
-        /* Warning Bar */
+        /* ─── WARNING BAR ─── */
         .warning-bar {
             position: absolute;
-            bottom: 30px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239,68,68,0.06);
+            border: 1px solid rgba(239,68,68,0.18);
             border-radius: 100px;
-            padding: 12px 32px;
+            padding: 10px 32px;
             display: flex;
             align-items: center;
             gap: 10px;
-            z-index: 10;
-            opacity: 0;
-            animation: fadeIn 0.8s ease forwards 2.4s;
             font-size: 13px;
-            max-width: 700px;
+            white-space: nowrap;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 2.5s;
         }
 
-        .warning-icon {
-            color: var(--accent-red);
-            font-size: 16px;
-            flex-shrink: 0;
-        }
+        .warning-bar span { color: #EF4444; font-weight: 700; }
 
-        .warning-text {
-            font-weight: 500;
-            color: var(--text-main);
-        }
-
-        .warning-text span {
-            color: var(--accent-red);
-            font-weight: 700;
-        }
-
-        /* Animations */
+        /* ─── KEYFRAMES ─── */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -345,179 +454,126 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* SVG Animations */
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes drawStroke {
-            from { stroke-dashoffset: 1000; }
-            to { stroke-dashoffset: 0; }
-        }
-
-        .rotating-ring {
-            animation: rotate 8s linear infinite;
-            transform-origin: center;
-        }
-
-        .pulsing-circle {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .drawing-path {
-            stroke-dasharray: 1000;
-            animation: drawStroke 2s ease-in-out forwards;
-        }
     </style>
 </head>
 <body>
     <div class="bg-glow"></div>
 
-    <header>
-        <span class="tag">Problem · 问题</span>
-        <h1>AI 已成为采购的 <span>守门员</span></h1>
+    <!-- Header -->
+    <div class="header">
+        <div class="tag">Problem · 问题</div>
+        <h1>AI 已成为采购的 <em>守门员</em></h1>
         <p class="subtitle">工厂若无 AI 能力，将彻底"隐形"于全球买家视野之外。2026 年的采购门槛：不是价格，不是质量，而是——你的工厂能被 AI 找到吗？</p>
-    </header>
+    </div>
 
-    <div class="main-content">
-        <!-- Left: Factory List -->
-        <div class="factory-section">
-            <div class="factory-item active" style="animation-delay: 0.1s;">
-                <div class="factory-icon">🏭</div>
-                <div class="factory-info">
+    <!-- Main Stage -->
+    <div class="stage">
+
+        <!-- LEFT: Factory List -->
+        <div class="factory-col">
+            <div class="col-label">全球工厂</div>
+
+            <div class="factory-row" data-delay="100">
+                <div class="factory-lottie" id="f1"></div>
+                <div class="factory-text">
                     <div class="factory-name">传统工厂 A</div>
-                    <div class="factory-status">无数字化接口</div>
+                    <div class="factory-sub">无数字化接口</div>
                 </div>
-                <div class="status-badge fail">✕</div>
+                <div class="badge fail">✕</div>
             </div>
-            <div class="factory-item active" style="animation-delay: 0.2s;">
-                <div class="factory-icon">🏭</div>
-                <div class="factory-info">
+
+            <div class="factory-row" data-delay="200">
+                <div class="factory-lottie" id="f2"></div>
+                <div class="factory-text">
                     <div class="factory-name">传统工厂 B</div>
-                    <div class="factory-status">数据孤岛</div>
+                    <div class="factory-sub">数据孤岛</div>
                 </div>
-                <div class="status-badge fail">✕</div>
+                <div class="badge fail">✕</div>
             </div>
-            <div class="factory-item active" style="animation-delay: 0.3s;">
-                <div class="factory-icon">🏭</div>
-                <div class="factory-info">
+
+            <div class="factory-row" data-delay="300">
+                <div class="factory-lottie" id="f3"></div>
+                <div class="factory-text">
                     <div class="factory-name">传统工厂 C</div>
-                    <div class="factory-status">无法被AI解析</div>
+                    <div class="factory-sub">无法被 AI 解析</div>
                 </div>
-                <div class="status-badge fail">✕</div>
+                <div class="badge fail">✕</div>
             </div>
-            <div class="factory-item active" style="animation-delay: 0.4s;">
-                <div class="factory-icon">🏭</div>
-                <div class="factory-info">
+
+            <div class="factory-row" data-delay="400">
+                <div class="factory-lottie" id="f4"></div>
+                <div class="factory-text">
                     <div class="factory-name">传统工厂 D</div>
-                    <div class="factory-status">离线运营</div>
+                    <div class="factory-sub">离线运营</div>
                 </div>
-                <div class="status-badge fail">✕</div>
+                <div class="badge fail">✕</div>
             </div>
-            <div class="factory-item success active" style="animation-delay: 0.5s;">
-                <div class="factory-icon">⚡</div>
-                <div class="factory-info">
-                    <div class="factory-name" style="color: var(--accent-green);">AI 赋能工厂 E</div>
-                    <div class="factory-status">AMR 94 · 实时同步</div>
+
+            <div class="factory-row ai-enabled" data-delay="500">
+                <div class="factory-lottie" id="f5"></div>
+                <div class="factory-text">
+                    <div class="factory-name">AI 赋能工厂 E</div>
+                    <div class="factory-sub">AMR 94 · 实时同步</div>
                 </div>
-                <div class="status-badge pass">✓</div>
+                <div class="badge pass">✓</div>
             </div>
-            <div class="factory-item success active" style="animation-delay: 0.6s;">
-                <div class="factory-icon">⚡</div>
-                <div class="factory-info">
-                    <div class="factory-name" style="color: var(--accent-green);">AI 赋能工厂 F</div>
-                    <div class="factory-status">AMR 91 · 自动响应</div>
+
+            <div class="factory-row ai-enabled" data-delay="600">
+                <div class="factory-lottie" id="f6"></div>
+                <div class="factory-text">
+                    <div class="factory-name">AI 赋能工厂 F</div>
+                    <div class="factory-sub">AMR 91 · 自动响应</div>
                 </div>
-                <div class="status-badge pass">✓</div>
+                <div class="badge pass">✓</div>
             </div>
         </div>
 
-        <!-- Center: AI Gatekeeper -->
-        <div class="center-section">
-            <div class="gatekeeper-visual">
-                <svg class="gatekeeper-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Outer pulsing rings -->
-                    <circle cx="140" cy="140" r="130" fill="none" stroke="rgba(59, 130, 246, 0.1)" stroke-width="1" class="pulsing-circle" style="animation-delay: 0s;"/>
-                    <circle cx="140" cy="140" r="110" fill="none" stroke="rgba(59, 130, 246, 0.15)" stroke-width="1" class="pulsing-circle" style="animation-delay: 0.3s;"/>
-                    <circle cx="140" cy="140" r="90" fill="none" stroke="rgba(59, 130, 246, 0.2)" stroke-width="1" class="pulsing-circle" style="animation-delay: 0.6s;"/>
+        <!-- Flow arrow left -->
+        <div class="arrow-left">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+        </div>
 
-                    <!-- Rotating scan ring -->
-                    <circle cx="140" cy="140" r="100" fill="none" stroke="url(#scanGradient)" stroke-width="2" class="rotating-ring" stroke-dasharray="10,15"/>
-
-                    <!-- Core circle with glow -->
-                    <defs>
-                        <radialGradient id="coreGlow">
-                            <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.8" />
-                            <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:0.2" />
-                        </radialGradient>
-                        <linearGradient id="scanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0" />
-                            <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:0" />
-                        </linearGradient>
-                    </defs>
-
-                    <!-- Core glow -->
-                    <circle cx="140" cy="140" r="50" fill="url(#coreGlow)" class="pulsing-circle"/>
-
-                    <!-- Core solid circle -->
-                    <circle cx="140" cy="140" r="40" fill="#FFFFFF" opacity="0.9"/>
-
-                    <!-- AI icon (simple geometric design) -->
-                    <g transform="translate(140, 140)">
-                        <!-- Brain-like icon -->
-                        <circle cx="-8" cy="-10" r="4" fill="#3B82F6"/>
-                        <circle cx="8" cy="-10" r="4" fill="#3B82F6"/>
-                        <circle cx="-12" cy="0" r="4" fill="#3B82F6"/>
-                        <circle cx="12" cy="0" r="4" fill="#3B82F6"/>
-                        <circle cx="0" cy="12" r="5" fill="#3B82F6"/>
-                        <!-- Connecting lines -->
-                        <line x1="-8" y1="-10" x2="-12" y2="0" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="8" y1="-10" x2="12" y2="0" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="-12" y1="0" x2="0" y2="12" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="12" y1="0" x2="0" y2="12" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
-                    </g>
-                </svg>
+        <!-- CENTER: AI Gatekeeper -->
+        <div class="center-col">
+            <div class="pulse-rings">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
             </div>
-            <div class="gatekeeper-label">
-                <div class="gatekeeper-title">AI 守门员</div>
-                <div class="gatekeeper-desc">AI Gatekeeper</div>
+            <div class="scan-arc"></div>
+            <div class="gate-lottie" id="gate-lottie"></div>
+            <div class="gate-label">
+                <div class="gate-title">AI 守门员</div>
+                <div class="gate-sub">AI Gatekeeper</div>
             </div>
         </div>
 
-        <!-- Right: Buyer -->
-        <div class="buyer-section">
-            <div class="buyer-visual">
-                <svg class="buyer-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Head -->
-                    <circle cx="80" cy="50" r="22" fill="none" stroke="#10B981" stroke-width="2" class="drawing-path"/>
-                    <!-- Body -->
-                    <path d="M 60 75 Q 80 85 100 75 L 100 110 Q 80 120 60 110 Z" fill="none" stroke="#10B981" stroke-width="2" class="drawing-path" style="animation-delay: 0.3s;"/>
-                    <!-- Left arm -->
-                    <line x1="60" y1="85" x2="35" y2="95" stroke="#10B981" stroke-width="2" class="drawing-path" style="animation-delay: 0.5s;"/>
-                    <!-- Right arm holding device -->
-                    <line x1="100" y1="85" x2="125" y2="95" stroke="#10B981" stroke-width="2" class="drawing-path" style="animation-delay: 0.5s;"/>
-                    <!-- Device in hand -->
-                    <rect x="118" y="90" width="18" height="24" rx="2" fill="none" stroke="#6EE7B7" stroke-width="1.5" class="drawing-path" style="animation-delay: 0.7s;"/>
-                    <!-- Screen lines -->
-                    <line x1="122" y1="98" x2="132" y2="98" stroke="#6EE7B7" stroke-width="1" opacity="0.6" class="drawing-path" style="animation-delay: 0.9s;"/>
-                    <line x1="122" y1="105" x2="132" y2="105" stroke="#6EE7B7" stroke-width="1" opacity="0.6" class="drawing-path" style="animation-delay: 1.0s;"/>
-                </svg>
+        <!-- Flow arrow right -->
+        <div class="arrow-right">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+        </div>
+
+        <!-- RIGHT: Buyer -->
+        <div class="buyer-col">
+            <div class="col-label" style="text-align:center;">海外采购商</div>
+            <div class="buyer-lottie-wrap">
+                <div class="buyer-lottie" id="buyer-lottie"></div>
             </div>
             <div class="buyer-info">
-                <div class="buyer-title">海外采购商</div>
-                <div class="buyer-desc">只看到 AI 推荐的工厂<br><span style="font-size: 10px; opacity: 0.7;">传统工厂已从视野中消失</span></div>
+                <div class="buyer-title">只看到 AI 推荐的工厂</div>
+                <div class="buyer-desc">传统工厂已从视野中消失</div>
+            </div>
+            <div class="visible-list">
+                <div class="visible-list-title">✓ 进入视野的工厂</div>
+                <div class="visible-item"><div class="visible-dot"></div>AI 赋能工厂 E · AMR 94</div>
+                <div class="visible-item"><div class="visible-dot"></div>AI 赋能工厂 F · AMR 91</div>
             </div>
         </div>
     </div>
 
+    <!-- Stats Row -->
     <div class="stats-row">
         <div class="stat-card">
             <div class="stat-value">90%</div>
@@ -533,22 +589,59 @@
         </div>
     </div>
 
+    <!-- Warning Bar -->
     <div class="warning-bar">
-        <span class="warning-icon">⚠️</span>
-        <p class="warning-text">2026 年的采购门槛：不是价格，不是质量，而是—— <span>你的工厂能被 AI 找到吗？</span></p>
+        ⚠️ 2026 年的采购门槛：不是价格，不是质量，而是——<span>你的工厂能被 AI 找到吗？</span>
     </div>
 
     <script>
-        // Animate factory items on load
-        window.addEventListener('load', () => {
-            const items = document.querySelectorAll('.factory-item');
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateX(0)';
-                }, 100 * index);
+        // ── Load Lottie animations ──
+        // AI Gatekeeper: 科技机器人
+        lottie.loadAnimation({
+            container: document.getElementById('gate-lottie'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/lottie/factory.json'
+        });
+
+        // Buyer: 商务人物场景
+        lottie.loadAnimation({
+            container: document.getElementById('buyer-lottie'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/lottie/ai_circle.json'
+        });
+
+        // Factory icons: 数据/服务器图标
+        ['f1','f2','f3','f4','f5','f6'].forEach(id => {
+            lottie.loadAnimation({
+                container: document.getElementById(id),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'assets/lottie/factory2.json'
             });
         });
+
+        // ── Staggered entrance for factory rows ──
+        document.querySelectorAll('.factory-row').forEach(row => {
+            const delay = parseInt(row.dataset.delay) || 0;
+            setTimeout(() => row.classList.add('visible'), delay);
+        });
+
+        // ── Adaptive scaling to fill viewport ──
+        function scaleSlide() {
+            const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+            const x = (window.innerWidth - 1280 * s) / 2;
+            const y = (window.innerHeight - 720 * s) / 2;
+            document.body.style.transform = `scale(${s})`;
+            document.body.style.left = x + 'px';
+            document.body.style.top = y + 'px';
+        }
+        scaleSlide();
+        window.addEventListener('resize', scaleSlide);
     </script>
 </body>
 </html>
