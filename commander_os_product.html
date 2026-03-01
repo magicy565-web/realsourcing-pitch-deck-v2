@@ -218,38 +218,103 @@
             animation: statusPulse 2s infinite;
         }
 
-        /* ── Pixel Corridor Screen Glow Overlays ── */
-        .screen-glow {
+        /* ── Sprite Sheet Animation ── */
+        .sprite-panel {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            background: #0a0d1a;
+        }
+        /* Each sprite is a div with background-image = sprite sheet */
+        /* width = 1 frame = 25% of total sheet width */
+        .sprite-anim {
             position: absolute;
-            border-radius: 50%;
+            bottom: 0;
+            left: 0;
+            /* height fills panel */
+            height: 100%;
+            /* width = 4x the panel width so we see 1 frame at a time */
+            width: 400%;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        .sprite-sarah {
+            background-image: url('assets/sarah_sprite.png');
+            animation: spriteWalk 1.2s steps(4) infinite;
+        }
+        .sprite-mike {
+            background-image: url('assets/mike_sprite.png');
+            animation: spriteWalk 2.4s steps(4) infinite;
+        }
+        .sprite-data {
+            background-image: url('assets/data_sprite.png');
+            animation: spriteWalk 3.2s steps(4) infinite;
+        }
+        @keyframes spriteWalk {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-75%); }
+        }
+        /* Wood sign name badge */
+        .wood-sign {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8B5E3C 0%, #A0714F 40%, #7A4F2D 100%);
+            border: 2px solid #5C3A1E;
+            border-radius: 4px;
+            padding: 3px 10px;
+            z-index: 20;
+            box-shadow: 0 2px 0 #3d2010, inset 0 1px 0 rgba(255,200,120,0.3);
+            animation: signFloat 3s ease-in-out infinite;
+            white-space: nowrap;
+        }
+        .wood-sign-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            color: #FFF8E7;
+            letter-spacing: 0.05em;
+            display: block;
+            text-shadow: 1px 1px 0 #3d2010;
+        }
+        .wood-sign-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7px;
+            color: #D4A96A;
+            display: block;
+            text-align: center;
+            margin-top: 1px;
+        }
+        @keyframes signFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50%       { transform: translateX(-50%) translateY(-2px); }
+        }
+        .sprite-panel:nth-child(2) .wood-sign { animation-delay: 0.8s; }
+        .sprite-panel:nth-child(3) .wood-sign { animation-delay: 1.6s; }
+        /* Scanline overlay */
+        .scanline {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
             pointer-events: none;
-            z-index: 10;
-            mix-blend-mode: screen;
+            z-index: 15;
         }
-        /* Sarah's monitor glow - left */
-        .screen-glow-1 {
-            width: 120px; height: 80px;
-            left: 13%; top: 30%;
-            background: radial-gradient(ellipse, rgba(59,130,246,0.25) 0%, transparent 70%);
-            animation: glowPulse 2.8s ease-in-out infinite;
-        }
-        /* Mike's monitor glow - center */
-        .screen-glow-2 {
-            width: 120px; height: 80px;
-            left: 46%; top: 30%;
-            background: radial-gradient(ellipse, rgba(99,102,241,0.22) 0%, transparent 70%);
-            animation: glowPulse 3.2s ease-in-out infinite 0.4s;
-        }
-        /* Data's monitor glow - right */
-        .screen-glow-3 {
-            width: 120px; height: 80px;
-            left: 78%; top: 30%;
-            background: radial-gradient(ellipse, rgba(167,139,250,0.28) 0%, transparent 70%);
-            animation: glowPulse 2.5s ease-in-out infinite 0.8s;
+        /* Status dot */
+        .status-dot {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            z-index: 20;
+            animation: glowPulse 1.5s ease-in-out infinite;
         }
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.15); }
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50%       { opacity: 1;   transform: scale(1.3); }
         }
     </style>
 </head>
@@ -370,25 +435,50 @@
         <!-- Right: Avatar Cards + Terminal -->
         <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
 
-            <!-- Stardew Valley Style Office Corridor - AI Generated -->
-            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:170px;">
+            <!-- Stardew Valley Style Sprite Sheet Animation Corridor -->
+            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:170px; display:flex; flex-direction:column;">
                 <!-- Top label bar -->
-                <div style="position:absolute; top:0; left:0; right:0; height:20px; background:rgba(10,13,26,0.9); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2);">
+                <div style="height:20px; background:rgba(10,13,26,0.95); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2); flex-shrink:0;">
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
-                    <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
+                    <span style="font-size:8px; color:#10b981; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
                 </div>
-                <!-- Pixel Scene Image -->
-                <img src="assets/pixel_corridor.png"
-                     style="width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block; image-rendering:pixelated; image-rendering:crisp-edges;"
-                     alt="AI Digital Team Office" />
-                <!-- Screen glow overlays (CSS animation) -->
-                <div class="screen-glow screen-glow-1"></div>
-                <div class="screen-glow screen-glow-2"></div>
-                <div class="screen-glow screen-glow-3"></div>
-                <!-- Scanline overlay for retro effect -->
-                <div style="position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px); pointer-events:none; z-index:5;"></div>
-                <!-- Vignette -->
-                <div style="position:absolute; inset:0; background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%); pointer-events:none; z-index:6;"></div>
+                <!-- Three sprite panels side by side -->
+                <div style="flex:1; display:flex; gap:2px; overflow:hidden;">
+
+                    <!-- Sarah: Typing Reply -->
+                    <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
+                        <div class="sprite-anim sprite-sarah"></div>
+                        <div class="wood-sign">
+                            <span class="wood-sign-name">✦ Sarah</span>
+                            <span class="wood-sign-role">Sales · 线索跟进中</span>
+                        </div>
+                        <div class="status-dot" style="background:#10b981; box-shadow:0 0 6px #10b981;"></div>
+                        <div class="scanline"></div>
+                    </div>
+
+                    <!-- Mike: Deep Thinking → Eureka -->
+                    <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
+                        <div class="sprite-anim sprite-mike"></div>
+                        <div class="wood-sign" style="animation-delay:0.8s;">
+                            <span class="wood-sign-name">✦ Mike</span>
+                            <span class="wood-sign-role">Ops · 内容发布中</span>
+                        </div>
+                        <div class="status-dot" style="background:#6366f1; box-shadow:0 0 6px #6366f1; animation-delay:0.5s;"></div>
+                        <div class="scanline"></div>
+                    </div>
+
+                    <!-- Data: Coffee → Phone Call -->
+                    <div class="sprite-panel">
+                        <div class="sprite-anim sprite-data"></div>
+                        <div class="wood-sign" style="animation-delay:1.6s;">
+                            <span class="wood-sign-name">✦ Data</span>
+                            <span class="wood-sign-role">AI · 线索扫描中</span>
+                        </div>
+                        <div class="status-dot" style="background:#a78bfa; box-shadow:0 0 6px #a78bfa; animation-delay:1s;"></div>
+                        <div class="scanline"></div>
+                    </div>
+
+                </div>
             </div>
 
             <!-- Terminal Log -->
@@ -450,321 +540,7 @@
 </div>
 
 <script>
-// ============================================================
-// STARDEW VALLEY STYLE OFFICE CORRIDOR - Canvas Animation
-// ============================================================
-function initCorridorScene() {
-    const canvas = document.getElementById('corridorCanvas');
-    if (!canvas) return;
-
-    // Set canvas size to fill container width
-    const container = canvas.parentElement;
-    const W = container.clientWidth || 880;
-    const H = 160;
-    canvas.width = W;
-    canvas.height = H;
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    canvas.style.marginTop = '18px';
-
-    const ctx = canvas.getContext('2d');
-    const SCALE = 3; // pixel art scale factor
-
-    // Load character spritesheets
-    const imgFemale = new Image();
-    const imgBlue   = new Image();
-    const imgMale   = new Image();
-    imgFemale.src = 'assets/characters/worker_female.png'; // 160x260, frame 53x65
-    imgBlue.src   = 'assets/characters/worker_blue.png';   // 160x260, frame 53x65
-    imgMale.src   = 'assets/characters/worker_male.png';   // 128x192, frame 42x48
-
-    // Load interior tileset
-    const imgTiles = new Image();
-    imgTiles.src = 'assets/tilesets/interior.png'; // 675x672
-
-    let loadedCount = 0;
-    const totalImages = 4;
-    function onLoad() {
-        loadedCount++;
-        if (loadedCount >= totalImages) startAnimation();
-    }
-    imgFemale.onload = onLoad;
-    imgBlue.onload   = onLoad;
-    imgMale.onload   = onLoad;
-    imgTiles.onload  = onLoad;
-    // fallback: start even if images fail
-    imgFemale.onerror = onLoad;
-    imgBlue.onerror   = onLoad;
-    imgMale.onerror   = onLoad;
-    imgTiles.onerror  = onLoad;
-
-    function startAnimation() {
-
-    // ── Color Palette (Stardew-inspired warm dark) ──
-    const C = {
-        // Floor
-        floorA:  '#1e2a3a', floorB:  '#1a2535', floorHL: '#243040',
-        // Wall
-        wallTop: '#0f1825', wallMid: '#0c1520', wallBase:'#0a1018',
-        wallDeco:'#162030',
-        // Desk
-        deskTop: '#3d5a3e', deskBody:'#2e4430', deskLeg: '#1e2e20',
-        // Monitor
-        monBez:  '#1e2535', monScr:  '#050d1f',
-        // Chair
-        chairSt: '#2a3a50', chairBd: '#1e2d40',
-        // Plants
-        pot:     '#4a3020', soil:    '#2a1a10', leaf:    '#2d6e30', leafL:   '#3a8a3c',
-        // Name tags
-        tagSarah:'#10b981', tagMike: '#60a5fa', tagData: '#a78bfa',
-        // Screen content
-        sGreen:  '#10b981', sBlue:   '#60a5fa', sPurple: '#a78bfa',
-        sYellow: '#fbbf24', sRed:    '#f87171',
-        // Misc
-        shadow:  'rgba(0,0,0,0.35)',
-        glowG:   'rgba(16,185,129,0.15)',
-        glowB:   'rgba(96,165,250,0.18)',
-        glowP:   'rgba(167,139,250,0.15)',
-    };
-
-    // ── Helper: draw pixel rect ──
-    function px(x, y, w, h, color) {
-        ctx.fillStyle = color;
-        ctx.fillRect(x * SCALE, y * SCALE, w * SCALE, h * SCALE);
-    }
-
-    // ── Workstation positions (in pixel units before scale) ──
-    // Canvas is W x H px, SCALE=3, so pixel grid is (W/3) x (H/3)
-    const PW = Math.floor(W / SCALE);
-    const PH = Math.floor(H / SCALE);
-    const stationW = Math.floor(PW / 3);
-
-    const stations = [
-        { name: 'Sarah',  role: '金牌销售',  status: '线索跟进中', color: C.tagSarah, glow: C.glowG,  img: imgFemale, fw: 53, fh: 65, row: 0, col: 1 },
-        { name: 'Mike',   role: '首席运营',  status: '内容发布中', color: C.tagMike,  glow: C.glowB,  img: imgBlue,   fw: 53, fh: 65, row: 0, col: 1 },
-        { name: 'Data',   role: 'AI 数据官', status: '扫描进行中', color: C.tagData,  glow: C.glowP,  img: imgMale,   fw: 42, fh: 48, row: 0, col: 1 },
-    ];
-
-    let frame = 0;
-    const codeLines = [
-        ['> scan linkedin...', C.sGreen],
-        ['  found: 47 leads',  C.sBlue],
-        ['> analyze buyer',    C.sPurple],
-        ['  score: 87/100',    C.sYellow],
-        ['> push to Sarah',    C.sGreen],
-        ['  priority: HIGH',   C.sRed],
-        ['> draft email...',   C.sBlue],
-        ['  status: done ✓',   C.sGreen],
-        ['> reddit scan...',   C.sPurple],
-        ['  3 new posts',      C.sBlue],
-        ['> reply drafted',    C.sGreen],
-        ['  awaiting boss',    C.sYellow],
-    ];
-
-    // ── Draw floor ──
-    function drawFloor() {
-        const floorY = Math.floor(PH * 0.55);
-        // Floor tiles with checkerboard
-        for (let tx = 0; tx < PW; tx += 4) {
-            for (let ty = floorY; ty < PH; ty += 4) {
-                const alt = ((tx / 4) + (ty / 4)) % 2 === 0;
-                px(tx, ty, 4, 4, alt ? C.floorA : C.floorB);
-            }
-        }
-        // Floor highlight line
-        px(0, floorY, PW, 1, C.floorHL);
-        // Baseboard
-        px(0, floorY - 1, PW, 1, C.wallBase);
-    }
-
-    // ── Draw wall ──
-    function drawWall() {
-        const floorY = Math.floor(PH * 0.55);
-        // Wall background
-        for (let ty = 0; ty < floorY; ty++) {
-            const shade = ty < 3 ? C.wallTop : (ty < floorY - 2 ? C.wallMid : C.wallBase);
-            px(0, ty, PW, 1, shade);
-        }
-        // Decorative horizontal stripe
-        px(0, Math.floor(floorY * 0.4), PW, 1, C.wallDeco);
-        px(0, Math.floor(floorY * 0.42), PW, 1, C.wallDeco);
-    }
-
-    // ── Draw a workstation (desk + monitor + chair) ──
-    function drawWorkstation(sx, floorY, glowColor, screenScrollOffset, stationIdx) {
-        const cx = sx + Math.floor(stationW / 2); // center x of station
-
-        // ── Desk ──
-        const deskW = Math.floor(stationW * 0.65);
-        const deskX = cx - Math.floor(deskW / 2);
-        const deskY = floorY - 9;
-        px(deskX,     deskY,     deskW, 1, C.deskTop);  // highlight
-        px(deskX,     deskY + 1, deskW, 5, C.deskBody); // body
-        px(deskX + 1, deskY + 6, 2,     3, C.deskLeg);  // left leg
-        px(deskX + deskW - 3, deskY + 6, 2, 3, C.deskLeg); // right leg
-
-        // ── Monitor ──
-        const monW = Math.floor(stationW * 0.38);
-        const monX = cx - Math.floor(monW / 2);
-        const monY = deskY - 10;
-        // Stand
-        px(cx - 1, deskY - 2, 2, 2, C.monBez);
-        // Bezel
-        px(monX, monY, monW, 9, C.monBez);
-        // Screen
-        const scrX = monX + 1;
-        const scrY = monY + 1;
-        const scrW = monW - 2;
-        const scrH = 7;
-        px(scrX, scrY, scrW, scrH, C.monScr);
-
-        // Screen glow
-        ctx.save();
-        const grd = ctx.createRadialGradient(
-            (cx) * SCALE, (monY + 4) * SCALE, 2,
-            (cx) * SCALE, (monY + 4) * SCALE, monW * SCALE
-        );
-        grd.addColorStop(0, glowColor.replace('0.1', '0.25').replace('0.15', '0.25').replace('0.18', '0.25'));
-        grd.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grd;
-        ctx.fillRect(scrX * SCALE, scrY * SCALE, scrW * SCALE, scrH * SCALE);
-        ctx.restore();
-
-        // Screen content (scrolling code)
-        ctx.save();
-        ctx.rect(scrX * SCALE, scrY * SCALE, scrW * SCALE, scrH * SCALE);
-        ctx.clip();
-        const lineH = 1.6;
-        const visLines = Math.floor(scrH / lineH);
-        const offset = (screenScrollOffset * 0.015) % lineH;
-        for (let li = 0; li < visLines + 1; li++) {
-            const lineIdx = (Math.floor(screenScrollOffset * 0.015 / lineH) + li + stationIdx * 4) % codeLines.length;
-            const ly = scrY + li * lineH - offset;
-            if (ly >= scrY - 0.5 && ly < scrY + scrH) {
-                ctx.fillStyle = codeLines[lineIdx][1];
-                ctx.font = `${SCALE}px monospace`;
-                ctx.fillText(codeLines[lineIdx][0].substring(0, Math.floor(scrW * 0.7)), (scrX + 0.5) * SCALE, ly * SCALE + SCALE);
-            }
-        }
-        // Scan line
-        const scanY = scrY + ((screenScrollOffset * 0.06) % scrH);
-        ctx.fillStyle = 'rgba(255,255,255,0.04)';
-        ctx.fillRect(scrX * SCALE, scanY * SCALE, scrW * SCALE, SCALE);
-        ctx.restore();
-
-        // ── Chair ──
-        const chairX = cx - 4;
-        const chairY = floorY - 5;
-        px(chairX,     chairY,     8, 1, C.chairSt); // seat top
-        px(chairX,     chairY + 1, 8, 3, C.chairBd); // seat body
-        px(chairX,     chairY - 4, 2, 5, C.chairBd); // back left
-        px(chairX + 6, chairY - 4, 2, 5, C.chairBd); // back right
-        px(chairX,     chairY - 4, 8, 2, C.chairBd); // back top
-        px(chairX + 1, floorY,     2, 1, '#0f1520'); // wheel left
-        px(chairX + 5, floorY,     2, 1, '#0f1520'); // wheel right
-    }
-
-    // ── Draw character using spritesheet ──
-    function drawCharacter(station, sx, floorY, frameNum) {
-        const { img, fw, fh, name } = station;
-        if (!img.complete || img.naturalWidth === 0) return;
-
-        const cx = sx + Math.floor(stationW / 2);
-        // Use "facing down" row (row 0), alternate between frame 0 and 2 for sitting animation
-        // For sitting: use col 1 (center/idle frame)
-        const animFrame = Math.floor(frameNum / 20) % 2 === 0 ? 0 : 2; // col 0 or 2
-        const srcX = animFrame * fw;
-        const srcY = 0; // row 0 = facing down
-
-        // Scale character to fit scene
-        const charScale = fh > 60 ? 1.4 : 1.6;
-        const dw = Math.floor(fw * charScale);
-        const dh = Math.floor(fh * charScale);
-
-        // Position: sitting at desk, feet near floorY
-        const charX = (cx - Math.floor(dw / (2 * SCALE))) * SCALE;
-        const charY = (floorY - Math.floor(dh / SCALE) - 1) * SCALE;
-
-        // Subtle bob animation
-        const bob = Math.sin(frameNum * 0.08 + sx) * 0.5;
-
-        ctx.save();
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(img, srcX, srcY, fw, fh, charX, charY + bob, dw, dh);
-        ctx.restore();
-
-        // ── Name tag above character ──
-        const tagY = (floorY - Math.floor(dh / SCALE) - 5) * SCALE;
-        const tagX = cx * SCALE;
-        ctx.save();
-        ctx.font = `bold ${SCALE * 2.5}px 'Inter', sans-serif`;
-        ctx.textAlign = 'center';
-        // Name
-        ctx.fillStyle = station.color;
-        ctx.fillText(station.name, tagX, tagY);
-        // Status dot
-        const dotBlink = Math.floor(frameNum / 30) % 2 === 0;
-        ctx.fillStyle = dotBlink ? station.color : 'rgba(255,255,255,0.3)';
-        ctx.beginPath();
-        ctx.arc(tagX - ctx.measureText(station.name).width / 2 - 5, tagY - 3, 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-    }
-
-    // ── Draw decorative plant ──
-    function drawPlant(px2, py) {
-        // Pot
-        px(px2, py + 3, 4, 3, C.pot);
-        px(px2 + 1, py + 2, 2, 1, C.soil);
-        // Leaves
-        px(px2 + 1, py, 2, 3, C.leaf);
-        px(px2, py + 1, 1, 2, C.leafL);
-        px(px2 + 3, py + 1, 1, 2, C.leafL);
-        px(px2 + 1, py - 1, 2, 1, C.leafL);
-    }
-
-    // ── Main render loop ──
-    function loop() {
-        frame++;
-        ctx.clearRect(0, 0, W, H);
-
-        const floorY = Math.floor(PH * 0.72);
-
-        drawWall();
-        drawFloor();
-
-        // Draw plants between stations
-        drawPlant(Math.floor(stationW * 0.05), floorY - 8);
-        drawPlant(Math.floor(stationW * 1.02), floorY - 8);
-        drawPlant(Math.floor(stationW * 2.02), floorY - 8);
-
-        // Draw dividers between stations
-        for (let d = 1; d < 3; d++) {
-            const dx = d * stationW;
-            px(dx, Math.floor(PH * 0.1), 1, Math.floor(PH * 0.65), C.wallDeco);
-        }
-
-        // Draw each workstation
-        stations.forEach((station, i) => {
-            const sx = i * stationW;
-            drawWorkstation(sx, floorY, station.glow, frame + i * 40, i);
-        });
-
-        // Draw characters on top
-        stations.forEach((station, i) => {
-            const sx = i * stationW;
-            drawCharacter(station, sx, floorY, frame + i * 7);
-        });
-
-        requestAnimationFrame(loop);
-    }
-
-    loop();
-    } // end startAnimation
-}
-
-// Initialize corridor scene when DOM is ready
-window.addEventListener('load', initCorridorScene);
+// CSS sprite animation handles corridor scene - no JS needed
 
 // ============================================================
 // Terminal Typewriter Effect - Reset animation on page load
