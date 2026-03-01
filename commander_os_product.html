@@ -336,8 +336,8 @@
         <!-- Right: Avatar Cards + Terminal -->
         <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
 
-            <!-- Avatar Cards Row -->
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+            <!-- Avatar Cards Row + Pixel Scene -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 220px; gap:12px; align-items:stretch;">
 
                 <!-- Sarah -->
                 <div class="avatar-card">
@@ -359,14 +359,11 @@
                     </div>
                 </div>
 
-                <!-- Data -->
-                <div class="avatar-card">
-                    <div class="avatar-circle ring-purple" style="background:#120720;">🤖</div>
-                    <div style="min-width:0;">
-                        <div style="font-size:14px; font-weight:700; color:#fff;">Data</div>
-                        <div style="font-size:11px; color:#475569; margin-top:1px;">数据专家</div>
-                        <span class="status-badge" style="background:rgba(167,139,250,0.15); color:#a78bfa;">● 线索扫描中</span>
-                    </div>
+                <!-- Pixel Game Scene -->
+                <div style="background:#0a0f1e; border:1px solid rgba(167,139,250,0.3); border-radius:12px; overflow:hidden; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow: 0 0 20px rgba(167,139,250,0.1);">
+                    <div style="position:absolute; top:7px; left:0; right:0; text-align:center; font-size:8px; color:#a78bfa; letter-spacing:0.12em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; z-index:10; font-weight:700;">DATA · 24H ONLINE</div>
+                    <canvas id="pixelCanvas" width="200" height="130" style="display:block; image-rendering:pixelated; image-rendering:crisp-edges; width:200px; height:130px;"></canvas>
+                    <div style="font-size:7px; color:#6d28d9; font-family:'JetBrains Mono',monospace; padding-bottom:5px; letter-spacing:0.08em;">&#9632; SCANNING LEADS...</div>
                 </div>
             </div>
 
@@ -429,6 +426,344 @@
 </div>
 
 <script>
+// ============================================================
+// PIXEL GAME SCENE - Canvas Animation
+// ============================================================
+function initPixelScene() {
+    const canvas = document.getElementById('pixelCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;   // 200
+    const H = canvas.height;  // 130
+    const S = 4; // pixel size (each "pixel" = 4x4 real px)
+
+    // Color palette
+    const C = {
+        bg:       '#0a0f1e',
+        bgGrid:   '#0d1428',
+        floor:    '#1a2340',
+        floorL:   '#1e2a4a',
+        desk:     '#2a3a5c',
+        deskTop:  '#3a4f7a',
+        deskLeg:  '#1e2d4a',
+        monitor:  '#1a2540',
+        monBez:   '#243050',
+        screenBg: '#050d1f',
+        screenGl: '#0a1a3a',
+        scanLine: '#1a3060',
+        kbd:      '#1e2d48',
+        kbdKey:   '#263550',
+        chair:    '#1a2a44',
+        chairSt:  '#243250',
+        // Character
+        skin:     '#f5c5a3',
+        hair:     '#a78bfa',
+        shirt:    '#3b82f6',
+        pants:    '#1e3a5f',
+        shoes:    '#0f1e35',
+        // Screen content colors
+        sGreen:   '#10b981',
+        sBlue:    '#60a5fa',
+        sPurple:  '#a78bfa',
+        sRed:     '#f87171',
+        sYellow:  '#fbbf24',
+        // Glow
+        glow:     'rgba(96,165,250,0.15)',
+        glowS:    'rgba(96,165,250,0.08)',
+    };
+
+    let frame = 0;
+    let typingFrame = 0; // for arm animation
+    let screenLines = [];
+    let particles = [];
+
+    // Generate screen code lines
+    const codeSnippets = [
+        { color: C.sGreen,  text: '> scan linkedin...' },
+        { color: C.sBlue,   text: '  found: 47 leads' },
+        { color: C.sPurple, text: '> analyze buyer' },
+        { color: C.sYellow, text: '  score: 87/100' },
+        { color: C.sGreen,  text: '> push to Sarah' },
+        { color: C.sRed,    text: '  priority: HIGH' },
+        { color: C.sBlue,   text: '> draft email...' },
+        { color: C.sGreen,  text: '  status: done ✓' },
+        { color: C.sPurple, text: '> next target...' },
+        { color: C.sBlue,   text: '  scanning 500...' },
+    ];
+    for (let i = 0; i < 6; i++) {
+        screenLines.push({ ...codeSnippets[i % codeSnippets.length], y: i });
+    }
+
+    // Helper: draw a filled rectangle in pixel units
+    function px(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x * S, y * S, w * S, h * S);
+    }
+
+    // Draw background grid
+    function drawBg() {
+        ctx.fillStyle = C.bg;
+        ctx.fillRect(0, 0, W, H);
+        // subtle grid
+        ctx.fillStyle = C.bgGrid;
+        for (let gx = 0; gx < W / S; gx += 4) {
+            for (let gy = 0; gy < H / S; gy += 4) {
+                ctx.fillRect(gx * S, gy * S, 1, H);
+                ctx.fillRect(0, gy * S, W, 1);
+            }
+        }
+    }
+
+    // Draw floor
+    function drawFloor() {
+        // Floor tiles
+        for (let tx = 0; tx < W / S; tx += 4) {
+            px(tx, 22, 4, 1, tx % 8 === 0 ? C.floorL : C.floor);
+        }
+        px(0, 23, W / S, 7, C.floor);
+        // Floor highlight stripe
+        for (let tx = 0; tx < W / S; tx += 2) {
+            px(tx, 22, 1, 1, C.floorL);
+        }
+    }
+
+    // Draw desk
+    function drawDesk() {
+        // Desk surface
+        px(3, 17, 38, 1, C.deskTop);  // top highlight
+        px(3, 18, 38, 3, C.desk);     // desk body
+        // Desk legs
+        px(4,  21, 2, 2, C.deskLeg);
+        px(38, 21, 2, 2, C.deskLeg);
+    }
+
+    // Draw monitor
+    function drawMonitor() {
+        // Monitor stand
+        px(19, 20, 4, 1, C.monBez);
+        px(20, 19, 2, 1, C.monBez);
+        // Monitor bezel
+        px(10, 7,  22, 12, C.monBez);
+        // Screen area
+        px(11, 8,  20, 10, C.screenBg);
+
+        // Screen glow effect
+        ctx.save();
+        const grad = ctx.createRadialGradient(21 * S, 13 * S, 2, 21 * S, 13 * S, 40);
+        grad.addColorStop(0, 'rgba(59,130,246,0.18)');
+        grad.addColorStop(1, 'rgba(59,130,246,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(11 * S, 8 * S, 20 * S, 10 * S);
+        ctx.restore();
+
+        // Screen content - scrolling code lines
+        const lineH = 1.5;
+        const startY = 9;
+        const scrollOffset = (frame * 0.02) % lineH;
+        ctx.save();
+        ctx.rect(11 * S, 8 * S, 20 * S, 10 * S);
+        ctx.clip();
+        screenLines.forEach((line, i) => {
+            const ly = startY + i * lineH - scrollOffset;
+            if (ly > 7.5 && ly < 18.5) {
+                ctx.fillStyle = line.color;
+                ctx.font = `${S - 1}px "JetBrains Mono", monospace`;
+                ctx.fillText(line.text, 12 * S, ly * S);
+            }
+        });
+        // Blinking cursor
+        if (Math.floor(frame / 20) % 2 === 0) {
+            px(11 + Math.floor(frame * 0.05) % 18, 17, 1, 1, C.sGreen);
+        }
+        // Scan line
+        const scanY = 8 + ((frame * 0.08) % 10);
+        ctx.fillStyle = 'rgba(96,165,250,0.06)';
+        ctx.fillRect(11 * S, scanY * S, 20 * S, S);
+        ctx.restore();
+    }
+
+    // Draw keyboard
+    function drawKeyboard() {
+        px(13, 20, 14, 1, C.kbd);
+        // Keys row 1
+        for (let k = 0; k < 6; k++) px(14 + k * 2, 20, 1, 1, C.kbdKey);
+        // Keys row 2 (shorter)
+        for (let k = 0; k < 5; k++) px(15 + k * 2, 20, 1, 1, C.kbdKey);
+    }
+
+    // Draw chair
+    function drawChair() {
+        // Seat
+        px(21, 21, 8, 1, C.chairSt);
+        px(21, 22, 8, 2, C.chair);
+        // Back
+        px(21, 17, 2, 5, C.chair);
+        px(27, 17, 2, 5, C.chair);
+        px(21, 17, 8, 2, C.chair);
+        // Wheels
+        px(22, 24, 1, 1, C.deskLeg);
+        px(27, 24, 1, 1, C.deskLeg);
+    }
+
+    // Draw pixel character
+    function drawCharacter() {
+        const isTyping = Math.floor(frame / 8) % 2 === 0;
+        const bobY = Math.sin(frame * 0.05) * 0.3; // subtle body bob
+        const by = Math.round(bobY); // integer offset
+
+        // Sitting position: body at y=18-20, legs at y=21-22
+        const bx = 24; // base x
+        const baseY = 18;
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect((bx + 1) * S, (baseY + 4) * S, 4 * S, S);
+
+        // Legs / pants (sitting, bent)
+        px(bx,     baseY + 3 + by, 2, 2, C.pants);
+        px(bx + 2, baseY + 3 + by, 2, 2, C.pants);
+        // Shoes
+        px(bx - 1, baseY + 4 + by, 2, 1, C.shoes);
+        px(bx + 3, baseY + 4 + by, 2, 1, C.shoes);
+
+        // Body / shirt
+        px(bx, baseY + 1 + by, 4, 2, C.shirt);
+
+        // Arms - typing animation
+        if (isTyping) {
+            // Arms down (typing)
+            px(bx - 1, baseY + 2 + by, 1, 2, C.shirt); // left arm
+            px(bx + 4, baseY + 2 + by, 1, 2, C.shirt); // right arm
+            // Hands on keyboard
+            px(bx - 1, baseY + 3 + by, 1, 1, C.skin);
+            px(bx + 4, baseY + 3 + by, 1, 1, C.skin);
+        } else {
+            // Arms slightly raised
+            px(bx - 1, baseY + 1 + by, 1, 2, C.shirt);
+            px(bx + 4, baseY + 1 + by, 1, 2, C.shirt);
+            px(bx - 1, baseY + 2 + by, 1, 1, C.skin);
+            px(bx + 4, baseY + 2 + by, 1, 1, C.skin);
+        }
+
+        // Neck
+        px(bx + 1, baseY + by, 2, 1, C.skin);
+
+        // Head
+        px(bx,     baseY - 2 + by, 4, 3, C.skin);
+        // Hair (purple - AI agent style)
+        px(bx,     baseY - 2 + by, 4, 1, C.hair);
+        px(bx,     baseY - 1 + by, 1, 1, C.hair);
+        px(bx + 3, baseY - 1 + by, 1, 1, C.hair);
+        // Eyes
+        px(bx + 1, baseY - 1 + by, 1, 1, '#1a1a2e');
+        px(bx + 2, baseY - 1 + by, 1, 1, '#1a1a2e');
+        // Eye glow (looking at screen)
+        if (Math.floor(frame / 30) % 3 !== 2) {
+            ctx.fillStyle = 'rgba(96,165,250,0.7)';
+            ctx.fillRect((bx + 1) * S + 1, (baseY - 1 + by) * S + 1, 2, 2);
+            ctx.fillRect((bx + 2) * S + 1, (baseY - 1 + by) * S + 1, 2, 2);
+        }
+        // Mouth (small smile)
+        px(bx + 1, baseY + by, 2, 1, '#d4956a');
+
+        // Headset / earpiece (AI agent accessory)
+        px(bx - 1, baseY - 1 + by, 1, 2, C.hair);
+        px(bx - 1, baseY - 1 + by, 1, 1, '#7c3aed');
+    }
+
+    // Draw floating data particles
+    function updateParticles() {
+        // Spawn new particles from screen
+        if (frame % 12 === 0) {
+            particles.push({
+                x: (11 + Math.random() * 20),
+                y: (8 + Math.random() * 10),
+                vx: (Math.random() - 0.3) * 0.3,
+                vy: -0.2 - Math.random() * 0.2,
+                life: 1.0,
+                color: [C.sGreen, C.sBlue, C.sPurple][Math.floor(Math.random() * 3)],
+                size: Math.random() > 0.5 ? 2 : 1,
+            });
+        }
+        // Update & draw
+        particles = particles.filter(p => p.life > 0);
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.025;
+            ctx.globalAlpha = p.life * 0.8;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x * S, p.y * S, p.size, p.size);
+            ctx.globalAlpha = 1;
+        });
+    }
+
+    // Draw screen glow on character face
+    function drawScreenGlowOnChar() {
+        const grad = ctx.createRadialGradient(21 * S, 13 * S, 0, 21 * S, 13 * S, 30);
+        grad.addColorStop(0, 'rgba(59,130,246,0.12)');
+        grad.addColorStop(1, 'rgba(59,130,246,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+    }
+
+    // Status bar at bottom of canvas
+    function drawStatusBar() {
+        // Blinking status dot
+        if (Math.floor(frame / 15) % 2 === 0) {
+            ctx.fillStyle = '#a78bfa';
+        } else {
+            ctx.fillStyle = '#6d28d9';
+        }
+        ctx.beginPath();
+        ctx.arc(8, H - 6, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Status text
+        ctx.fillStyle = 'rgba(167,139,250,0.6)';
+        ctx.font = '7px monospace';
+        ctx.fillText('SCANNING...', 14, H - 3);
+
+        // Frame counter (game feel)
+        ctx.fillStyle = 'rgba(96,165,250,0.3)';
+        ctx.fillText(`${String(frame % 1000).padStart(4,'0')}`, W - 30, H - 3);
+    }
+
+    // Scroll screen lines
+    function scrollScreenLines() {
+        if (frame % 80 === 0) {
+            screenLines.shift();
+            const next = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            screenLines.push({ ...next, y: screenLines.length });
+        }
+    }
+
+    // Main animation loop
+    function loop() {
+        frame++;
+        scrollScreenLines();
+
+        drawBg();
+        drawFloor();
+        drawChair();
+        drawDesk();
+        drawMonitor();
+        drawKeyboard();
+        drawScreenGlowOnChar();
+        drawCharacter();
+        updateParticles();
+        drawStatusBar();
+
+        requestAnimationFrame(loop);
+    }
+
+    loop();
+}
+
+// Initialize pixel scene when DOM is ready
+window.addEventListener('load', initPixelScene);
+
+// ============================================================
 // Terminal Typewriter Effect - Reset animation on page load
 function resetTerminalAnimation() {
     const logBody = document.getElementById('terminal-log');
