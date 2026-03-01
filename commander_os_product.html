@@ -113,8 +113,14 @@
             font-size: 11.5px;
             line-height: 1.75;
             color: #8899b0;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            scroll-behavior: smooth;
         }
+        .log-body::-webkit-scrollbar { width: 4px; }
+        .log-body::-webkit-scrollbar-track { background: transparent; }
+        .log-body::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 2px; }
         .ts  { color: #3d5066; }
         .tag-data   { color: #a78bfa; font-weight: 700; }
         .tag-sarah  { color: #34d399; font-weight: 700; }
@@ -457,7 +463,7 @@
         </div>
 
         <!-- Right: Avatar Cards + Terminal -->
-        <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0; height:520px;">
 
             <!-- Stardew Valley Style Sprite Sheet Animation Corridor -->
             <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; display:flex; flex-direction:column;">
@@ -466,14 +472,14 @@
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
                     <span style="font-size:8px; color:#10b981; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
                 </div>
-                <!-- Single combined GIF: Sarah + Mike + Data in one scene (1536x900, with CN signs) -->
+                <!-- Single combined GIF: Sarah + Mike + Data in one scene (1536x750, with CN signs) -->
                 <div style="width:100%; overflow:hidden; line-height:0; background:#0d1117;">
-                    <img src="assets/team_anim.gif?v=5" alt="Team Animation" style="width:100%; height:auto; display:block; image-rendering:pixelated; image-rendering:crisp-edges;" />
+                    <img src="assets/team_anim.gif?v=6" alt="Team Animation" style="width:100%; height:auto; display:block; image-rendering:pixelated; image-rendering:crisp-edges;" />
                 </div>
             </div>
 
             <!-- Terminal Log -->
-            <div class="terminal-window" style="flex:1;">
+            <div class="terminal-window" style="flex:1; min-height:0; overflow:hidden;">
                 <div class="terminal-header">
                     <div style="width:11px; height:11px; border-radius:50%; background:#ef4444; flex-shrink:0;"></div>
                     <div style="width:11px; height:11px; border-radius:50%; background:#f59e0b; flex-shrink:0;"></div>
@@ -555,85 +561,37 @@ window.addEventListener('load', resetTerminalAnimation);
 // Also run immediately for faster effect
 resetTerminalAnimation();
 
-// ── Corridor Canvas Animation ──
-// Background: scene_bg.png (2048x1143)
-// Sprites: sarah/mike/data_sprite.png (2752x1536, 4 frames each)
-// Each sprite frame: 688x1536
-// Display: scale sprite to 450x1004, bottom-align on canvas
-// Positions (in 2048x1143 canvas coords):
-//   Sarah: x=25,  y=139
-//   Mike:  x=799, y=139
-//   Data:  x=1481, y=139
-(function initCorridorCanvas() {
-    const canvas = document.getElementById('corridorCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+// ── Terminal Log Auto-Scroll ──
+// Continuously scrolls the log body to simulate live agent activity
+(function initTerminalScroll() {
+    const logBody = document.getElementById('terminal-log');
+    if (!logBody) return;
 
-    // Canvas internal resolution = background image size
-    const BG_W = 2048, BG_H = 1143;
-    canvas.width  = BG_W;
-    canvas.height = BG_H;
+    // Wait for typewriter animation to finish, then start auto-scroll
+    // Total typewriter delay: 15 lines × 0.1s + 0.5s = 2s
+    setTimeout(() => {
+        let scrolling = true;
+        let scrollPos = 0;
+        const maxScroll = logBody.scrollHeight - logBody.clientHeight;
 
-    // Sprite sheet parameters
-    const FRAME_W = 688;   // source frame width in sprite sheet
-    const FRAME_H = 1536;  // source frame height
-    const FRAMES  = 4;
-    const DST_W   = 450;   // display width on canvas
-    const DST_H   = 1004;  // display height on canvas (= DST_W * FRAME_H/FRAME_W)
-    const DST_Y   = BG_H - DST_H;  // 139 — bottom-align
-
-    // Character x positions on canvas
-    const CHARS = [
-        { img: null, src: 'assets/sarah_sprite.png', x: 25,   fps: 1.6 },
-        { img: null, src: 'assets/mike_sprite.png',  x: 799,  fps: 2.4 },
-        { img: null, src: 'assets/data_sprite.png',  x: 1481, fps: 3.2 },
-    ];
-
-    // Load all images
-    let loaded = 0;
-    const bg = new Image();
-    bg.src = 'assets/scene_bg.png';
-    bg.onload = () => { loaded++; tryStart(); };
-
-    CHARS.forEach(c => {
-        c.img = new Image();
-        c.img.src = c.src;
-        c.img.onload = () => { loaded++; tryStart(); };
-    });
-
-    function tryStart() {
-        if (loaded === CHARS.length + 1) startAnimation();
-    }
-
-    function startAnimation() {
-        let lastTime = 0;
-
-        function draw(ts) {
-            // Clear
-            ctx.clearRect(0, 0, BG_W, BG_H);
-
-            // Draw background
-            ctx.drawImage(bg, 0, 0, BG_W, BG_H);
-
-            // Draw each character's current frame
-            CHARS.forEach(c => {
-                // Compute current frame index based on time
-                const frameIndex = Math.floor((ts / (c.fps * 1000 / FRAMES)) % FRAMES);
-                const srcX = frameIndex * FRAME_W;
-
-                // Draw sprite frame at character position
-                ctx.drawImage(
-                    c.img,
-                    srcX, 0, FRAME_W, FRAME_H,   // source: one frame
-                    c.x, DST_Y, DST_W, DST_H     // destination: scaled position
-                );
-            });
-
-            requestAnimationFrame(draw);
+        function autoScroll() {
+            if (!scrolling) return;
+            if (scrollPos < maxScroll) {
+                scrollPos += 0.4;  // 慢速滚动
+                logBody.scrollTop = scrollPos;
+                requestAnimationFrame(autoScroll);
+            } else {
+                // 到底后暂停 2 秒，再滚回顶部，循环
+                setTimeout(() => {
+                    scrollPos = 0;
+                    logBody.scrollTop = 0;
+                    setTimeout(autoScroll, 500);
+                }, 2000);
+            }
         }
 
-        requestAnimationFrame(draw);
-    }
+        autoScroll();
+    }, 2500);
 }());
 </script>
 </body>
