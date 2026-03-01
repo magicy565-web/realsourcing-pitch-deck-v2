@@ -218,57 +218,67 @@
             animation: statusPulse 2s infinite;
         }
 
-        /* ── Sprite Sheet Animation (using <img> + clip-path) ──
-         * Each sprite sheet: 2752x1536px, 4 frames side by side (688x1536 each)
-         * Use object-fit: cover to fill container, then clip to show one frame at a time
-         * Animate object-position to shift the visible frame
+        /* ── Scene + Sprite Overlay Animation ──
+         * scene_bg.png (2048x1143): full office scene with 3 characters
+         * sprite sheets (2752x1536, 4 frames each): overlay on each character
+         *
+         * Layout:
+         *   .scene-container: aspect-ratio 2048/1143, relative positioned
+         *   .scene-bg: 100% width background
+         *   .sprite-overlay: absolute, covers 1/3 of scene width, full height
+         *   .sprite-sheet: 400% wide (4 frames), animated via translateX
          */
-        .sprite-panel {
+        .scene-container {
             position: relative;
-            flex: 1;
+            width: 100%;
+            aspect-ratio: 2048 / 1143;
             overflow: hidden;
-            background: #0a0d1a;
         }
-        /* The sprite img fills the panel */
-        .sprite-img {
+        .scene-bg {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 0% center;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
-        .sprite-sarah-img {
-            animation: spriteFrameSarah 1.6s steps(4) infinite;
+        /* Each sprite overlay covers exactly 1/3 of the scene width */
+        .sprite-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            overflow: hidden;
         }
-        .sprite-mike-img {
-            animation: spriteFrameMike 2.4s steps(4) infinite;
+        /* sprite-sheet img: 4 frames wide, full overlay height */
+        /* Width = 400% of overlay = 100% of scene = shows 1 frame per overlay */
+        .sprite-sheet {
+            position: absolute;
+            /* Height: sprite aspect = 688:1536 = 0.448
+               overlay width = 33.33% of scene width
+               if scene displays at W px, overlay = W/3
+               sprite height at W/3 wide = (W/3) / 0.448 = W*0.744
+               scene height = W * (1143/2048) = W * 0.558
+               sprite is taller: bottom-align by setting bottom:0 */
+            bottom: 0;
+            left: 0;
+            width: 400%;  /* 4 frames wide = overlay width * 4 */
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
-        .sprite-data-img {
-            animation: spriteFrameData 3.2s steps(4) infinite;
+        .sprite-sarah-anim {
+            animation: spriteWalk 1.6s steps(4) infinite;
         }
-        @keyframes spriteFrameSarah {
-            0%   { object-position: 0% center; }
-            25%  { object-position: 25% center; }
-            50%  { object-position: 50% center; }
-            75%  { object-position: 75% center; }
-            100% { object-position: 100% center; }
+        .sprite-mike-anim {
+            animation: spriteWalk 2.4s steps(4) infinite;
         }
-        @keyframes spriteFrameMike {
-            0%   { object-position: 0% center; }
-            25%  { object-position: 25% center; }
-            50%  { object-position: 50% center; }
-            75%  { object-position: 75% center; }
-            100% { object-position: 100% center; }
+        .sprite-data-anim {
+            animation: spriteWalk 3.2s steps(4) infinite;
         }
-        @keyframes spriteFrameData {
-            0%   { object-position: 0% center; }
-            25%  { object-position: 25% center; }
-            50%  { object-position: 50% center; }
-            75%  { object-position: 75% center; }
-            100% { object-position: 100% center; }
+        @keyframes spriteWalk {
+            from { transform: translateX(0%); }
+            to   { transform: translateX(-75%); }
         }
         /* Wood sign name badge */
         .wood-sign {
@@ -450,48 +460,37 @@
         <div style="flex:1; display:flex; flex-direction:column; gap:16px; min-width:0;">
 
             <!-- Stardew Valley Style Sprite Sheet Animation Corridor -->
-            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; height:220px; display:flex; flex-direction:column;">
+            <div style="position:relative; border:1px solid rgba(99,102,241,0.3); border-radius:12px; overflow:hidden; background:#0a0d1a; display:flex; flex-direction:column;">
                 <!-- Top label bar -->
-                <div style="height:20px; background:rgba(10,13,26,0.95); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2); flex-shrink:0;">
+                <div style="height:24px; background:rgba(10,13,26,0.95); z-index:20; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid rgba(99,102,241,0.2); flex-shrink:0;">
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
                     <span style="font-size:8px; color:#10b981; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
                 </div>
-                <!-- Three sprite panels side by side -->
-                <div style="flex:1; display:flex; gap:2px; overflow:hidden;">
+                <!-- Scene: background image + sprite overlays -->
+                <div class="scene-container">
+                    <!-- Static scene background -->
+                    <img src="assets/scene_bg.png" class="scene-bg" alt="office scene" />
 
-                    <!-- Sarah: Typing Reply -->
-                    <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
-                        <img src="assets/sarah_sprite.png?v=3" class="sprite-img sprite-sarah-img" alt="Sarah" />
-                        <div class="wood-sign">
-                            <span class="wood-sign-name">✦ Sarah</span>
-                            <span class="wood-sign-role">Sales · 线索跟进中</span>
-                        </div>
-                        <div class="status-dot" style="background:#10b981; box-shadow:0 0 6px #10b981;"></div>
-                        <div class="scanline"></div>
+                    <!-- Sarah sprite overlay (left third: 0/3 = 0%) -->
+                    <div class="sprite-overlay" style="left:0%; width:33.33%;">
+                        <img src="assets/sarah_sprite.png?v=4" class="sprite-sheet sprite-sarah-anim" alt="Sarah" />
                     </div>
 
-                    <!-- Mike: Deep Thinking → Eureka -->
-                    <div class="sprite-panel" style="border-right:1px solid rgba(99,102,241,0.15);">
-                        <img src="assets/mike_sprite.png?v=3" class="sprite-img sprite-mike-img" alt="Mike" />
-                        <div class="wood-sign" style="animation-delay:0.8s;">
-                            <span class="wood-sign-name">✦ Mike</span>
-                            <span class="wood-sign-role">Ops · 内容发布中</span>
-                        </div>
-                        <div class="status-dot" style="background:#6366f1; box-shadow:0 0 6px #6366f1; animation-delay:0.5s;"></div>
-                        <div class="scanline"></div>
+                    <!-- Mike sprite overlay (middle third: 1/3 = 33.33%) -->
+                    <div class="sprite-overlay" style="left:33.33%; width:33.34%;">
+                        <img src="assets/mike_sprite.png?v=4" class="sprite-sheet sprite-mike-anim" alt="Mike" />
                     </div>
 
-                    <!-- Data: Coffee → Phone Call -->
-                    <div class="sprite-panel">
-                        <img src="assets/data_sprite.png?v=3" class="sprite-img sprite-data-img" alt="Data" />
-                        <div class="wood-sign" style="animation-delay:1.6s;">
-                            <span class="wood-sign-name">✦ Data</span>
-                            <span class="wood-sign-role">AI · 线索扫描中</span>
-                        </div>
-                        <div class="status-dot" style="background:#a78bfa; box-shadow:0 0 6px #a78bfa; animation-delay:1s;"></div>
-                        <div class="scanline"></div>
+                    <!-- Data sprite overlay (right third: 2/3 = 66.67%) -->
+                    <div class="sprite-overlay" style="left:66.67%; width:33.33%;">
+                        <img src="assets/data_sprite.png?v=4" class="sprite-sheet sprite-data-anim" alt="Data" />
                     </div>
 
+                    <!-- Status dots -->
+                    <div class="status-dot" style="left:12%; background:#10b981; box-shadow:0 0 6px #10b981;"></div>
+                    <div class="status-dot" style="left:45%; background:#6366f1; box-shadow:0 0 6px #6366f1; animation-delay:0.5s;"></div>
+                    <div class="status-dot" style="left:78%; background:#a78bfa; box-shadow:0 0 6px #a78bfa; animation-delay:1s;"></div>
+                    <div class="scanline"></div>
                 </div>
             </div>
 
