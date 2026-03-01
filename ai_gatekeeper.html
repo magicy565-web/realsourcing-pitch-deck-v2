@@ -10,131 +10,284 @@
         body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
         .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
 
-        /* Background */
-        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.1; }
+        /* ── Background ── */
+        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.08; }
         .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
             background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(79,110,247,0.08) 0%, transparent 70%),
-                        linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.7) 50%, rgba(5,5,16,0.95) 100%); }
+                        linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.6) 50%, rgba(5,5,16,0.95) 100%); }
         .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
             background-image: linear-gradient(rgba(79,110,247,0.03) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(79,110,247,0.03) 1px, transparent 1px);
             background-size:60px 60px; }
 
-        /* Header */
+        /* ── Header ── */
         .header { position:absolute; top:36px; left:80px; z-index:10;
             opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
         .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
             color:#EF4444; margin-bottom:8px; }
-        .main-title { font-size:36px; font-weight:900; letter-spacing:-1px; }
+        .main-title { font-size:38px; font-weight:900; letter-spacing:-1px; }
         .title-em { color:#EF4444; }
         .subtitle-tag { font-size:14px; color:rgba(255,255,255,0.4); margin-top:6px; }
 
-        /* Main scene: 3 zones */
+        /* ── Main Scene ── */
         .scene { position:absolute; top:110px; left:0; right:0; bottom:80px; z-index:10;
-            display:grid; grid-template-columns:280px 1fr 280px; gap:0; padding:0 40px; align-items:center; }
+            display:grid; grid-template-columns:300px 1fr 300px; gap:0; padding:0 40px; align-items:center; }
 
-        /* Left: Factory Grid */
-        .factory-zone { display:flex; flex-direction:column; gap:12px; align-items:flex-end;
+        /* ══════════════════════════════════════
+           LEFT: Factory Zone
+        ══════════════════════════════════════ */
+        .factory-zone { display:flex; flex-direction:column; gap:10px; align-items:flex-end;
             opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
-        .factory-zone-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-            color:rgba(255,255,255,0.3); text-align:right; margin-bottom:4px; }
-        .factory-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; }
-        .factory-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center;
-            justify-content:center; font-size:20px; position:relative; }
-        .factory-blocked { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); }
-        .factory-blocked::after { content:'✕'; position:absolute; top:-6px; right:-6px;
-            background:#EF4444; color:#fff; font-size:9px; font-weight:900;
-            width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-            line-height:16px; text-align:center; }
-        .factory-pass { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
-            box-shadow:0 0 16px rgba(16,185,129,0.2); }
-        .factory-pass::after { content:'✓'; position:absolute; top:-6px; right:-6px;
-            background:#10B981; color:#fff; font-size:9px; font-weight:900;
-            width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-            line-height:16px; text-align:center; }
+        .factory-zone-title { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+            color:rgba(255,255,255,0.25); text-align:right; margin-bottom:6px; }
+        .factory-row { display:flex; align-items:center; gap:10px; justify-content:flex-end; }
         .factory-label { font-size:11px; color:rgba(255,255,255,0.3); }
         .factory-label-pass { color:#10B981; font-weight:600; }
 
-        /* Center: AI Gate */
-        .gate-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+        /* SVG Factory Icon wrapper */
+        .factory-icon-wrap { width:48px; height:48px; border-radius:10px;
+            display:flex; align-items:center; justify-content:center;
+            position:relative; flex-shrink:0; }
+        .fi-blocked { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); }
+        .fi-pass { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+            box-shadow:0 0 16px rgba(16,185,129,0.2); }
+
+        /* Status badge (MG draw-in) */
+        .status-badge { position:absolute; top:-7px; right:-7px; width:18px; height:18px;
+            border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .badge-x { background:#EF4444; }
+        .badge-check { background:#10B981; }
+        .badge-svg { width:10px; height:10px; }
+        .badge-svg path { stroke-dasharray:20; stroke-dashoffset:20;
+            animation:drawPath 0.5s ease-out forwards; }
+        .fi-blocked .badge-svg path { animation-delay:1.2s; }
+        .fi-pass .badge-svg path { animation-delay:1.6s; }
+        /* Stagger delays for each row */
+        .fr-1 .badge-svg path { animation-delay:1.0s; }
+        .fr-2 .badge-svg path { animation-delay:1.15s; }
+        .fr-3 .badge-svg path { animation-delay:1.3s; }
+        .fr-4 .badge-svg path { animation-delay:1.45s; }
+        .fr-5 .badge-svg path { animation-delay:1.6s; }
+        .fr-6 .badge-svg path { animation-delay:1.75s; }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+
+        /* Factory SVG icon */
+        .factory-svg { width:30px; height:30px; }
+
+        /* Smoke animation (only for pass factories) */
+        .smoke { animation:smokeRise 2s ease-out infinite; transform-origin:bottom center; }
+        .smoke-1 { animation-delay:0s; }
+        .smoke-2 { animation-delay:0.6s; }
+        .smoke-3 { animation-delay:1.2s; }
+        @keyframes smokeRise {
+            0%   { transform:translateY(0) scale(0.5); opacity:0.6; }
+            60%  { transform:translateY(-6px) scale(1); opacity:0.3; }
+            100% { transform:translateY(-10px) scale(1.3); opacity:0; }
+        }
+
+        /* ══════════════════════════════════════
+           CENTER: AI Gate
+        ══════════════════════════════════════ */
+        .gate-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
             opacity:0; animation:fadeIn 1s ease-out forwards 0.8s; }
-        .gate-container { position:relative; display:flex; align-items:center; justify-content:center; }
-        .gate-ring { position:absolute; border-radius:50%; border:1px solid rgba(79,110,247,0.15);
-            animation:ringPulse 3s ease-in-out infinite; }
-        .gate-ring-1 { width:180px; height:180px; animation-delay:0s; }
-        .gate-ring-2 { width:220px; height:220px; animation-delay:0.5s; border-color:rgba(79,110,247,0.08); }
-        .gate-ring-3 { width:260px; height:260px; animation-delay:1s; border-color:rgba(79,110,247,0.04); }
-        @keyframes ringPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.03);opacity:0.6} }
-        .gate-core { width:140px; height:140px; border-radius:50%;
-            background:radial-gradient(circle, rgba(79,110,247,0.2) 0%, rgba(79,110,247,0.05) 70%, transparent 100%);
-            border:2px solid rgba(79,110,247,0.4);
+        .gate-container { position:relative; display:flex; align-items:center; justify-content:center;
+            width:280px; height:280px; }
+
+        /* Outer rings */
+        .gate-ring { position:absolute; border-radius:50%; border:1px solid rgba(79,110,247,0.15); }
+        .gate-ring-1 { width:180px; height:180px; animation:ringPulse 3s ease-in-out infinite 0s; }
+        .gate-ring-2 { width:220px; height:220px; animation:ringPulse 3s ease-in-out infinite 0.6s; border-color:rgba(79,110,247,0.08); }
+        .gate-ring-3 { width:260px; height:260px; animation:ringPulse 3s ease-in-out infinite 1.2s; border-color:rgba(79,110,247,0.04); }
+        @keyframes ringPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.04);opacity:0.5} }
+
+        /* Rotating scan arc */
+        .scan-arc { position:absolute; width:160px; height:160px; border-radius:50%;
+            border:2px solid transparent;
+            border-top-color:rgba(79,110,247,0.6);
+            border-right-color:rgba(79,110,247,0.2);
+            animation:scanRotate 4s linear infinite; z-index:3; }
+        @keyframes scanRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+        /* Core circle: ChatGPT breathing */
+        .gate-core { width:130px; height:130px; border-radius:50%;
+            background:radial-gradient(circle, rgba(79,110,247,0.15) 0%, rgba(79,110,247,0.04) 70%, transparent 100%);
+            border:2px solid rgba(79,110,247,0.35);
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            box-shadow:0 0 40px rgba(79,110,247,0.3), inset 0 0 30px rgba(79,110,247,0.1);
-            position:relative; z-index:2; }
-        .gate-logo { width:56px; height:56px; border-radius:50%;
+            position:relative; z-index:4;
+            animation:coreBreath 3.5s ease-in-out infinite;
+            box-shadow:0 0 0 0 rgba(79,110,247,0.4); }
+        @keyframes coreBreath {
+            0%,100% {
+                transform:scale(1);
+                box-shadow:0 0 20px rgba(79,110,247,0.25), 0 0 0 0 rgba(79,110,247,0.15);
+            }
+            50% {
+                transform:scale(1.06);
+                box-shadow:0 0 40px rgba(79,110,247,0.5), 0 0 60px rgba(79,110,247,0.15);
+            }
+        }
+
+        /* ChatGPT logo inside core */
+        .chatgpt-logo-wrap { width:58px; height:58px; border-radius:50%;
             background:#fff; display:flex; align-items:center; justify-content:center;
-            box-shadow:0 4px 20px rgba(0,0,0,0.5); margin-bottom:8px; overflow:hidden; }
-        .gate-logo img { width:40px; height:40px; object-fit:contain; }
+            margin-bottom:8px; overflow:hidden;
+            animation:logoBreath 3.5s ease-in-out infinite;
+            box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+        @keyframes logoBreath {
+            0%,100% { box-shadow:0 4px 20px rgba(0,0,0,0.4), 0 0 0 0 rgba(255,255,255,0.1); }
+            50%      { box-shadow:0 4px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.15); }
+        }
+        .chatgpt-logo-wrap img { width:42px; height:42px; object-fit:contain; }
         .gate-label { font-size:11px; font-weight:700; color:#8BA4FF; letter-spacing:1px; }
         .gate-sublabel { font-size:9px; color:rgba(255,255,255,0.3); margin-top:2px; }
 
         /* Data stats below gate */
-        .gate-stats { display:flex; gap:16px; }
-        .gate-stat { text-align:center; padding:10px 16px;
+        .gate-stats { display:flex; gap:12px; }
+        .gate-stat { text-align:center; padding:10px 14px;
             background:rgba(79,110,247,0.06); border:1px solid rgba(79,110,247,0.12); border-radius:12px; }
         .gate-stat-num { font-size:22px; font-weight:900; color:#4F6EF7; }
         .gate-stat-label { font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px; }
 
-        /* Right: Buyer Zone */
-        .buyer-zone { display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+        /* ══════════════════════════════════════
+           FLOW ARROWS (SVG animated)
+        ══════════════════════════════════════ */
+        .flow-arrow-svg { position:absolute; top:50%; z-index:5; transform:translateY(-50%); }
+        .arrow-left-svg { left:348px; }
+        .arrow-right-svg { right:348px; }
+        .arrow-path { stroke-dasharray:60; stroke-dashoffset:60;
+            animation:drawArrow 0.8s ease-out forwards 1.4s; }
+        .arrow-head { opacity:0; animation:fadeIn 0.3s ease-out forwards 2.1s; }
+        @keyframes drawArrow { to { stroke-dashoffset:0; } }
+        /* Flowing dots on arrow */
+        .flow-dot { animation:flowDot 2s linear infinite; }
+        .flow-dot-1 { animation-delay:0s; }
+        .flow-dot-2 { animation-delay:0.7s; }
+        .flow-dot-3 { animation-delay:1.4s; }
+        @keyframes flowDot {
+            0%   { offset-distance:0%;   opacity:0; }
+            10%  { opacity:1; }
+            90%  { opacity:1; }
+            100% { offset-distance:100%; opacity:0; }
+        }
+
+        /* ══════════════════════════════════════
+           RIGHT: Buyer Zone
+        ══════════════════════════════════════ */
+        .buyer-zone { display:flex; flex-direction:column; align-items:flex-start; gap:14px;
             opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 1.0s; }
-        .buyer-zone-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-            color:rgba(255,255,255,0.3); margin-bottom:4px; }
-        .buyer-icon-box { width:80px; height:80px; border-radius:50%;
+        .buyer-zone-title { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+            color:rgba(255,255,255,0.25); margin-bottom:4px; }
+
+        /* Person icon – pure CSS MG */
+        .buyer-person-wrap { width:80px; height:80px; border-radius:50%;
             background:rgba(16,185,129,0.08); border:2px solid rgba(16,185,129,0.3);
-            display:flex; align-items:center; justify-content:center; font-size:36px;
-            box-shadow:0 0 30px rgba(16,185,129,0.15); }
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 0 30px rgba(16,185,129,0.15);
+            animation:personPulse 3s ease-in-out infinite 1.5s;
+            position:relative; overflow:visible; }
+        @keyframes personPulse {
+            0%,100% { box-shadow:0 0 20px rgba(16,185,129,0.15); }
+            50%      { box-shadow:0 0 40px rgba(16,185,129,0.35); }
+        }
+        /* CSS-drawn person figure */
+        .person-figure { position:relative; width:44px; height:52px; }
+        /* Head */
+        .person-head { width:16px; height:16px; border-radius:50%;
+            background:transparent; border:2px solid #10B981;
+            position:absolute; top:0; left:50%; transform:translateX(-50%);
+            animation:personDraw 0.5s ease-out forwards 1.2s;
+            clip-path:circle(0% at 50% 50%); }
+        @keyframes personDraw { to { clip-path:circle(60% at 50% 50%); } }
+        /* Body arc */
+        .person-body { position:absolute; top:18px; left:0; width:44px; height:26px; }
+        /* Shoulders line */
+        .person-shoulder { position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,#10B981,transparent);
+            border-radius:1px;
+            transform:scaleX(0); transform-origin:center;
+            animation:scaleIn 0.5s ease-out forwards 1.7s; }
+        @keyframes scaleIn { to { transform:scaleX(1); } }
+        /* Torso */
+        .person-torso { position:absolute; top:2px; left:50%; transform:translateX(-50%);
+            width:2px; height:16px; background:#10B981; border-radius:1px;
+            transform-origin:top center;
+            animation:growDown 0.4s ease-out forwards 1.9s; height:0; }
+        @keyframes growDown { to { height:16px; } }
+        /* Arms */
+        .person-arm-l { position:absolute; top:4px; left:4px; width:14px; height:2px;
+            background:#10B981; border-radius:1px; transform-origin:right center;
+            transform:rotate(-30deg) scaleX(0);
+            animation:armIn 0.4s ease-out forwards 2.1s; }
+        .person-arm-r { position:absolute; top:4px; right:4px; width:14px; height:2px;
+            background:#10B981; border-radius:1px; transform-origin:left center;
+            transform:rotate(30deg) scaleX(0);
+            animation:armIn 0.4s ease-out forwards 2.1s; }
+        @keyframes armIn { to { transform:rotate(-30deg) scaleX(1); } }
+        /* Legs */
+        .person-leg-l { position:absolute; bottom:0; left:10px; width:2px; height:12px;
+            background:#10B981; border-radius:1px; transform-origin:top center;
+            transform:rotate(-8deg) scaleY(0);
+            animation:legIn 0.4s ease-out forwards 2.3s; }
+        .person-leg-r { position:absolute; bottom:0; right:10px; width:2px; height:12px;
+            background:#10B981; border-radius:1px; transform-origin:top center;
+            transform:rotate(8deg) scaleY(0);
+            animation:legIn 0.4s ease-out forwards 2.3s; }
+        @keyframes legIn { to { transform:rotate(-8deg) scaleY(1); } }
+        /* Tablet/device in hand */
+        .person-tablet { position:absolute; top:6px; right:0; width:10px; height:8px;
+            border:1.5px solid #6EE7B7; border-radius:1px;
+            opacity:0; animation:fadeIn 0.4s ease-out forwards 2.5s; }
+        /* Pulse dot (AI signal) */
+        .person-dot { position:absolute; top:10px; left:50%; transform:translateX(-50%);
+            width:5px; height:5px; border-radius:50%; background:#10B981;
+            animation:dotPulse 2s ease-in-out infinite 2.8s; }
+        @keyframes dotPulse { 0%,100%{opacity:0.4;transform:translateX(-50%) scale(1)} 50%{opacity:1;transform:translateX(-50%) scale(1.4)} }
+        .person-svg { width:44px; height:44px; }
+
         .buyer-label { font-size:14px; font-weight:700; color:#6EE7B7; }
         .buyer-sublabel { font-size:11px; color:rgba(255,255,255,0.3); }
+
+        /* Visible factories list */
         .buyer-sees { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15);
             border-radius:12px; padding:12px 16px; }
-        .buyer-sees-title { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:8px; }
+        .buyer-sees-title { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:10px;
+            display:flex; align-items:center; gap:6px; }
+        .check-mini-svg { width:12px; height:12px; }
+        .check-mini-path { stroke-dasharray:20; stroke-dashoffset:20;
+            animation:drawPath 0.5s ease-out forwards 2s; }
         .buyer-sees-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-        .mini-factory { width:28px; height:28px; border-radius:6px;
+        .mini-factory-wrap { width:28px; height:28px; border-radius:6px;
             background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3);
-            display:flex; align-items:center; justify-content:center; font-size:14px; }
+            display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .mini-factory-svg { width:18px; height:18px; }
         .mini-factory-label { font-size:11px; color:#6EE7B7; }
 
-        /* Flow arrows */
-        .flow-arrow { position:absolute; top:50%; z-index:5; font-size:24px; color:rgba(79,110,247,0.4);
-            animation:arrowPulse 2s ease-in-out infinite; }
-        .arrow-left { left:310px; transform:translateY(-50%); }
-        .arrow-right { right:310px; transform:translateY(-50%) scaleX(-1); }
-        @keyframes arrowPulse { 0%,100%{opacity:0.4;transform:translateY(-50%) translateX(0)} 50%{opacity:0.8;transform:translateY(-50%) translateX(4px)} }
-        .arrow-right { animation-name:arrowPulseRight; }
-        @keyframes arrowPulseRight { 0%,100%{opacity:0.4;transform:translateY(-50%) scaleX(-1) translateX(0)} 50%{opacity:0.8;transform:translateY(-50%) scaleX(-1) translateX(4px)} }
-
-        /* Bottom Verdict */
+        /* ══════════════════════════════════════
+           BOTTOM VERDICT
+        ══════════════════════════════════════ */
         .verdict { position:absolute; bottom:16px; left:0; right:0; text-align:center; z-index:10;
-            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.4s; }
+            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.6s; }
         .verdict-box { display:inline-flex; align-items:center; gap:12px;
             background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
             border-radius:100px; padding:12px 32px; }
+        .warn-svg { width:18px; height:18px; flex-shrink:0; }
+        .warn-path { stroke-dasharray:80; stroke-dashoffset:80;
+            animation:drawPath 0.8s ease-out forwards 2s; }
         .verdict-text { font-size:15px; font-weight:700; color:rgba(255,255,255,0.8); }
         .verdict-em { color:#EF4444; font-size:16px; }
 
-        /* Slide num */
+        /* ── Misc ── */
         .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
             color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
         .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
             background:linear-gradient(90deg,#EF4444,#4F6EF7,#10B981); }
 
-        /* Animations */
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        /* ── Keyframes ── */
+        @keyframes fadeIn      { from{opacity:0} to{opacity:1} }
+        @keyframes fadeInDown  { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp    { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
         @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInRight{ from{opacity:0;transform:translateX(30px)}  to{opacity:1;transform:translateX(0)} }
     </style>
 </head>
 <body>
@@ -145,58 +298,187 @@
     <div class="bg-overlay"></div>
     <div class="grid-lines"></div>
 
-    <!-- Header -->
+    <!-- ── Header ── -->
     <div class="header">
         <div class="section-tag">Problem &middot; 问题</div>
         <div class="main-title">AI 已成为采购的 <span class="title-em">守门员</span></div>
         <div class="subtitle-tag">工厂若无 AI 能力，将彻底"隐形"于全球买家视野之外</div>
     </div>
 
-    <!-- Main Scene -->
+    <!-- ── Main Scene ── -->
     <div class="scene">
-        <!-- Left: Factory Grid -->
+
+        <!-- LEFT: Factory Grid -->
         <div class="factory-zone">
             <div class="factory-zone-title">全球工厂</div>
-            <div class="factory-row">
+
+            <!-- Factory Row 1 – blocked -->
+            <div class="factory-row fr-1">
                 <span class="factory-label">传统工厂 A</span>
-                <div class="factory-icon factory-blocked">&#127981;</div>
+                <div class="factory-icon-wrap fi-blocked">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- chimney -->
+                        <rect x="5" y="8" width="4" height="14" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="11" y="11" width="3" height="11" rx="1" fill="rgba(255,255,255,0.12)"/>
+                        <!-- building body -->
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+                        <!-- windows -->
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <!-- ground line -->
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-x">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 2 L8 8 M8 2 L2 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="factory-row">
+
+            <!-- Factory Row 2 – blocked -->
+            <div class="factory-row fr-2">
                 <span class="factory-label">传统工厂 B</span>
-                <div class="factory-icon factory-blocked">&#127981;</div>
+                <div class="factory-icon-wrap fi-blocked">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none">
+                        <rect x="5" y="8" width="4" height="14" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="11" y="11" width="3" height="11" rx="1" fill="rgba(255,255,255,0.12)"/>
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-x">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 2 L8 8 M8 2 L2 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="factory-row">
+
+            <!-- Factory Row 3 – blocked -->
+            <div class="factory-row fr-3">
                 <span class="factory-label">传统工厂 C</span>
-                <div class="factory-icon factory-blocked">&#127981;</div>
+                <div class="factory-icon-wrap fi-blocked">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none">
+                        <rect x="5" y="8" width="4" height="14" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="11" y="11" width="3" height="11" rx="1" fill="rgba(255,255,255,0.12)"/>
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-x">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 2 L8 8 M8 2 L2 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="factory-row">
+
+            <!-- Factory Row 4 – blocked -->
+            <div class="factory-row fr-4">
                 <span class="factory-label">传统工厂 D</span>
-                <div class="factory-icon factory-blocked">&#127981;</div>
+                <div class="factory-icon-wrap fi-blocked">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none">
+                        <rect x="5" y="8" width="4" height="14" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="11" y="11" width="3" height="11" rx="1" fill="rgba(255,255,255,0.12)"/>
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="rgba(255,255,255,0.25)"/>
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-x">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 2 L8 8 M8 2 L2 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="factory-row">
+
+            <!-- Factory Row 5 – PASS (with smoke) -->
+            <div class="factory-row fr-5">
                 <span class="factory-label factory-label-pass">AI 赋能工厂 E</span>
-                <div class="factory-icon factory-pass">&#127981;</div>
+                <div class="factory-icon-wrap fi-pass">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none">
+                        <!-- animated smoke puffs -->
+                        <circle class="smoke smoke-1" cx="7"  cy="7" r="1.5" fill="rgba(16,185,129,0.5)"/>
+                        <circle class="smoke smoke-2" cx="12.5" cy="7" r="1.2" fill="rgba(16,185,129,0.4)"/>
+                        <circle class="smoke smoke-3" cx="7"  cy="7" r="1"   fill="rgba(16,185,129,0.3)"/>
+                        <!-- chimney -->
+                        <rect x="5" y="8" width="4" height="12" rx="1" fill="#10B981" opacity="0.7"/>
+                        <rect x="11" y="11" width="3" height="9" rx="1" fill="#10B981" opacity="0.5"/>
+                        <!-- building -->
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="#10B981" opacity="0.35"/>
+                        <!-- windows lit -->
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-check">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M1.5 5 L4 7.5 L8.5 2.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="factory-row">
+
+            <!-- Factory Row 6 – PASS (with smoke) -->
+            <div class="factory-row fr-6">
                 <span class="factory-label factory-label-pass">AI 赋能工厂 F</span>
-                <div class="factory-icon factory-pass">&#127981;</div>
+                <div class="factory-icon-wrap fi-pass">
+                    <svg class="factory-svg" viewBox="0 0 30 30" fill="none">
+                        <circle class="smoke smoke-2" cx="7"  cy="7" r="1.5" fill="rgba(16,185,129,0.5)"/>
+                        <circle class="smoke smoke-3" cx="12.5" cy="7" r="1.2" fill="rgba(16,185,129,0.4)"/>
+                        <circle class="smoke smoke-1" cx="7"  cy="7" r="1"   fill="rgba(16,185,129,0.3)"/>
+                        <rect x="5" y="8" width="4" height="12" rx="1" fill="#10B981" opacity="0.7"/>
+                        <rect x="11" y="11" width="3" height="9" rx="1" fill="#10B981" opacity="0.5"/>
+                        <rect x="3" y="18" width="24" height="9" rx="1.5" fill="#10B981" opacity="0.35"/>
+                        <rect x="6"  y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="11" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="16" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <rect x="21" y="21" width="3" height="3" rx="0.5" fill="#6EE7B7" opacity="0.9"/>
+                        <line x1="1" y1="27" x2="29" y2="27" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+                    </svg>
+                    <div class="status-badge badge-check">
+                        <svg class="badge-svg" viewBox="0 0 10 10" fill="none">
+                            <path d="M1.5 5 L4 7.5 L8.5 2.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Center: AI Gate -->
+        <!-- CENTER: AI Gate -->
         <div class="gate-zone">
             <div class="gate-container">
+                <!-- Outer pulse rings -->
                 <div class="gate-ring gate-ring-3"></div>
                 <div class="gate-ring gate-ring-2"></div>
                 <div class="gate-ring gate-ring-1"></div>
+                <!-- Rotating scan arc -->
+                <div class="scan-arc"></div>
+                <!-- Core with ChatGPT breathing -->
                 <div class="gate-core">
-                    <div class="gate-logo">
+                    <div class="chatgpt-logo-wrap">
                         <img src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/bVAGeIBavmFdBZLW.png" alt="ChatGPT">
                     </div>
                     <div class="gate-label">AI 守门员</div>
                     <div class="gate-sublabel">AI Gatekeeper</div>
                 </div>
             </div>
+
+            <!-- Stats -->
             <div class="gate-stats">
                 <div class="gate-stat">
                     <div class="gate-stat-num">90%</div>
@@ -213,36 +495,114 @@
             </div>
         </div>
 
-        <!-- Right: Buyer -->
+        <!-- RIGHT: Buyer Zone -->
         <div class="buyer-zone">
             <div class="buyer-zone-title">海外采购商</div>
-            <div class="buyer-icon-box">&#128722;</div>
+
+            <!-- Person figure – CSS MG animation -->
+            <div class="buyer-person-wrap">
+                <div class="person-figure">
+                    <div class="person-head"></div>
+                    <div class="person-body">
+                        <div class="person-shoulder"></div>
+                        <div class="person-torso"></div>
+                        <div class="person-arm-l"></div>
+                        <div class="person-arm-r"></div>
+                        <div class="person-leg-l"></div>
+                        <div class="person-leg-r"></div>
+                        <div class="person-tablet"></div>
+                        <div class="person-dot"></div>
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <div class="buyer-label">只看到 AI 推荐的工厂</div>
                 <div class="buyer-sublabel">传统工厂已从视野中消失</div>
             </div>
+
+            <!-- Visible factories -->
             <div class="buyer-sees">
-                <div class="buyer-sees-title">&#10003; 进入视野的工厂</div>
+                <div class="buyer-sees-title">
+                    <!-- Animated check -->
+                    <svg class="check-mini-svg" viewBox="0 0 12 12" fill="none">
+                        <path class="check-mini-path" d="M1.5 6 L4.5 9 L10.5 3" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    进入视野的工厂
+                </div>
                 <div class="buyer-sees-row">
-                    <div class="mini-factory">&#127981;</div>
+                    <div class="mini-factory-wrap">
+                        <svg class="mini-factory-svg" viewBox="0 0 18 18" fill="none">
+                            <circle class="smoke smoke-1" cx="4" cy="3.5" r="1" fill="rgba(16,185,129,0.6)"/>
+                            <rect x="3" y="4" width="2.5" height="7" rx="0.5" fill="#10B981" opacity="0.7"/>
+                            <rect x="6.5" y="5.5" width="2" height="5.5" rx="0.5" fill="#10B981" opacity="0.5"/>
+                            <rect x="2" y="10" width="14" height="6" rx="1" fill="#10B981" opacity="0.35"/>
+                            <rect x="3.5" y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                            <rect x="7"   y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                            <rect x="10.5" y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                        </svg>
+                    </div>
                     <span class="mini-factory-label">AI 赋能工厂 E &middot; AMR 94</span>
                 </div>
                 <div class="buyer-sees-row">
-                    <div class="mini-factory">&#127981;</div>
+                    <div class="mini-factory-wrap">
+                        <svg class="mini-factory-svg" viewBox="0 0 18 18" fill="none">
+                            <circle class="smoke smoke-2" cx="4" cy="3.5" r="1" fill="rgba(16,185,129,0.6)"/>
+                            <rect x="3" y="4" width="2.5" height="7" rx="0.5" fill="#10B981" opacity="0.7"/>
+                            <rect x="6.5" y="5.5" width="2" height="5.5" rx="0.5" fill="#10B981" opacity="0.5"/>
+                            <rect x="2" y="10" width="14" height="6" rx="1" fill="#10B981" opacity="0.35"/>
+                            <rect x="3.5" y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                            <rect x="7"   y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                            <rect x="10.5" y="12" width="2" height="2" rx="0.3" fill="#6EE7B7" opacity="0.9"/>
+                        </svg>
+                    </div>
                     <span class="mini-factory-label">AI 赋能工厂 F &middot; AMR 91</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Flow Arrows -->
-    <div class="flow-arrow arrow-left">&#9654;</div>
-    <div class="flow-arrow arrow-right">&#9654;</div>
+    <!-- ── Flow Arrows (SVG animated) ── -->
+    <!-- Left arrow: factories → gate -->
+    <svg class="flow-arrow-svg arrow-left-svg" width="60" height="24" viewBox="0 0 60 24" fill="none">
+        <path class="arrow-path" d="M4 12 H52" stroke="rgba(79,110,247,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+        <path class="arrow-head" d="M48 6 L58 12 L48 18" stroke="rgba(79,110,247,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <!-- flowing dots -->
+        <circle r="2.5" fill="#4F6EF7" opacity="0.8">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="2s">
+                <mpath href="#arrow-left-path"/>
+            </animateMotion>
+        </circle>
+    </svg>
 
-    <!-- Bottom Verdict -->
+    <!-- Right arrow: gate → buyer -->
+    <svg class="flow-arrow-svg arrow-right-svg" width="60" height="24" viewBox="0 0 60 24" fill="none">
+        <path class="arrow-path" d="M4 12 H52" stroke="rgba(16,185,129,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+        <path class="arrow-head" d="M48 6 L58 12 L48 18" stroke="rgba(16,185,129,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle r="2.5" fill="#10B981" opacity="0.8">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="2.3s">
+                <mpath href="#arrow-right-path"/>
+            </animateMotion>
+        </circle>
+    </svg>
+
+    <!-- Hidden motion paths for animateMotion -->
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <path id="arrow-left-path"  d="M4 12 H52"/>
+            <path id="arrow-right-path" d="M4 12 H52"/>
+        </defs>
+    </svg>
+
+    <!-- ── Bottom Verdict ── -->
     <div class="verdict">
         <div class="verdict-box">
-            <span>&#9888;</span>
+            <!-- Animated warning triangle -->
+            <svg class="warn-svg" viewBox="0 0 18 18" fill="none">
+                <path class="warn-path" d="M9 2 L16.5 15.5 H1.5 Z" stroke="#EF4444" stroke-width="1.5" stroke-linejoin="round"/>
+                <line x1="9" y1="7" x2="9" y2="11" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="9" cy="13.5" r="0.8" fill="#EF4444"/>
+            </svg>
             <span class="verdict-text">2026 年的采购门槛：不是价格，不是质量，而是——</span>
             <span class="verdict-em">你的工厂能被 AI 找到吗？</span>
         </div>
