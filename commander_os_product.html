@@ -466,17 +466,11 @@
                     <span style="font-size:8px; color:#6366f1; font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; font-weight:700;">COMMANDER OS · DIGITAL TEAM · 24H ONLINE</span>
                     <span style="font-size:8px; color:#10b981; font-family:'JetBrains Mono',monospace; animation:statusBlink 1.5s ease-in-out infinite;">● 3 AGENTS ACTIVE</span>
                 </div>
-                <!-- Three animated GIFs side by side, fixed aspect-ratio to prevent layout shift -->
-                <div style="display:flex; width:100%; background:#0a0d1a; gap:0; overflow:hidden; align-items:stretch;">
-                    <div style="flex:1; aspect-ratio:512/1149; overflow:hidden; position:relative;">
-                        <img src="assets/sarah_anim.gif" alt="Sarah" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />
-                    </div>
-                    <div style="flex:1; aspect-ratio:512/1149; overflow:hidden; position:relative;">
-                        <img src="assets/mike_anim.gif" alt="Mike" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />
-                    </div>
-                    <div style="flex:1; aspect-ratio:512/1149; overflow:hidden; position:relative;">
-                        <img src="assets/data_anim.gif" alt="Data" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />
-                    </div>
+                <!-- Three animated GIFs side by side -->
+                <div style="display:flex; width:100%; background:#0a0d1a; overflow:hidden; will-change:transform;">
+                    <img src="assets/sarah_anim.gif" alt="Sarah" style="flex:1; width:33.33%; height:auto; display:block; image-rendering:pixelated; will-change:transform;" />
+                    <img src="assets/mike_anim.gif"  alt="Mike"  style="flex:1; width:33.34%; height:auto; display:block; image-rendering:pixelated; will-change:transform;" />
+                    <img src="assets/data_anim.gif"  alt="Data"  style="flex:1; width:33.33%; height:auto; display:block; image-rendering:pixelated; will-change:transform;" />
                 </div>
             </div>
 
