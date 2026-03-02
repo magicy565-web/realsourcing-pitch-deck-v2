@@ -33,25 +33,132 @@
         .main-layout { position:absolute; top:110px; left:0; right:0; bottom:70px; z-index:10;
             display:grid; grid-template-columns:1fr 320px 1fr; gap:0; padding:0 40px; align-items:center; }
 
-        /* Left Panel: Buyers */
-        .buyer-panel { background:rgba(79,110,247,0.04); border:1px solid rgba(79,110,247,0.12);
-            border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
-            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
-        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
-        .tag-blue { color:#4F6EF7; }
-        .tag-green { color:#10B981; }
-        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
-        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
-        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
-            background:rgba(79,110,247,0.06); border:1px solid rgba(79,110,247,0.10); border-radius:12px; }
-        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
-        .feature-text { flex:1; }
-        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
-        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
-        .value-box { background:rgba(79,110,247,0.08); border:1px solid rgba(79,110,247,0.2);
-            border-radius:12px; padding:12px 14px; margin-top:12px; }
-        .value-label { font-size:10px; font-weight:700; color:#4F6EF7; letter-spacing:1px; margin-bottom:4px; }
-        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
+        /* Left Panel: MacBook Pro Carousel */
+        .macbook-carousel { 
+            background:rgba(79,110,247,0.04); 
+            border:1px solid rgba(79,110,247,0.12);
+            border-radius:20px; 
+            padding:20px; 
+            height:480px; 
+            display:flex; 
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            opacity:0; 
+            animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .carousel-title {
+            font-size:14px;
+            font-weight:700;
+            color:#4F6EF7;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            margin-bottom:16px;
+            align-self:flex-start;
+            padding:0 8px;
+        }
+
+        .macbook-container {
+            position:relative;
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .macbook-frame {
+            position:relative;
+            width:280px;
+            height:180px;
+            background:#1a1a1a;
+            border-radius:12px 12px 0 0;
+            border:8px solid #2a2a2a;
+            box-shadow:0 20px 60px rgba(0,0,0,0.8);
+            overflow:hidden;
+        }
+
+        .macbook-notch {
+            position:absolute;
+            top:0;
+            left:50%;
+            transform:translateX(-50%);
+            width:60px;
+            height:8px;
+            background:#1a1a1a;
+            border-radius:0 0 20px 20px;
+            z-index:10;
+        }
+
+        .macbook-screen {
+            width:100%;
+            height:100%;
+            background:#fff;
+            position:relative;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            overflow:hidden;
+        }
+
+        .macbook-screen img {
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            opacity:0;
+            animation:fadeInScreen 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInScreen {
+            from { opacity:0; }
+            to { opacity:1; }
+        }
+
+        .macbook-base {
+            width:100%;
+            height:12px;
+            background:linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius:0 0 12px 12px;
+        }
+
+        .carousel-dots {
+            display:flex;
+            gap:8px;
+            margin-top:16px;
+            justify-content:center;
+        }
+
+        .dot {
+            width:8px;
+            height:8px;
+            border-radius:50%;
+            background:rgba(79,110,247,0.3);
+            cursor:pointer;
+            transition:all 0.3s ease;
+            border:1px solid rgba(79,110,247,0.5);
+        }
+
+        .dot.active {
+            background:#4F6EF7;
+            box-shadow:0 0 12px rgba(79,110,247,0.6);
+            transform:scale(1.3);
+        }
+
+        .step-label {
+            font-size:11px;
+            color:rgba(255,255,255,0.5);
+            margin-top:8px;
+            text-align:center;
+            min-height:14px;
+        }
+
+        .step-label.active {
+            color:#4F6EF7;
+            font-weight:600;
+        }
 
         /* Center Hub */
         .hub-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
@@ -91,9 +198,20 @@
         .factory-panel { background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12);
             border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
             opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
-        .feature-item-green { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); }
-        .value-box-green { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
-        .value-label-green { color:#10B981; }
+        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
+        .tag-green { color:#10B981; }
+        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
+        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
+        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
+            background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); border-radius:12px; }
+        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+        .feature-text { flex:1; }
+        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
+        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
+        .value-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
+            border-radius:12px; padding:12px 14px; margin-top:12px; }
+        .value-label { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:4px; }
+        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
 
         /* Bottom trust bar */
         .trust-bar { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
@@ -135,43 +253,25 @@
 
     <!-- Main Layout -->
     <div class="main-layout">
-        <!-- Left: Buyers -->
-        <div class="buyer-panel">
-            <div class="panel-tag tag-blue">DEMAND SIDE &middot; 需求侧</div>
-            <div class="panel-title">全球买家</div>
-            <div class="feature-list">
-                <div class="feature-item">
-                    <span class="feature-icon">&#9889;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">15 分钟极速匹配</div>
-                        <div class="feature-desc">AI 理解需求，自动筛选最优工厂</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128172;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">30 分钟透明报价</div>
-                        <div class="feature-desc">Agent 自动谈判，价格实时可见</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128247;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">Webinar 直连工厂</div>
-                        <div class="feature-desc">视频询盘，零时差直接沟通</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128200;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">全程可视化追踪</div>
-                        <div class="feature-desc">订单状态实时更新，风险提前预警</div>
+        <!-- Left: MacBook Pro Carousel -->
+        <div class="macbook-carousel">
+            <div class="carousel-title">BUYER JOURNEY &middot; 买家旅程</div>
+            <div class="macbook-container">
+                <div class="macbook-frame">
+                    <div class="macbook-notch"></div>
+                    <div class="macbook-screen">
+                        <img id="carousel-img" src="./assets/step1_input_demand.png" alt="Step 1">
                     </div>
                 </div>
             </div>
-            <div class="value-box">
-                <div class="value-label">&#10024; 核心价值</div>
-                <div class="value-text">像网购一样简单的 B2B 采购体验</div>
+            <div class="carousel-dots">
+                <div class="dot active" data-step="0"></div>
+                <div class="dot" data-step="1"></div>
+                <div class="dot" data-step="2"></div>
+                <div class="dot" data-step="3"></div>
+            </div>
+            <div class="step-label active" id="step-label">
+                第1步：输入需求
             </div>
         </div>
 
@@ -209,28 +309,28 @@
             <div class="panel-tag tag-green">SUPPLY SIDE &middot; 供给侧</div>
             <div class="panel-title">数字工厂</div>
             <div class="feature-list">
-                <div class="feature-item feature-item-green">
+                <div class="feature-item">
                     <span class="feature-icon">&#129302;</span>
                     <div class="feature-text">
                         <div class="feature-title">0 成本自动获客</div>
                         <div class="feature-desc">AI Agent 全球搜寻订单，无需展会</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
+                <div class="feature-item">
                     <span class="feature-icon">&#128483;</span>
                     <div class="feature-text">
                         <div class="feature-title">AI 自动接单谈判</div>
                         <div class="feature-desc">7x24 小时响应，多语言无障碍</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
+                <div class="feature-item">
                     <span class="feature-icon">&#127981;</span>
                     <div class="feature-text">
                         <div class="feature-title">闲置产能智能填补</div>
                         <div class="feature-desc">精准匹配订单，最大化产能利用率</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
+                <div class="feature-item">
                     <span class="feature-icon">&#128202;</span>
                     <div class="feature-text">
                         <div class="feature-title">AMR 数字画像</div>
@@ -238,8 +338,8 @@
                     </div>
                 </div>
             </div>
-            <div class="value-box value-box-green">
-                <div class="value-label value-label-green">&#127775; 核心价值</div>
+            <div class="value-box">
+                <div class="value-label">&#127775; 核心价值</div>
                 <div class="value-text">老板的数字分身，永不休息的外贸部</div>
             </div>
         </div>
@@ -272,5 +372,63 @@
     <div class="bottom-bar"></div>
     <div class="slide-num">08 / 16</div>
 </div>
+
+<script>
+    const steps = [
+        {
+            image: './assets/step1_input_demand.png',
+            label: '第1步：输入需求'
+        },
+        {
+            image: './assets/step2_match_factory.png',
+            label: '第2步：需求匹配'
+        },
+        {
+            image: './assets/step3_webinar_call.png',
+            label: '第3步：视频通话'
+        },
+        {
+            image: './assets/step4_generate_contract.png',
+            label: '第4步：生成合同'
+        }
+    ];
+
+    let currentStep = 0;
+    const carouselImg = document.getElementById('carousel-img');
+    const stepLabel = document.getElementById('step-label');
+    const dots = document.querySelectorAll('.dot');
+
+    function updateCarousel(step) {
+        currentStep = step;
+        carouselImg.style.opacity = '0';
+        
+        setTimeout(() => {
+            carouselImg.src = steps[step].image;
+            stepLabel.textContent = steps[step].label;
+            carouselImg.style.opacity = '1';
+        }, 300);
+
+        dots.forEach((dot, index) => {
+            if (index === step) {
+                dot.classList.add('active');
+                stepLabel.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+                stepLabel.classList.remove('active');
+            }
+        });
+    }
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            updateCarousel(parseInt(dot.dataset.step));
+        });
+    });
+
+    // Auto-rotate carousel every 5 seconds
+    setInterval(() => {
+        updateCarousel((currentStep + 1) % steps.length);
+    }, 5000);
+</script>
 </body>
 </html>
