@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Platform Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
+
+        /* Background */
+        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.1; }
+        .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(79,110,247,0.1) 0%, transparent 70%),
+                        linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.6) 50%, rgba(5,5,16,0.9) 100%); }
+        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background-image: linear-gradient(rgba(79,110,247,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(79,110,247,0.03) 1px, transparent 1px);
+            background-size:60px 60px; }
+
+        /* Header */
+        .header { position:absolute; top:32px; left:0; right:0; text-align:center; z-index:10;
+            opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
+        .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+            color:#4F6EF7; margin-bottom:8px; }
+        .main-title { font-size:34px; font-weight:900; letter-spacing:-1px; }
+        .title-em { background:linear-gradient(135deg,#4F6EF7,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .subtitle-tag { font-size:13px; color:rgba(255,255,255,0.4); margin-top:6px; }
+
+        /* Main layout */
+        .main-layout { position:absolute; top:110px; left:0; right:0; bottom:70px; z-index:10;
+            display:grid; grid-template-columns:1fr 320px 1fr; gap:0; padding:0 40px; align-items:center; }
+
+        /* Left Panel: Buyers */
+        .buyer-panel { background:rgba(79,110,247,0.04); border:1px solid rgba(79,110,247,0.12);
+            border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
+            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
+        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
+        .tag-blue { color:#4F6EF7; }
+        .tag-green { color:#10B981; }
+        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
+        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
+        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
+            background:rgba(79,110,247,0.06); border:1px solid rgba(79,110,247,0.10); border-radius:12px; }
+        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+        .feature-text { flex:1; }
+        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
+        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
+        .value-box { background:rgba(79,110,247,0.08); border:1px solid rgba(79,110,247,0.2);
+            border-radius:12px; padding:12px 14px; margin-top:12px; }
+        .value-label { font-size:10px; font-weight:700; color:#4F6EF7; letter-spacing:1px; margin-bottom:4px; }
+        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
+
+        /* Center Hub */
+        .hub-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+            opacity:0; animation:fadeIn 1s ease-out forwards 0.8s; }
+        .hub-container { position:relative; display:flex; align-items:center; justify-content:center; }
+        .hub-ring { position:absolute; border-radius:50%; border:1px solid rgba(79,110,247,0.12);
+            animation:hubPulse 4s ease-in-out infinite; }
+        .hub-ring-1 { width:200px; height:200px; animation-delay:0s; }
+        .hub-ring-2 { width:240px; height:240px; animation-delay:1s; border-color:rgba(79,110,247,0.07); }
+        .hub-ring-3 { width:280px; height:280px; animation-delay:2s; border-color:rgba(79,110,247,0.04); }
+        @keyframes hubPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.02);opacity:0.6} }
+        .hub-core { width:160px; height:160px; border-radius:50%;
+            background:radial-gradient(circle, rgba(79,110,247,0.25) 0%, rgba(79,110,247,0.08) 60%, transparent 100%);
+            border:2px solid rgba(79,110,247,0.5);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            box-shadow:0 0 50px rgba(79,110,247,0.3), inset 0 0 30px rgba(79,110,247,0.1);
+            position:relative; z-index:2; }
+        .hub-emoji { font-size:40px; margin-bottom:8px; }
+        .hub-name { font-size:14px; font-weight:900; color:#fff; letter-spacing:0.5px; }
+        .hub-sublabel { font-size:9px; color:#8BA4FF; letter-spacing:2px; margin-top:3px; }
+
+        /* Data flow particles */
+        .particle { position:absolute; width:6px; height:6px; border-radius:50%; z-index:3; }
+        .p-left { background:#4F6EF7; box-shadow:0 0 8px #4F6EF7; animation:flowRight 3s linear infinite; }
+        .p-right { background:#10B981; box-shadow:0 0 8px #10B981; animation:flowLeft 3s linear infinite; }
+        @keyframes flowRight { 0%{left:-20px;top:50%;opacity:0} 20%{opacity:1} 80%{opacity:1} 100%{left:calc(100% + 20px);top:50%;opacity:0} }
+        @keyframes flowLeft { 0%{right:-20px;top:50%;opacity:0} 20%{opacity:1} 80%{opacity:1} 100%{right:calc(100% + 20px);top:50%;opacity:0} }
+
+        /* Hub stats */
+        .hub-stats { display:flex; gap:12px; }
+        .hub-stat { text-align:center; padding:8px 14px;
+            background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; }
+        .hub-stat-num { font-size:18px; font-weight:900; color:#4F6EF7; }
+        .hub-stat-label { font-size:9px; color:rgba(255,255,255,0.35); margin-top:2px; }
+
+        /* Right Panel: Factories */
+        .factory-panel { background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12);
+            border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
+            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
+        .feature-item-green { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); }
+        .value-box-green { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
+        .value-label-green { color:#10B981; }
+
+        /* Bottom trust bar */
+        .trust-bar { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
+            display:flex; align-items:center; justify-content:center; gap:0;
+            border-top:1px solid rgba(255,255,255,0.05);
+            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.2s; }
+        .trust-item { display:flex; align-items:center; gap:8px; padding:0 32px;
+            border-right:1px solid rgba(255,255,255,0.06); }
+        .trust-item:last-child { border-right:none; }
+        .trust-icon { font-size:18px; }
+        .trust-text { font-size:12px; color:rgba(255,255,255,0.45); }
+
+        .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
+            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
+        .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
+            background:linear-gradient(90deg,#4F6EF7,#8B5CF6,#10B981); }
+
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="section-tag">Platform Overview &middot; 平台全景</div>
+        <div class="main-title">双核驱动的 <span class="title-em">智能采购生态</span></div>
+        <div class="subtitle-tag">连接全球碎片化需求 &middot; 赋能中国柔性供应链 &middot; RealSourcing 作为核心操作系统</div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left: Buyers -->
+        <div class="buyer-panel">
+            <div class="panel-tag tag-blue">DEMAND SIDE &middot; 需求侧</div>
+            <div class="panel-title">全球买家</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-icon">&#9889;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">15 分钟极速匹配</div>
+                        <div class="feature-desc">AI 理解需求，自动筛选最优工厂</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#128172;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">30 分钟透明报价</div>
+                        <div class="feature-desc">Agent 自动谈判，价格实时可见</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#128247;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">Webinar 直连工厂</div>
+                        <div class="feature-desc">视频询盘，零时差直接沟通</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#128200;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">全程可视化追踪</div>
+                        <div class="feature-desc">订单状态实时更新，风险提前预警</div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-box">
+                <div class="value-label">&#10024; 核心价值</div>
+                <div class="value-text">像网购一样简单的 B2B 采购体验</div>
+            </div>
+        </div>
+
+        <!-- Center Hub -->
+        <div class="hub-zone">
+            <div class="hub-container" style="position:relative;width:280px;height:280px;">
+                <div class="hub-ring hub-ring-3"></div>
+                <div class="hub-ring hub-ring-2"></div>
+                <div class="hub-ring hub-ring-1"></div>
+                <div class="hub-core">
+                    <div class="hub-emoji">&#129504;</div>
+                    <div class="hub-name">RealSourcing</div>
+                    <div class="hub-sublabel">INTELLIGENT OS</div>
+                </div>
+                <!-- Data flow particles -->
+                <div class="particle p-left" style="top:calc(50% - 3px);animation-delay:0s;"></div>
+                <div class="particle p-left" style="top:calc(50% - 3px);animation-delay:1.5s;"></div>
+                <div class="particle p-right" style="top:calc(50% + 6px);animation-delay:0.8s;"></div>
+                <div class="particle p-right" style="top:calc(50% + 6px);animation-delay:2.3s;"></div>
+            </div>
+            <div class="hub-stats">
+                <div class="hub-stat">
+                    <div class="hub-stat-num">1,247</div>
+                    <div class="hub-stat-label">认证工厂</div>
+                </div>
+                <div class="hub-stat">
+                    <div class="hub-stat-num">100+</div>
+                    <div class="hub-stat-label">AMR 维度</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Factories -->
+        <div class="factory-panel">
+            <div class="panel-tag tag-green">SUPPLY SIDE &middot; 供给侧</div>
+            <div class="panel-title">数字工厂</div>
+            <div class="feature-list">
+                <div class="feature-item feature-item-green">
+                    <span class="feature-icon">&#129302;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">0 成本自动获客</div>
+                        <div class="feature-desc">AI Agent 全球搜寻订单，无需展会</div>
+                    </div>
+                </div>
+                <div class="feature-item feature-item-green">
+                    <span class="feature-icon">&#128483;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">AI 自动接单谈判</div>
+                        <div class="feature-desc">7x24 小时响应，多语言无障碍</div>
+                    </div>
+                </div>
+                <div class="feature-item feature-item-green">
+                    <span class="feature-icon">&#127981;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">闲置产能智能填补</div>
+                        <div class="feature-desc">精准匹配订单，最大化产能利用率</div>
+                    </div>
+                </div>
+                <div class="feature-item feature-item-green">
+                    <span class="feature-icon">&#128202;</span>
+                    <div class="feature-text">
+                        <div class="feature-title">AMR 数字画像</div>
+                        <div class="feature-desc">100+ 维度评分，建立可信数字档案</div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-box value-box-green">
+                <div class="value-label value-label-green">&#127775; 核心价值</div>
+                <div class="value-text">老板的数字分身，永不休息的外贸部</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+        <div class="trust-item">
+            <span class="trust-icon">&#128274;</span>
+            <span class="trust-text">资金托管保障</span>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon">&#128269;</span>
+            <span class="trust-text">实地验厂报告</span>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon">&#9878;</span>
+            <span class="trust-text">履约纠纷仲裁</span>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon">&#127759;</span>
+            <span class="trust-text">全球物流追踪</span>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon">&#9733;</span>
+            <span class="trust-text">AMR 信用评级</span>
+        </div>
+    </div>
+
+    <div class="bottom-bar"></div>
+    <div class="slide-num">08 / 16</div>
+</div>
+</body>
+</html>

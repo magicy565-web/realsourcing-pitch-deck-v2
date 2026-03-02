@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+            padding: 40px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: 1;
+        }
+
+        .header {
+            z-index: 2;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            z-index: 2;
+            flex: 1;
+            align-items: center;
+        }
+
+        /* Left: Founder */
+        .founder-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInLeft 0.8s ease-out forwards 0.2s;
+        }
+
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4F6EF7, #8E44AD);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #FFF;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(79, 110, 247, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .founder-name { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
+        .founder-role { font-size: 1rem; color: #4F6EF7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; font-weight: 600; }
+        .founder-quote { font-size: 1rem; line-height: 1.6; color: rgba(255, 255, 255, 0.8); font-style: italic; background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 16px; border-left: 3px solid #4F6EF7; }
+
+        /* Right: Ecosystem */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .eco-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .eco-card:nth-child(1) { animation: fadeInUp 0.6s ease-out forwards 0.4s; }
+        .eco-card:nth-child(2) { animation: fadeInUp 0.6s ease-out forwards 0.6s; }
+        .eco-card:nth-child(3) { animation: fadeInUp 0.6s ease-out forwards 0.8s; }
+        .eco-card:nth-child(4) { animation: fadeInUp 0.6s ease-out forwards 1.0s; }
+
+        .eco-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #FFF;
+            margin-bottom: 15px;
+        }
+
+        .eco-title { font-size: 1.1rem; font-weight: 600; color: #FFF; margin-bottom: 5px; }
+        .eco-desc { font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); line-height: 1.4; }
+
+        @keyframes fadeInDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="header">
+            <div class="section-tag">TEAM & ECOSYSTEM</div>
+            <h1 class="main-title">轻资产、高协同的分布式作战网络</h1>
+        </div>
+
+        <div class="content-grid">
+            <!-- Left: Founder -->
+            <div class="founder-card">
+                <div class="avatar-placeholder">杨</div>
+                <div class="founder-name">杨尚坤</div>
+                <div class="founder-role">创始人 & CEO</div>
+                <div class="founder-quote">
+                    "OPC 不是劣势，而是早期最灵活的优势。我用 10 年积累的行业资源，构建了一个去中心化的支持网络。"
+                </div>
+            </div>
+
+            <!-- Right: Ecosystem -->
+            <div class="ecosystem-grid">
+                <div class="eco-card">
+                    <div class="eco-icon" style="background: #E74C3C;"><i class="fas fa-flag"></i></div>
+                    <div class="eco-title">英国本土化合伙人</div>
+                    <div class="eco-desc">基于英国本地提供出海服务，快速推动欧洲市场落地。</div>
+                </div>
+                <div class="eco-card">
+                    <div class="eco-icon" style="background: #3498DB;"><i class="fab fa-tiktok"></i></div>
+                    <div class="eco-title">TikTok 运营团队</div>
+                    <div class="eco-desc">为工厂提供代运营与项目陪跑，解决流量端痛点。</div>
+                </div>
+                <div class="eco-card">
+                    <div class="eco-icon" style="background: #F1C40F;"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="eco-title">海外 Mentor 网络</div>
+                    <div class="eco-desc">联合举办 Webinar 线上会议，精准输送工厂资源。</div>
+                </div>
+                <div class="eco-card">
+                    <div class="eco-icon" style="background: #2ECC71;"><i class="fas fa-code-branch"></i></div>
+                    <div class="eco-title">技术支持生态</div>
+                    <div class="eco-desc">外部技术团队支持，专注于 AI Agent 快速部署与迭代。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Business Model</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
+
+        /* Background */
+        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.08; }
+        .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(249,115,22,0.06) 0%, transparent 70%),
+                        linear-gradient(180deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0.7) 50%, rgba(5,5,16,0.95) 100%); }
+        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+            background-image: linear-gradient(rgba(249,115,22,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(249,115,22,0.02) 1px, transparent 1px);
+            background-size:60px 60px; }
+
+        /* Header */
+        .header { position:absolute; top:32px; left:0; right:0; text-align:center; z-index:10;
+            opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
+        .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+            color:#F97316; margin-bottom:8px; }
+        .main-title { font-size:34px; font-weight:900; letter-spacing:-1px; }
+        .title-em { background:linear-gradient(135deg,#F97316,#EF4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .subtitle-tag { font-size:13px; color:rgba(255,255,255,0.4); margin-top:6px; }
+
+        /* Main layout: 3 revenue cards + center flywheel */
+        .main-layout { position:absolute; top:110px; left:0; right:0; bottom:70px; z-index:10;
+            display:grid; grid-template-columns:1fr 280px 1fr; gap:24px; padding:0 50px; align-items:center; }
+
+        /* Revenue Cards */
+        .rev-col { display:flex; flex-direction:column; gap:16px; }
+        .rev-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+            border-radius:16px; padding:20px; position:relative; overflow:hidden;
+            opacity:0; }
+        .rev-card-1 { animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
+        .rev-card-2 { animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
+        .rev-card-3 { animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
+        .rev-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+        .card-blue::before { background:linear-gradient(90deg,#4F6EF7,transparent); }
+        .card-green::before { background:linear-gradient(90deg,#10B981,transparent); }
+        .card-orange::before { background:linear-gradient(90deg,#F97316,transparent); }
+        .rev-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+        .rev-icon { font-size:24px; }
+        .rev-title { font-size:15px; font-weight:800; }
+        .rev-tag { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+            padding:3px 8px; border-radius:100px; margin-left:auto; }
+        .tag-blue { background:rgba(79,110,247,0.15); color:#8BA4FF; }
+        .tag-green { background:rgba(16,185,129,0.15); color:#6EE7B7; }
+        .tag-orange { background:rgba(249,115,22,0.15); color:#FCA5A5; }
+        .rev-desc { font-size:12px; color:rgba(255,255,255,0.45); line-height:1.6; margin-bottom:12px; }
+        .rev-price { display:flex; align-items:baseline; gap:4px; }
+        .price-num { font-size:22px; font-weight:900; }
+        .price-blue { color:#4F6EF7; }
+        .price-green { color:#10B981; }
+        .price-orange { color:#F97316; }
+        .price-unit { font-size:12px; color:rgba(255,255,255,0.4); }
+        .rev-detail { font-size:11px; color:rgba(255,255,255,0.3); margin-top:4px; }
+
+        /* Center: Flywheel */
+        .flywheel-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+            opacity:0; animation:fadeIn 1s ease-out forwards 0.9s; }
+        .flywheel-container { position:relative; width:240px; height:240px; }
+        .flywheel-ring { position:absolute; top:50%; left:50%; border-radius:50%;
+            border:1px solid rgba(249,115,22,0.15); transform:translate(-50%,-50%);
+            animation:flywheelSpin 20s linear infinite; }
+        .fw-ring-1 { width:240px; height:240px; }
+        .fw-ring-2 { width:200px; height:200px; animation-direction:reverse; animation-duration:15s; border-color:rgba(249,115,22,0.1); }
+        @keyframes flywheelSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+        .flywheel-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:120px; height:120px; border-radius:50%;
+            background:radial-gradient(circle, rgba(249,115,22,0.2) 0%, rgba(249,115,22,0.05) 70%, transparent 100%);
+            border:2px solid rgba(249,115,22,0.4);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            box-shadow:0 0 40px rgba(249,115,22,0.2); z-index:2; }
+        .fw-emoji { font-size:32px; animation:fwRotate 4s linear infinite; }
+        @keyframes fwRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        .fw-label { font-size:11px; font-weight:700; color:#FCA5A5; margin-top:4px; letter-spacing:1px; }
+
+        /* Flywheel arrows */
+        .fw-arrow { position:absolute; font-size:14px; color:rgba(249,115,22,0.6);
+            animation:arrowFade 2s ease-in-out infinite; }
+        .fw-arr-1 { top:8px; left:50%; transform:translateX(-50%); }
+        .fw-arr-2 { right:8px; top:50%; transform:translateY(-50%) rotate(90deg); animation-delay:0.5s; }
+        .fw-arr-3 { bottom:8px; left:50%; transform:translateX(-50%) rotate(180deg); animation-delay:1s; }
+        .fw-arr-4 { left:8px; top:50%; transform:translateY(-50%) rotate(270deg); animation-delay:1.5s; }
+        @keyframes arrowFade { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+        /* Flywheel loop text */
+        .fw-loop { background:rgba(249,115,22,0.06); border:1px solid rgba(249,115,22,0.15);
+            border-radius:12px; padding:12px 16px; text-align:center; }
+        .fw-loop-title { font-size:11px; font-weight:700; color:#F97316; margin-bottom:6px; letter-spacing:1px; }
+        .fw-loop-text { font-size:10px; color:rgba(255,255,255,0.4); line-height:1.7; }
+        .fw-loop-em { color:#FCA5A5; font-weight:600; }
+
+        /* Bottom: Revenue summary */
+        .rev-summary { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
+            display:flex; align-items:center; justify-content:center; gap:0;
+            border-top:1px solid rgba(255,255,255,0.05);
+            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.3s; }
+        .summary-item { display:flex; flex-direction:column; align-items:center; padding:0 40px;
+            border-right:1px solid rgba(255,255,255,0.06); }
+        .summary-item:last-child { border-right:none; }
+        .summary-num { font-size:20px; font-weight:900; color:#F97316; }
+        .summary-label { font-size:10px; color:rgba(255,255,255,0.35); margin-top:2px; letter-spacing:1px; }
+
+        .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
+            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
+        .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
+            background:linear-gradient(90deg,#4F6EF7,#F97316,#10B981); }
+
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="section-tag">Business Model &middot; 商业模式</div>
+        <div class="main-title">三条收入线 &middot; <span class="title-em">价值飞轮</span> 自我强化</div>
+        <div class="subtitle-tag">买家越多 &rarr; 数据越准 &rarr; 工厂越依赖 &rarr; 报价越快 &rarr; 吸引更多买家</div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left: Buyer + Transaction -->
+        <div class="rev-col">
+            <div class="rev-card card-blue rev-card-1">
+                <div class="rev-header">
+                    <span class="rev-icon">&#127760;</span>
+                    <span class="rev-title">买家订阅</span>
+                    <span class="rev-tag tag-blue">BUYER</span>
+                </div>
+                <div class="rev-desc">优质买家付费获取高效采购服务：验厂报告、资金托管、专属客服、优先匹配权</div>
+                <div class="rev-price">
+                    <span class="price-num price-blue">$299</span>
+                    <span class="price-unit">/ 月 &middot; Pro Plan</span>
+                </div>
+                <div class="rev-detail">基础版免费 &middot; 增值服务按需付费</div>
+            </div>
+            <div class="rev-card card-orange rev-card-2">
+                <div class="rev-header">
+                    <span class="rev-icon">&#128200;</span>
+                    <span class="rev-title">交易抽成</span>
+                    <span class="rev-tag tag-orange">GMV</span>
+                </div>
+                <div class="rev-desc">平台从成功交易中抽取佣金，与买卖双方利益完全对齐，越做越大</div>
+                <div class="rev-price">
+                    <span class="price-num price-orange">3-5%</span>
+                    <span class="price-unit">GMV 抽成</span>
+                </div>
+                <div class="rev-detail">成功交易后收取 &middot; 零风险模型</div>
+            </div>
+        </div>
+
+        <!-- Center: Flywheel -->
+        <div class="flywheel-zone">
+            <div class="flywheel-container">
+                <div class="flywheel-ring fw-ring-1"></div>
+                <div class="flywheel-ring fw-ring-2"></div>
+                <div class="flywheel-core">
+                    <div class="fw-emoji">&#9881;</div>
+                    <div class="fw-label">FLYWHEEL</div>
+                </div>
+                <div class="fw-arrow fw-arr-1">&#9650;</div>
+                <div class="fw-arrow fw-arr-2">&#9650;</div>
+                <div class="fw-arrow fw-arr-3">&#9650;</div>
+                <div class="fw-arrow fw-arr-4">&#9650;</div>
+            </div>
+            <div class="fw-loop">
+                <div class="fw-loop-title">&#9654; 飞轮效应</div>
+                <div class="fw-loop-text">
+                    <span class="fw-loop-em">买家增长</span> &rarr; 数据积累<br>
+                    &rarr; <span class="fw-loop-em">AMR 精准</span> &rarr; 工厂依赖<br>
+                    &rarr; <span class="fw-loop-em">报价更快</span> &rarr; 更多买家
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Factory SaaS -->
+        <div class="rev-col">
+            <div class="rev-card card-green rev-card-3">
+                <div class="rev-header">
+                    <span class="rev-icon">&#127981;</span>
+                    <span class="rev-title">工厂 SaaS 订阅</span>
+                    <span class="rev-tag tag-green">SAAS</span>
+                </div>
+                <div class="rev-desc">工厂付费获得 AI 订单系统和数字化能力：Commander OS、AI 外贸员、AMR 认证</div>
+                <div class="rev-price">
+                    <span class="price-num price-green">¥19,800</span>
+                    <span class="price-unit">/ 年</span>
+                </div>
+                <div class="rev-detail">替代 5 人外贸团队 ¥50万/年 &middot; 节省 96%</div>
+                <!-- Cost comparison mini bar -->
+                <div style="margin-top:12px;">
+                    <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;">
+                        <span>传统团队 ¥500,000/年</span>
+                        <span>RealSourcing ¥19,800/年</span>
+                    </div>
+                    <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+                        <div style="height:100%;width:4%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:3px;box-shadow:0 0 8px rgba(16,185,129,0.5);"></div>
+                    </div>
+                    <div style="font-size:10px;color:#10B981;margin-top:4px;font-weight:700;">&#8592; 仅需 4% 的成本</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Summary -->
+    <div class="rev-summary">
+        <div class="summary-item">
+            <span class="summary-num">3</span>
+            <span class="summary-label">收入来源</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-num">96%</span>
+            <span class="summary-label">工厂成本节省</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-num">3-5%</span>
+            <span class="summary-label">GMV 抽成比例</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-num" style="color:#8B5CF6;">&#8734;</span>
+            <span class="summary-label">飞轮自我强化</span>
+        </div>
+    </div>
+
+    <div class="bottom-bar"></div>
+    <div class="slide-num">11 / 16</div>
+</div>
+</body>
+</html>

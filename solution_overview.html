@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>解决方案 - Commander OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { overflow:hidden; background:#000; will-change:transform; }
+        
+        /* 资源预加载 */
+        @font-face { font-family:'Inter'; src:url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800'); font-display:swap; }
+        
+        /* 预加载关键图片 */
+        img { will-change:transform,opacity; }
+
+        .slide {
+            width:1280px; height:720px;
+            background:radial-gradient(ellipse at 20% 50%, #0d1f3c 0%, #0F172A 60%);
+            color:#F8FAFC; overflow:hidden; position:relative;
+            font-family:'Inter','Noto Sans SC',sans-serif;
+        }
+
+        .corner { position:absolute; top:26px; right:44px; text-align:right;
+            font-size:10px; color:rgba(255,255,255,0.2); line-height:1.6;
+            font-family:'JetBrains Mono',monospace; }
+
+        .hd { position:absolute; top:26px; left:44px; }
+        .hd h1 { font-size:32px; font-weight:800; letter-spacing:-0.5px; line-height:1.1; }
+        .hd h1 span { color:#f97316; }
+        .hd .sub { font-size:12px; color:#64748b; margin-top:4px; }
+
+        /* ── 右侧面板 ── */
+        .left-panel {
+            position:absolute; left:44px; top:88px;
+            width:520px; height:612px;
+            display:flex; align-items:center; justify-content:center;
+        }
+
+        /* iPhone 外壳 */
+        .iphone {
+            position:relative; width:280px; height:580px;
+            background:linear-gradient(145deg,#1c1c1e,#2c2c2e,#1c1c1e);
+            border-radius:50px;
+            border:1px solid rgba(255,255,255,0.15);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,0.8),
+                0 40px 100px rgba(0,0,0,0.9),
+                inset 0 1px 0 rgba(255,255,255,0.12),
+                inset 0 -1px 0 rgba(0,0,0,0.5);
+            overflow:hidden;
+        }
+
+        /* 屏幕区域 */
+        .iphone-screen {
+            position:absolute;
+            top:4px; left:4px; right:4px; bottom:4px;
+            background:#000;
+            border-radius:46px;
+            overflow:hidden;
+        }
+
+        /* 壁纸 */
+        .wallpaper {
+            position:absolute; inset:0;
+            background:linear-gradient(160deg,#0a0a2e 0%,#0d1b3e 30%,#071428 60%,#050d1a 100%);
+        }
+        .wallpaper::before {
+            content:''; position:absolute;
+            width:200px; height:200px;
+            background:radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%);
+            top:50%; left:50%; transform:translate(-50%,-50%);
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position:absolute; top:14px; left:50%; transform:translateX(-50%);
+            width:110px; height:32px;
+            background:#000; border-radius:20px; z-index:30;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0 12px;
+        }
+        .di-dot { width:6px; height:6px; background:#1a1a1a; border-radius:50%; }
+        .di-cam { width:10px; height:10px; background:#1a1a1a; border-radius:50%; border:2px solid #2a2a2a; }
+
+        /* 状态栏 */
+        .status-bar {
+            position:absolute; top:18px; left:0; right:0; z-index:25;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 24px;
+        }
+        .sb-time { font-size:12px; font-weight:700; color:#fff; font-family:'JetBrains Mono',monospace; }
+        .sb-icons { font-size:10px; color:#fff; display:flex; gap:4px; align-items:center; }
+
+        /* ── 主屏幕图标网格 ── */
+        /* 4×3 = 12 个位置，最后一格放 Commander OS */
+        .home-grid {
+            position:absolute;
+            top:68px; left:0; right:0;
+            padding:0 16px;
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:10px 8px;
+            z-index:10;
+        }
+
+        .app-icon-wrap {
+            display:flex; flex-direction:column; align-items:center; gap:3px;
+        }
+
+        /* App 名称标签 - 初始可见，动画开始时隐藏 */
+        .app-label {
+            font-size:9px; color:rgba(255,255,255,0.85);
+            text-align:center; line-height:1.2;
+            text-shadow:0 1px 2px rgba(0,0,0,0.8);
+            white-space:nowrap;
+            transition:opacity 0.3s ease;
+        }
+        /* 动画进行时隐藏所有标签 */
+        .animating .app-label { opacity:0 !important; }
+
+        .app-icon {
+            width:52px; height:52px;
+            border-radius:13px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 2px 8px rgba(0,0,0,0.4);
+            overflow:hidden;
+            position:relative;
+            will-change:transform, opacity;
+            transform:translate3d(0,0,0);
+        }
+        .app-icon img { width:100%; height:100%; object-fit:cover; border-radius:13px; }
+        .app-icon .svg-bg {
+            width:100%; height:100%;
+            display:flex; align-items:center; justify-content:center;
+            border-radius:13px;
+        }
+        .app-icon .svg-bg svg { width:32px; height:32px; }
+
+        /* Commander OS 图标格 - 特殊高亮 */
+        .cos-cell .app-icon {
+            width:52px; height:52px;
+            border-radius:13px;
+            box-shadow:
+                0 0 20px rgba(59,130,246,0.5),
+                0 0 40px rgba(59,130,246,0.2),
+                0 2px 8px rgba(0,0,0,0.5);
+            border:1px solid rgba(59,130,246,0.4);
+        }
+        .cos-cell .app-label {
+            color:#60a5fa;
+            font-weight:600;
+            font-size:8px;
+        }
+
+        /* 脉冲光环（绕 Commander OS 图标） */
+        .cos-pulse {
+            position:absolute;
+            width:52px; height:52px;
+            border-radius:13px;
+            border:2px solid rgba(59,130,246,0.6);
+            pointer-events:none;
+            opacity:0;
+        }
+        .cos-pulse.active {
+            animation:pulse-out 2.5s ease-out infinite;
+        }
+        .cos-pulse:nth-child(2).active { animation-delay:0.8s; }
+        .cos-pulse:nth-child(3).active { animation-delay:1.6s; }
+        @keyframes pulse-out {
+            0% { transform:scale(1); opacity:0.7; }
+            100% { transform:scale(2.5); opacity:0; }
+        }
+
+        /* 汇聚后的 Commander OS 放大展示 */
+        .cos-enlarged {
+            position:absolute;
+            top:50%; left:50%;
+            transform:translate(-50%,-50%) scale(0);
+            z-index:20;
+            display:flex; flex-direction:column; align-items:center; gap:8px;
+            transition:transform 0.8s cubic-bezier(.34,1.56,.64,1), opacity 0.6s ease;
+            opacity:0;
+            pointer-events:none;
+        }
+        .cos-enlarged.show {
+            transform:translate(-50%,-50%) scale(1);
+            opacity:1;
+        }
+        .cos-enlarged-icon {
+            width:90px; height:90px;
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:
+                0 0 40px rgba(59,130,246,0.8),
+                0 0 80px rgba(59,130,246,0.3),
+                0 8px 24px rgba(0,0,0,0.6);
+        }
+        .cos-enlarged-icon img { width:100%; height:100%; object-fit:cover; }
+        .cos-enlarged-name { font-size:13px; font-weight:700; color:#fff; text-align:center; text-shadow:0 1px 4px rgba(0,0,0,0.8); }
+        .cos-enlarged-tag { font-size:9px; color:#60a5fa; font-family:'JetBrains Mono',monospace; text-align:center; letter-spacing:1px; }
+
+        /* 放大脉冲 */
+        .cos-enlarged-pulse {
+            position:absolute; top:50%; left:50%;
+            width:90px; height:90px;
+            border-radius:20px;
+            border:2px solid rgba(59,130,246,0.5);
+            transform:translate(-50%,-50%) scale(1);
+            opacity:0; z-index:15;
+            pointer-events:none;
+        }
+        .cos-enlarged-pulse.active {
+            animation:pulse-big 2s ease-out infinite;
+        }
+        .cos-enlarged-pulse:nth-child(2).active { animation-delay:0.7s; }
+        .cos-enlarged-pulse:nth-child(3).active { animation-delay:1.4s; }
+        @keyframes pulse-big {
+            0% { transform:translate(-50%,-50%) scale(1); opacity:0.8; }
+            100% { transform:translate(-50%,-50%) scale(3); opacity:0; }
+        }
+
+        /* Dock */
+        .dock {
+            position:absolute; bottom:28px; left:12px; right:12px;
+            height:72px;
+            background:rgba(255,255,255,0.12);
+            backdrop-filter:blur(20px);
+            border-radius:20px;
+            border:1px solid rgba(255,255,255,0.1);
+            display:flex; align-items:center; justify-content:space-around;
+            padding:0 12px;
+            z-index:10;
+        }
+        .dock-icon {
+            width:48px; height:48px;
+            border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            overflow:hidden;
+            will-change:transform, opacity;
+            transform:translate3d(0,0,0);
+        }
+        .dock-icon .svg-bg { width:100%; height:100%; display:flex; align-items:center; justify-content:center; border-radius:12px; }
+        .dock-icon .svg-bg svg { width:30px; height:30px; }
+
+        /* Home 指示条 */
+        .home-bar {
+            position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+            width:110px; height:5px;
+            background:rgba(255,255,255,0.35); border-radius:3px; z-index:30;
+        }
+
+        /* ── 右侧大脑区域 ── */
+        .right-panel {
+            position:absolute; left:570px; top:0; right:0; height:720px;
+            overflow:hidden;
+        }
+
+        /* 大脑插画：铺满整个右侧区域 */
+        .brain-wrap {
+            position:absolute; inset:0;
+            opacity:0;
+            transition:opacity 1.2s ease;
+        }
+        .brain-wrap.show { opacity:1; }
+        .brain-img {
+            width:100%; height:100%;
+            object-fit:contain;
+            object-position:center center;
+
+        }
+
+        /* 技能图标（初始散落在大脑外围，带文字标签） */
+        .skill-icon-outer {
+            position:absolute;
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            opacity:0;
+            transform:scale(0.3);
+            transition:opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.56,.64,1);
+            z-index:20;
+        }
+        .skill-icon-outer.pop {
+            opacity:1;
+            transform:scale(1);
+        }
+        .skill-icon-outer img {
+            width:52px; height:52px;
+            border-radius:50%;
+            box-shadow:0 0 16px rgba(255,200,50,0.6), 0 4px 12px rgba(0,0,0,0.6);
+            border:2px solid rgba(255,200,50,0.5);
+        }
+        .skill-label {
+            font-size:10px; color:rgba(255,255,255,0.95);
+            text-align:center; white-space:nowrap;
+            text-shadow:0 1px 4px rgba(0,0,0,1);
+            font-weight:700;
+            background:rgba(0,0,20,0.75);
+            padding:2px 7px; border-radius:4px;
+            border:1px solid rgba(255,200,50,0.3);
+        }
+
+        /* 技能图标嵌入大脑后的状态（圆形，带文字） */
+        .skill-icon-inner {
+            position:absolute;
+            display:flex; flex-direction:column; align-items:center; gap:3px;
+            opacity:0;
+            z-index:15;
+            transform:translate(-50%, -50%);
+            will-change:opacity,transform;
+        }
+        .skill-icon-inner img {
+            width:46px; height:46px;
+            border-radius:50%;
+            box-shadow:0 0 14px rgba(255,200,50,0.7), 0 0 28px rgba(59,130,246,0.4);
+            filter:brightness(1.15);
+            border:2px solid rgba(255,220,80,0.7);
+        }
+        .skill-icon-inner .inner-label {
+            font-size:9px; color:rgba(255,255,255,0.9);
+            text-align:center; white-space:nowrap;
+            text-shadow:0 1px 4px rgba(0,0,0,1);
+            font-weight:700;
+            background:rgba(0,0,20,0.8);
+            padding:1px 5px; border-radius:3px;
+        }
+        .skill-icon-inner.show {
+            opacity:1;
+            animation:skill-pulse 3s ease-in-out infinite;
+        }
+        @keyframes skill-pulse {
+            0%,100% { filter:brightness(1.15); }
+            50% { filter:brightness(1.4) drop-shadow(0 0 10px rgba(255,200,50,0.8)); }
+        }
+
+        /* "数字分身"文案容器 */
+        .digital-twin-text {
+            position:absolute; bottom:100px; right:60px;
+            text-align:left; z-index:25;
+            opacity:0; pointer-events:none;
+            max-width:280px;
+        }
+        .digital-twin-text.show {
+            animation:twin-fade-up 0.8s ease-out forwards;
+        }
+        @keyframes twin-fade-up {
+            0% { opacity:0; transform:translateY(20px); }
+            100% { opacity:1; transform:translateY(0); }
+        }
+        .digital-twin-text .main-text {
+            font-size:16px; font-weight:700; color:#fff; line-height:1.3; margin-bottom:6px;
+            letter-spacing:-0.3px;
+        }
+        .digital-twin-text .sub-text {
+            font-size:11px; color:#64748b; line-height:1.5;
+            font-weight:400;
+        }
+        
+        /* 重播按钮 */
+        .replay-btn {
+            position:absolute; bottom:20px; right:20px;
+            background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+            color:rgba(255,255,255,0.5); font-size:11px; padding:6px 12px;
+            border-radius:20px; cursor:pointer; font-family:'JetBrains Mono',monospace;
+            transition:all 0.2s;
+        }
+        .replay-btn:hover { background:rgba(255,255,255,0.15); color:#fff; }
+    </style>
+</head>
+<body>
+<div class="slide">
+    <div class="corner">Solution<br>Commander OS</div>
+
+    <div class="hd">
+        <h1>一个 <span>Commander OS</span>，统领所有渠道</h1>
+        <div class="sub">所有平台的信号，汇聚成一个智能决策中枢</div>
+    </div>
+
+    <!-- 左侧 iPhone -->
+    <div class="left-panel">
+        <div class="iphone">
+            <div class="iphone-screen" id="iphone-screen">
+                <div class="wallpaper"></div>
+
+                <!-- Dynamic Island -->
+                <div class="dynamic-island">
+                    <div class="di-dot"></div>
+                    <div class="di-cam"></div>
+                    <div class="di-dot"></div>
+                </div>
+
+                <!-- 状态栏 -->
+                <div class="status-bar">
+                    <span class="sb-time" id="phone-time">9:41</span>
+                    <div class="sb-icons">
+                        <span>●●●●</span>
+                        <span>5G</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+
+                <!-- 主屏幕图标网格（3行×4列 = 12格） -->
+                <div class="home-grid" id="home-grid">
+                    <!-- Row 1 -->
+                    <div class="app-icon-wrap" data-idx="0">
+                        <div class="app-icon" id="ai-0">
+                            <div class="svg-bg" style="background:#1877F2;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">Facebook</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="1">
+                        <div class="app-icon" id="ai-1">
+                            <img src="assets/icons/google.png" alt="Google">
+                        </div>
+                        <span class="app-label">Google</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="2">
+                        <div class="app-icon" id="ai-2">
+                            <div class="svg-bg" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">Instagram</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="3">
+                        <div class="app-icon" id="ai-3">
+                            <div class="svg-bg" style="background:#FF0000;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">YouTube</span>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="app-icon-wrap" data-idx="4">
+                        <div class="app-icon" id="ai-4">
+                            <div class="svg-bg" style="background:#010101;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">TikTok</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="5">
+                        <div class="app-icon" id="ai-5">
+                            <img src="assets/icons/linkedin.png" alt="LinkedIn">
+                        </div>
+                        <span class="app-label">LinkedIn</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="6">
+                        <div class="app-icon" id="ai-6">
+                            <img src="assets/icons/alibaba.png" alt="Alibaba" style="border-radius:13px;">
+                        </div>
+                        <span class="app-label">Alibaba</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="7">
+                        <div class="app-icon" id="ai-7">
+                            <img src="assets/icons/feishu.png" alt="飞书" style="border-radius:13px;">
+                        </div>
+                        <span class="app-label">飞书</span>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class="app-icon-wrap" data-idx="8">
+                        <div class="app-icon" id="ai-8">
+                            <div class="svg-bg" style="background:#07C160;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">微信</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="9">
+                        <div class="app-icon" id="ai-9">
+                            <div class="svg-bg" style="background:#25D366;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">WhatsApp</span>
+                    </div>
+                    <div class="app-icon-wrap" data-idx="10">
+                        <div class="app-icon" id="ai-10">
+                            <div class="svg-bg" style="background:#2CA5E0;">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            </div>
+                        </div>
+                        <span class="app-label">Telegram</span>
+                    </div>
+                    <!-- 第12格：Commander OS（一开始就在这里） -->
+                    <div class="app-icon-wrap cos-cell" id="cos-cell" data-idx="11">
+                        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+                            <div class="cos-pulse" id="cp1"></div>
+                            <div class="cos-pulse" id="cp2"></div>
+                            <div class="cos-pulse" id="cp3"></div>
+                            <div class="app-icon" id="ai-cos">
+                                <img src="assets/icons/commander_os.webp" alt="Commander OS" style="border-radius:13px;">
+                            </div>
+                        </div>
+                        <span class="app-label" style="color:#60a5fa;font-weight:600;">Commander</span>
+                    </div>
+                </div>
+
+                <!-- Dock -->
+                <div class="dock" id="dock">
+                    <div class="dock-icon" id="di-0">
+                        <div class="svg-bg" style="background:#07C160;border-radius:12px;">
+                            <svg viewBox="0 0 24 24" fill="white" width="30" height="30"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348z M5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/></svg>
+                        </div>
+                    </div>
+                    <div class="dock-icon" id="di-1">
+                        <div class="svg-bg" style="background:#25D366;border-radius:12px;">
+                            <svg viewBox="0 0 24 24" fill="white" width="30" height="30"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                        </div>
+                    </div>
+                    <div class="dock-icon" id="di-2">
+                        <div class="svg-bg" style="background:#2CA5E0;border-radius:12px;">
+                            <svg viewBox="0 0 24 24" fill="white" width="30" height="30"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        </div>
+                    </div>
+                    <div class="dock-icon" id="di-3">
+                        <img src="assets/icons/feishu.png" alt="飞书" style="width:48px;height:48px;border-radius:12px;object-fit:cover;">
+                    </div>
+                </div>
+
+                <!-- 汇聚后放大的 Commander OS（覆盖在屏幕中央） -->
+                <div class="cos-enlarged" id="cos-enlarged">
+                    <div class="cos-enlarged-pulse" id="cep1"></div>
+                    <div class="cos-enlarged-pulse" id="cep2"></div>
+                    <div class="cos-enlarged-pulse" id="cep3"></div>
+                    <div class="cos-enlarged-icon">
+                        <img src="assets/icons/commander_os.webp" alt="Commander OS">
+                    </div>
+                    <div class="cos-enlarged-name">Commander OS</div>
+                    <div class="cos-enlarged-tag">ALL CHANNELS · ONE OS</div>
+                </div>
+
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧大脑区域 -->
+    <div class="right-panel" id="right-panel">
+        <!-- 大脑插画：铺满整个右侧 -->
+        <div class="brain-wrap" id="brain-wrap">
+            <img class="brain-img" src="assets/brain_3x3_transparent.png" alt="Brain">
+        </div>
+
+        <!-- 技能图标（初始散落在大脑外围，带标签） -->
+        <!-- 分布在大脑图片的周围边缘 -->
+        <div class="skill-icon-outer" id="sk-0" style="top:20px;left:20px;"><img src="assets/icons/skill_negotiation.webp"><span class="skill-label">业务谈判</span></div>
+        <div class="skill-icon-outer" id="sk-1" style="top:20px;left:calc(50% - 26px);"><img src="assets/icons/skill_pricing.webp"><span class="skill-label">报价处理</span></div>
+        <div class="skill-icon-outer" id="sk-2" style="top:20px;right:20px;"><img src="assets/icons/skill_prospecting.webp"><span class="skill-label">开发客户</span></div>
+        <div class="skill-icon-outer" id="sk-3" style="top:280px;left:10px;"><img src="assets/icons/skill_cost.webp"><span class="skill-label">成本管理</span></div>
+        <div class="skill-icon-outer" id="sk-4" style="top:280px;right:10px;"><img src="assets/icons/skill_hiring.webp"><span class="skill-label">人才招聘</span></div>
+        <div class="skill-icon-outer" id="sk-5" style="bottom:80px;left:10px;"><img src="assets/icons/skill_training.webp"><span class="skill-label">团队培训</span></div>
+        <div class="skill-icon-outer" id="sk-6" style="bottom:80px;right:10px;"><img src="assets/icons/skill_planning.webp"><span class="skill-label">组织规划</span></div>
+        <div class="skill-icon-outer" id="sk-7" style="bottom:20px;left:calc(50% - 26px);"><img src="assets/icons/skill_admin.webp"><span class="skill-label">行政办公</span></div>
+        <div class="skill-icon-outer" id="sk-8" style="top:calc(50% - 26px);right:10px;"><img src="assets/icons/skill_design.webp"><span class="skill-label">艺术设计</span></div>
+
+        <!-- 技能图标（嵌入大脑后状态） -->
+        <!-- 位置基于大脑插画的圆形槽位百分比坐标 -->
+        <!-- 大脑插画 2752x1536, 右侧区域 710x720 -->
+        <!-- 槽位百分比（从网格图目观测量）： -->
+        <!-- 行1：(38%,10%), (52%,8%), (67%,10%) -->
+        <!-- 行2：(28%,27%), (43%,30%), (57%,25%), (73%,27%) -->
+        <!-- 行3：(38%,52%), (57%,55%), (72%,52%) -->
+        <!-- 将百分比转换为像素：区域710x720 -->
+        <div class="skill-icon-inner" id="ski-0" style="left:38.77%;top:34.52%;"><img src="assets/icons/skill_negotiation.webp"><span class="inner-label">业务谈判</span></div>
+        <div class="skill-icon-inner" id="ski-1" style="left:50.00%;top:34.52%;"><img src="assets/icons/skill_pricing.webp"><span class="inner-label">报价处理</span></div>
+        <div class="skill-icon-inner" id="ski-2" style="left:61.23%;top:34.52%;"><img src="assets/icons/skill_prospecting.webp"><span class="inner-label">开发客户</span></div>
+        <div class="skill-icon-inner" id="ski-3" style="left:38.77%;top:44.15%;"><img src="assets/icons/skill_cost.webp"><span class="inner-label">成本管理</span></div>
+        <div class="skill-icon-inner" id="ski-4" style="left:50.00%;top:44.15%;"><img src="assets/icons/skill_hiring.webp"><span class="inner-label">人才招聘</span></div>
+        <div class="skill-icon-inner" id="ski-5" style="left:61.23%;top:44.15%;"><img src="assets/icons/skill_training.webp"><span class="inner-label">团队培训</span></div>
+        <div class="skill-icon-inner" id="ski-6" style="left:38.77%;top:53.78%;"><img src="assets/icons/skill_planning.webp"><span class="inner-label">组织规划</span></div>
+        <div class="skill-icon-inner" id="ski-7" style="left:50.00%;top:53.78%;"><img src="assets/icons/skill_admin.webp"><span class="inner-label">行政办公</span></div>
+        <div class="skill-icon-inner" id="ski-8" style="left:61.23%;top:53.78%;"><img src="assets/icons/skill_design.webp"><span class="inner-label">艺术设计</span></div>
+    </div>
+    
+    <!-- "数字分身"文案（压轴入场） -->
+    <div class="digital-twin-text" id="digital-twin-text">
+        <div class="main-text">一个"数字分身"分配老板的精力</div>
+        <div class="sub-text">"所有的技能"它都能学会，帮助管理业务</div>
+    </div>
+
+    <button class="replay-btn" onclick="resetAndPlay()">↺ 重新播放</button>
+</div>
+
+<script>
+// 更新时间
+function updateTime() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('phone-time').textContent = h + ':' + m;
+}
+updateTime();
+
+var animating = false;
+var rightAnimDone = false;
+
+// ── 右侧大脑动画 ──
+function startBrainAnim() {
+    // 阶段1：大脑出现
+    var brainWrap = document.getElementById('brain-wrap');
+    brainWrap.classList.add('show');
+
+    // 阶段2：技能图标从外围冒出（带标签）
+    for (var i = 0; i < 9; i++) {
+        (function(idx) {
+            setTimeout(function() {
+                document.getElementById('sk-' + idx).classList.add('pop');
+            }, 800 + idx * 180);
+        })(i);
+    }
+
+    // 阶段3：技能图标飞入大脑（隐藏外围，显示内嵌）
+    var flyDelay = 800 + 9 * 180 + 1000;
+    for (var j = 0; j < 9; j++) {
+        (function(idx) {
+            setTimeout(function() {
+                var outer = document.getElementById('sk-' + idx);
+                var inner = document.getElementById('ski-' + idx);
+                var panel = document.getElementById('right-panel');
+                var panelRect = panel.getBoundingClientRect();
+                var outerRect = outer.getBoundingClientRect();
+                var innerRect = inner.getBoundingClientRect();
+
+                // 计算飞行向量
+                var dx = (innerRect.left + innerRect.width/2) - (outerRect.left + outerRect.width/2);
+                var dy = (innerRect.top + innerRect.height/2) - (outerRect.top + outerRect.height/2);
+
+                outer.style.transition = 'transform 0.6s cubic-bezier(.4,0,.6,1), opacity 0.4s 0.2s ease';
+                outer.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.6)';
+                outer.style.opacity = '0';
+
+                setTimeout(function() {
+                    inner.style.opacity = ''; // 清除 inline opacity，让 CSS class 生效
+                    inner.classList.add('show');
+                }, 400);
+            }, flyDelay + idx * 120);
+        })(j);
+    }
+    
+    // 阶段4：所有技能图标飞入后，"数字分身"文案压轴入场
+    var textDelay = flyDelay + 9 * 120 + 600;
+    setTimeout(function() {
+        var twinText = document.getElementById('digital-twin-text');
+        if (twinText) {
+            twinText.classList.add('show');
+        }
+    }, textDelay);
+    
+    rightAnimDone = true;
+}
+
+function startConverge() {
+    if (animating) return;
+    animating = true;
+
+    var screen = document.getElementById('iphone-screen');
+    var screenRect = screen.getBoundingClientRect();
+
+    // Commander OS 图标在屏幕中的位置
+    var cosIcon = document.getElementById('ai-cos');
+    var cosRect = cosIcon.getBoundingClientRect();
+    var cx = cosRect.left - screenRect.left + cosRect.width / 2;
+    var cy = cosRect.top - screenRect.top + cosRect.height / 2;
+
+    // 隐藏所有 App 标签
+    document.getElementById('home-grid').classList.add('animating');
+
+    // 收集所有需要飞入的图标（排除 Commander OS）
+    var allIcons = [];
+    for (var i = 0; i <= 10; i++) {
+        var el = document.getElementById('ai-' + i);
+        if (el) allIcons.push({el: el, idx: i});
+    }
+    for (var j = 0; j <= 3; j++) {
+        var del = document.getElementById('di-' + j);
+        if (del) allIcons.push({el: del, idx: 11 + j});
+    }
+
+    // 激活 Commander OS 脉冲（汇聚前就在跳动）
+    document.getElementById('cp1').classList.add('active');
+    document.getElementById('cp2').classList.add('active');
+    document.getElementById('cp3').classList.add('active');
+
+    // 预计算所有图标的位移向量，避免重复的 getBoundingClientRect 调用
+    var iconTransforms = [];
+    for (var k = 0; k < allIcons.length; k++) {
+        var icon = allIcons[k].el;
+        var ic = icon.getBoundingClientRect();
+        var ix = ic.left - screenRect.left + ic.width / 2;
+        var iy = ic.top - screenRect.top + ic.height / 2;
+        var dx = cx - ix;
+        var dy = cy - iy;
+        iconTransforms.push({el: icon, dx: dx, dy: dy});
+    }
+
+    // 使用 requestAnimationFrame 批量应用样式，减少重排
+    var startIdx = 0;
+    function applyAnimationBatch() {
+        var batchSize = 5; // 每帧处理 5 个图标
+        var endIdx = Math.min(startIdx + batchSize, iconTransforms.length);
+        
+        for (var m = startIdx; m < endIdx; m++) {
+            var item = iconTransforms[m];
+            (function(el, dx, dy, idx) {
+                setTimeout(function() {
+                    el.style.transition = 'transform 0.55s cubic-bezier(.4,0,.6,1), opacity 0.35s 0.2s ease';
+                    el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.05)';
+                    el.style.opacity = '0';
+                }, idx * 70);
+            })(item.el, item.dx, item.dy, m);
+        }
+        
+        startIdx = endIdx;
+        if (startIdx < iconTransforms.length) {
+            requestAnimationFrame(applyAnimationBatch);
+        }
+    }
+    applyAnimationBatch();
+
+    // 所有图标飞完后：隐藏网格，放大 Commander OS
+    var totalDelay = allIcons.length * 70 + 650;
+    setTimeout(function() {
+        document.getElementById('home-grid').style.visibility = 'hidden';
+        document.getElementById('dock').style.visibility = 'hidden';
+
+        // 显示放大的 Commander OS
+        var enlarged = document.getElementById('cos-enlarged');
+        enlarged.classList.add('show');
+
+        // 激活放大脉冲
+        setTimeout(function() {
+            document.getElementById('cep1').classList.add('active');
+            document.getElementById('cep2').classList.add('active');
+            document.getElementById('cep3').classList.add('active');
+        }, 500);
+
+        // 左侧完成后 0.8 秒，触发右侧大脑动画
+        setTimeout(function() {
+            startBrainAnim();
+        }, 1200);
+    }, totalDelay);
+}
+
+function resetAndPlay() {
+    animating = false;
+    rightAnimDone = false;
+
+    // 重置右侧大脑动画
+    document.getElementById('brain-wrap').classList.remove('show');
+    var twinText = document.getElementById('digital-twin-text');
+    if (twinText) { twinText.classList.remove('show'); }
+    for (var k = 0; k < 9; k++) {
+        var sk = document.getElementById('sk-' + k);
+        if (sk) { sk.classList.remove('pop'); sk.style.transition = 'none'; sk.style.transform = ''; sk.style.opacity = ''; }
+        var ski = document.getElementById('ski-' + k);
+        if (ski) { ski.classList.remove('show'); ski.style.opacity = ''; }
+    }
+
+    // 重置所有图标
+    for (var i = 0; i <= 10; i++) {
+        var el = document.getElementById('ai-' + i);
+        if (el) { el.style.transition = 'none'; el.style.transform = ''; el.style.opacity = '1'; }
+    }
+    for (var j = 0; j <= 3; j++) {
+        var del = document.getElementById('di-' + j);
+        if (del) { del.style.transition = 'none'; del.style.transform = ''; del.style.opacity = '1'; }
+    }
+
+    // 重置 Commander OS 脉冲
+    ['cp1','cp2','cp3'].forEach(function(id) {
+        document.getElementById(id).classList.remove('active');
+    });
+    ['cep1','cep2','cep3'].forEach(function(id) {
+        document.getElementById(id).classList.remove('active');
+    });
+
+    // 重置放大状态
+    var enlarged = document.getElementById('cos-enlarged');
+    enlarged.classList.remove('show');
+
+    // 恢复网格和 dock 可见
+    document.getElementById('home-grid').style.visibility = 'visible';
+    document.getElementById('home-grid').classList.remove('animating');
+    document.getElementById('dock').style.visibility = 'visible';
+
+    // 延迟后重新播放
+    setTimeout(startConverge, 800);
+}
+
+// 页面加载后 1.5 秒开始动画
+window.addEventListener('load', function() {
+    setTimeout(startConverge, 1500);
+});
+</script>
+</body>
+</html>

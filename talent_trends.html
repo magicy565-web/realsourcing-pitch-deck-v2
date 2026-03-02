@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外贸人才趋势：AI正在重塑行业</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            color: #F8FAFC;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at top right, #1E293B 0%, #0F172A 100%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .nav-dot {
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            background-color: #F97316;
+            width: 32px;
+        }
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .chart-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-12">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">外贸人才趋势：<span class="text-orange-500">AI 正在重塑行业</span></h1>
+                <p class="text-slate-400 mt-2 text-lg">数据验证：传统模式崩塌，超级个体崛起</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-slate-500">Data Source</div>
+                <div class="text-xs text-slate-600">BOSS直聘 / 猎聘 / LinkedIn / McKinsey</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex gap-8 min-h-0">
+            <!-- Left Column: Chart Area -->
+            <div class="w-3/5 glass-card rounded-2xl p-6 flex flex-col relative">
+                <div class="chart-container flex-1">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <!-- Chart Navigation -->
+                <div class="flex justify-center gap-3 mt-6">
+                    <button onclick="manualSwitch(0)" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-slate-400" aria-label="Slide 1"></button>
+                    <button onclick="manualSwitch(1)" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-slate-400" aria-label="Slide 2"></button>
+                    <button onclick="manualSwitch(2)" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-slate-400" aria-label="Slide 3"></button>
+                    <button onclick="manualSwitch(3)" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-slate-400" aria-label="Slide 4"></button>
+                </div>
+            </div>
+
+            <!-- Right Column: Insight Area -->
+            <div class="w-2/5 flex flex-col justify-center pl-4">
+                <div id="insight-content" class="transition-all duration-500">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Configurations
+        const slidesData = [
+            {
+                title: "传统外贸岗位断崖式下跌",
+                stat: "-70%",
+                statColor: "text-red-500",
+                desc: "传统外贸业务员岗位正在消失。这不是因为贸易萎缩，而是因为 AI 正在接管低效的搬运工作。",
+                source: "来源：职友集 / 亿恩媒体 (2022-2023)",
+                chartType: 'line',
+                chartData: {
+                    labels: ['2021', '2022', '2023', '2024', '2025(E)'],
+                    datasets: [{
+                        label: '传统外贸业务员招聘量',
+                        data: [100, 85, 30, 25, 15],
+                        borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                chartOptions: {
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94A3B8' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            },
+            {
+                title: "跨境电商运营需求爆发",
+                stat: "+509%",
+                statColor: "text-green-500",
+                desc: "外贸行业不缺人，缺的是能用 AI 武装自己的新型外贸人。深圳等地跨境电商运营岗位需求呈爆发式增长。",
+                source: "来源：猎聘大数据 / 职友集 (深圳数据)",
+                chartType: 'bar',
+                chartData: {
+                    labels: ['2021', '2022', '2023', '2024'],
+                    datasets: [{
+                        label: '跨境电商运营岗位需求',
+                        data: [100, 157, 609, 850],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.5)',
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(59, 130, 246, 0.8)',
+                            '#3B82F6'
+                        ],
+                        borderRadius: 6
+                    }]
+                },
+                chartOptions: {
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94A3B8' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            },
+            {
+                title: "AI 替代初级岗位比例",
+                stat: "39%",
+                statColor: "text-orange-500",
+                desc: "AI 不是在'帮助'外贸人，而是在'替代'那些没有认知、只会搬运信息的初级业务员。",
+                source: "来源：脉脉2025人才报告 / McKinsey",
+                chartType: 'doughnut',
+                chartData: {
+                    labels: ['AI 已替代 (初级)', '人机协作 (中级)', '人类核心 (高级)'],
+                    datasets: [{
+                        data: [39, 45, 16],
+                        backgroundColor: ['#F97316', '#3B82F6', '#10B981'],
+                        borderWidth: 0
+                    }]
+                },
+                chartOptions: {
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#F8FAFC', padding: 20 } }
+                    }
+                }
+            },
+            {
+                title: "一人+AI 模式效率革命",
+                stat: "5x",
+                statColor: "text-blue-400",
+                desc: "一个装备了 AI 的外贸老板，战斗力等于一支 5 人团队。RealSourcing 就是那套核心 AI 装备。",
+                source: "来源：LinkedIn 'One Person + AI' Report (2025)",
+                chartType: 'bar',
+                chartData: {
+                    labels: ['销售周期', '团队人数', '运营成本'],
+                    datasets: [
+                        {
+                            label: '传统模式',
+                            data: [100, 100, 100],
+                            backgroundColor: '#64748B',
+                            borderRadius: 4
+                        },
+                        {
+                            label: '一人+AI 模式',
+                            data: [50, 20, 3],
+                            backgroundColor: '#F97316',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                chartOptions: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { size: 14 } } }
+                    },
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } }
+                }
+            }
+        ];
+
+        let currentSlide = 0;
+        let chartInstance = null;
+        let autoPlayInterval;
+
+        function renderSlide(index) {
+            const data = slidesData[index];
+            
+            // Update Insight Content
+            const insightContainer = document.getElementById('insight-content');
+            insightContainer.innerHTML = `
+                <div class="fade-enter-active">
+                    <div class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Key Insight ${index + 1}/4</div>
+                    <h2 class="text-3xl font-bold text-white mb-4 leading-tight">${data.title}</h2>
+                    <div class="text-6xl font-extrabold ${data.statColor} mb-6">${data.stat}</div>
+                    <p class="text-lg text-slate-300 leading-relaxed mb-8 border-l-4 border-slate-600 pl-4">${data.desc}</p>
+                    <div class="text-xs text-slate-500 italic">${data.source}</div>
+                </div>
+            `;
+
+            // Update Navigation Dots
+            document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // Update Chart
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: data.chartType,
+                data: data.chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
+                    ...data.chartOptions
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slidesData.length;
+            renderSlide(currentSlide);
+        }
+
+        function manualSwitch(index) {
+            clearInterval(autoPlayInterval); // Stop auto-play on interaction
+            currentSlide = index;
+            renderSlide(currentSlide);
+            // Restart auto-play after 10 seconds of inactivity
+            setTimeout(() => {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(nextSlide, 6000);
+            }, 10000);
+        }
+
+        // Initialize
+        renderSlide(0);
+        autoPlayInterval = setInterval(nextSlide, 6000);
+
+    </script>
+</body>
+</html>

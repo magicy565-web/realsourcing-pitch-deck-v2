@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lottie Preview</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<style>
+body { background: #050510; color: white; display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; font-family: sans-serif; }
+.item { text-align: center; }
+.item div { width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+p { font-size: 11px; margin-top: 4px; color: #aaa; }
+</style>
+</head>
+<body>
+<script>
+const files = [
+  'ai_brain.json','ai_core.json','ai_scan.json','ai_tech.json','ai_circle.json',
+  'buyer.json','factory.json','factory2.json','factory_icon.json',
+  'gear.json','person.json','person_work.json','person_laptop.json'
+];
+files.forEach(f => {
+  const wrap = document.createElement('div');
+  wrap.className = 'item';
+  const container = document.createElement('div');
+  container.id = f;
+  const label = document.createElement('p');
+  label.textContent = f;
+  wrap.appendChild(container);
+  wrap.appendChild(label);
+  document.body.appendChild(wrap);
+  lottie.loadAnimation({
+    container, renderer: 'svg', loop: true, autoplay: true,
+    path: 'assets/lottie/' + f
+  });
+});
+</script>
+</body>
+</html>

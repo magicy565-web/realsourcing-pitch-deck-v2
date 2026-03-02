@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - 工厂端价值</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background: #0A0A0F;
+        }
+        /* Background Video Layer */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.15;
+            mix-blend-mode: screen;
+        }
+
+        /* Split Layout */
+        .split-container {
+            display: flex;
+            height: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to left, rgba(139, 92, 246, 0.1), rgba(0,0,0,0));
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Pain Points (Left) */
+        .pain-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .pain-item:hover {
+            opacity: 1;
+            transform: translateX(10px);
+        }
+
+        .pain-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #999;
+        }
+
+        /* Value Points (Right) */
+        .value-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(139, 92, 246, 0.2);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .value-card:hover::before {
+            left: 100%;
+        }
+
+        .digital-avatar-glow {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animations */
+        .fade-in-left {
+            animation: fadeInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .fade-in-right {
+            animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        @keyframes fadeInLeft { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { to { opacity: 1; transform: translateX(0); } }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* Typography */
+        .gradient-text {
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+
+        <div class="split-container">
+            <!-- Left: The Pain (Traditional) -->
+            <div class="left-panel">
+                <div class="mb-8 fade-in-left">
+                    <div class="text-xs font-bold text-gray-500 tracking-widest mb-2">THE OLD WAY</div>
+                    <h2 class="text-3xl font-bold text-gray-400">传统外贸部的<br><span class="text-gray-500">不可能三角</span></h2>
+                </div>
+
+                <div class="pain-item fade-in-left delay-100">
+                    <div class="pain-icon">😓</div>
+                    <div>
+                        <div class="text-lg font-medium text-gray-300">招人难，留人更难</div>
+                        <div class="text-sm text-gray-500">平均流失率 > 30%，培养半年刚上手就跳槽</div>
+                    </div>
+                </div>
+
+                <div class="pain-item fade-in-left delay-200">
+                    <div class="pain-icon">🌙</div>
+                    <div>
+                        <div class="text-lg font-medium text-gray-300">时差苦，响应慢</div>
+                        <div class="text-sm text-gray-500">欧美客户半夜找，早上回复黄花菜都凉了</div>
+                    </div>
+                </div>
+
+                <div class="pain-item fade-in-left delay-300">
+                    <div class="pain-icon">🗣️</div>
+                    <div>
+                        <div class="text-lg font-medium text-gray-300">语言通，懂行难</div>
+                        <div class="text-sm text-gray-500">懂英语的不懂工艺，懂工艺的不懂英语</div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-white/10 fade-in-left delay-400">
+                    <div class="text-sm text-gray-500">传统模式成本：</div>
+                    <div class="text-2xl font-bold text-gray-400">¥50万+/年 <span class="text-sm font-normal">(3人团队)</span></div>
+                </div>
+            </div>
+
+            <!-- Right: The Solution (Digital Twin) -->
+            <div class="right-panel">
+                <div class="digital-avatar-glow"></div>
+                
+                <div class="mb-8 fade-in-right relative z-10">
+                    <div class="text-xs font-bold text-purple-400 tracking-widest mb-2">THE NEW WAY</div>
+                    <h2 class="text-4xl font-bold text-white">老板的<span class="gradient-text">数字分身</span></h2>
+                    <p class="text-purple-200/80 mt-2">无需组建外贸部，AI 就是你的千军万马</p>
+                </div>
+
+                <div class="value-card fade-in-right delay-100 relative z-10">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-300 text-xl">🤖</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">全能数字员工</h3>
+                            <p class="text-sm text-gray-300 mt-1">继承老板的工艺知识与谈判技巧，比业务员更懂产品，比翻译更懂语言。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="value-card fade-in-right delay-200 relative z-10">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-300 text-xl">⚡</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">7x24h 零时差响应</h3>
+                            <p class="text-sm text-gray-300 mt-1">秒回全球买家询盘，永不睡觉，永不疲劳，永不情绪化。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-white/10 fade-in-right delay-300 relative z-10 flex items-center justify-between">
+                    <div>
+                        <div class="text-sm text-purple-300">RealSourcing 成本：</div>
+                        <div class="text-3xl font-bold text-white">¥0 <span class="text-sm font-normal text-gray-400">底薪</span></div>
+                    </div>
+                    <div class="px-4 py-2 bg-purple-600 rounded-lg text-white font-bold text-sm shadow-lg shadow-purple-600/30">
+                        按效果付费
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

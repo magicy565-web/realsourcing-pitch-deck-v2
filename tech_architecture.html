@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - 技术架构</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background: #0A0A0F;
+        }
+        /* Background Video Layer */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.1;
+            mix-blend-mode: screen;
+        }
+
+        /* Data X-Ray Container */
+        .xray-container {
+            background: rgba(18, 18, 26, 0.6);
+            backdrop-filter: blur(8px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .data-step {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .data-step::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #8B5CF6, transparent);
+        }
+
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            background: #1E1E2E;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #A9B1D6;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .keyword { color: #BB9AF7; }
+        .string { color: #9ECE6A; }
+        .number { color: #FF9E64; }
+
+        /* Architecture Layers */
+        .arch-layer {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arch-layer:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .layer-label {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #0A0A0F;
+            padding: 0 8px;
+            font-size: 12px;
+            color: #8B5CF6;
+            font-weight: 600;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 4px;
+        }
+
+        .tech-pill {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #E2E8F0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animations */
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+
+        <!-- Left: Data X-Ray -->
+        <div class="w-1/3 xray-container z-10">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-white">Data X-Ray</h2>
+                <p class="text-xs text-gray-400">从非结构化文本到精准匹配</p>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="data-step slide-up delay-100">
+                <div class="text-xs font-semibold text-purple-400 mb-1">INPUT: USER PROMPT</div>
+                <div class="bg-white/5 p-3 rounded-lg text-sm text-gray-300 italic border border-white/10">
+                    "Looking for a noise-cancelling headphone supplier, MOQ 500, similar to Sony WH-1000XM5..."
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="data-step slide-up delay-200">
+                <div class="text-xs font-semibold text-blue-400 mb-1">PROCESS: STRUCTURED RFQ</div>
+                <div class="code-block">
+{
+  <span class="keyword">"category"</span>: <span class="string">"Consumer Electronics"</span>,
+  <span class="keyword">"specs"</span>: {
+    <span class="keyword">"feature"</span>: <span class="string">"ANC"</span>,
+    <span class="keyword">"chipset"</span>: <span class="string">"BES2300"</span>
+  },
+  <span class="keyword">"moq"</span>: <span class="number">500</span>,
+  <span class="keyword">"target_price"</span>: <span class="number">25.00</span>
+}
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="data-step slide-up delay-300">
+                <div class="text-xs font-semibold text-green-400 mb-1">OUTPUT: VECTOR MATCH</div>
+                <div class="code-block">
+[0.12, -0.58, 0.93, ...]
+<span class="keyword">Match Score</span>: <span class="number">0.92</span>
+<span class="keyword">Factory ID</span>: <span class="string">"FAC_SZ_089"</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Architecture -->
+        <div class="w-2/3 p-12 z-10 flex flex-col justify-center">
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-white mb-2">技术架构</h1>
+                <p class="text-gray-400">OpenClaw Agent 框架驱动的智能供应链引擎</p>
+            </div>
+
+            <!-- Layer 1: Application -->
+            <div class="arch-layer slide-up delay-100">
+                <div class="layer-label">APPLICATION LAYER</div>
+                <div class="flex gap-3 mt-2">
+                    <div class="tech-pill">Next.js 14</div>
+                    <div class="tech-pill">React Server Components</div>
+                    <div class="tech-pill">Tailwind CSS</div>
+                    <div class="tech-pill">Real-time WebSocket</div>
+                </div>
+            </div>
+
+            <!-- Layer 2: Agent Framework -->
+            <div class="arch-layer slide-up delay-200 border-purple-500/30 bg-purple-500/5">
+                <div class="layer-label text-purple-400 border-purple-500/50">OPENCLAW AGENT FRAMEWORK</div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div class="bg-black/20 p-3 rounded border border-white/5">
+                        <div class="text-xs text-gray-400 mb-1">Orchestrator</div>
+                        <div class="text-sm font-medium">Task Planning & Routing</div>
+                    </div>
+                    <div class="bg-black/20 p-3 rounded border border-white/5">
+                        <div class="text-xs text-gray-400 mb-1">Tools</div>
+                        <div class="text-sm font-medium">Search, Quote, Logistics API</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 3: Model & Data -->
+            <div class="arch-layer slide-up delay-300 flex gap-6">
+                <div class="flex-1">
+                    <div class="layer-label">MODEL LAYER</div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <div class="tech-pill border-blue-500/30 text-blue-300">GPT-4o (Reasoning)</div>
+                        <div class="tech-pill border-blue-500/30 text-blue-300">Claude 3.5 (Coding)</div>
+                        <div class="tech-pill border-blue-500/30 text-blue-300">Llama 3 (Local)</div>
+                    </div>
+                </div>
+                <div class="flex-1 border-l border-white/10 pl-6">
+                    <div class="layer-label">DATA INFRASTRUCTURE</div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <div class="tech-pill border-green-500/30 text-green-300">Pinecone (Vector DB)</div>
+                        <div class="tech-pill border-green-500/30 text-green-300">PostgreSQL (Relational)</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

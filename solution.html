@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - Solution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { width: 100%; height: 100%; }
+        body { 
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            background: #050510;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: #fff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(79,110,247,0.08) 0%, #050510 70%);
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+            text-align: center;
+        }
+
+        .section-tag {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4F6EF7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Timeline Flow */
+        .timeline-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        /* Timeline connecting line */
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(79,110,247,0.2) 0%, rgba(79,110,247,0.5) 50%, rgba(79,110,247,0.2) 100%);
+            z-index: 0;
+        }
+
+        /* Timeline step */
+        .timeline-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+
+        .timeline-step:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-step:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-step:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-step:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-step:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Timeline node */
+        .timeline-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(79,110,247,0.15);
+            border: 2px solid #4F6EF7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(79,110,247,0.3);
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        .timeline-step:nth-child(1) .timeline-node { animation-delay: 0.1s; }
+        .timeline-step:nth-child(2) .timeline-node { animation-delay: 0.2s; }
+        .timeline-step:nth-child(3) .timeline-node { animation-delay: 0.3s; }
+        .timeline-step:nth-child(4) .timeline-node { animation-delay: 0.4s; }
+        .timeline-step:nth-child(5) .timeline-node { animation-delay: 0.5s; }
+
+        /* Timeline label */
+        .timeline-label {
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .timeline-label .title {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .timeline-label .time {
+            font-size: 12px;
+            color: #4F6EF7;
+            font-weight: 600;
+        }
+
+        /* Bottom comparison bar */
+        .comparison-bar {
+            background: rgba(79,110,247,0.08);
+            border: 1px solid rgba(79,110,247,0.2);
+            border-radius: 16px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards 0.6s;
+            flex-wrap: wrap;
+        }
+
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .comparison-item.highlight {
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .comparison-item.old {
+            color: #ef4444;
+            text-decoration: line-through;
+        }
+
+        .arrow {
+            color: rgba(79,110,247,0.4);
+            font-size: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(79,110,247,0.3), inset 0 0 20px rgba(79,110,247,0.1); }
+            50% { box-shadow: 0 0 40px rgba(79,110,247,0.6), inset 0 0 20px rgba(79,110,247,0.2); }
+        }
+
+        /* Data flow particles */
+        @keyframes flowRight {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        .flow-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #4F6EF7;
+            top: 50%;
+            box-shadow: 0 0 6px rgba(79,110,247,0.8);
+            pointer-events: none;
+        }
+
+        .flow-particle:nth-child(1) { animation: flowRight 2s ease-in-out infinite 0s; }
+        .flow-particle:nth-child(2) { animation: flowRight 2s ease-in-out infinite 0.4s; }
+        .flow-particle:nth-child(3) { animation: flowRight 2s ease-in-out infinite 0.8s; }
+        .flow-particle:nth-child(4) { animation: flowRight 2s ease-in-out infinite 1.2s; }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="section-tag">THE SOLUTION</div>
+            <h1 class="main-title">直连 · 极速 · 可信赖</h1>
+        </div>
+
+        <!-- Timeline Flow -->
+        <div class="timeline-container">
+            <div class="timeline-line">
+                <div class="flow-particle"></div>
+                <div class="flow-particle"></div>
+                <div class="flow-particle"></div>
+                <div class="flow-particle"></div>
+            </div>
+
+            <!-- Step 1: Buyer Submits -->
+            <div class="timeline-step">
+                <div class="timeline-node">🛒</div>
+                <div class="timeline-label">
+                    <div class="title">需求提交</div>
+                    <div class="time">T+0min</div>
+                </div>
+            </div>
+
+            <!-- Step 2: AI Matching -->
+            <div class="timeline-step">
+                <div class="timeline-node">🤖</div>
+                <div class="timeline-label">
+                    <div class="title">AI 智能匹配</div>
+                    <div class="time">T+15min</div>
+                </div>
+            </div>
+
+            <!-- Step 3: Auto Quotation -->
+            <div class="timeline-step">
+                <div class="timeline-node">⚡</div>
+                <div class="timeline-label">
+                    <div class="title">自动报价</div>
+                    <div class="time">T+30min</div>
+                </div>
+            </div>
+
+            <!-- Step 4: Verification -->
+            <div class="timeline-step">
+                <div class="timeline-node">✓</div>
+                <div class="timeline-label">
+                    <div class="title">实时验厂</div>
+                    <div class="time">T+1h</div>
+                </div>
+            </div>
+
+            <!-- Step 5: Direct Connection -->
+            <div class="timeline-step">
+                <div class="timeline-node">🔗</div>
+                <div class="timeline-label">
+                    <div class="title">直连工厂</div>
+                    <div class="time">T+2h</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Bar -->
+        <div class="comparison-bar">
+            <div class="comparison-item old">传统平台: 3–7 天</div>
+            <span class="arrow">→</span>
+            <div class="comparison-item">需求提交</div>
+            <span class="arrow">→</span>
+            <div class="comparison-item highlight">15 分钟匹配</div>
+            <span class="arrow">→</span>
+            <div class="comparison-item highlight">30 分钟报价</div>
+            <span class="arrow">→</span>
+            <div class="comparison-item highlight">直连工厂</div>
+        </div>
+    </div>
+
+    <script>
+    // Adaptive scaling
+    function scaleSlide() {
+        const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        const x = (window.innerWidth - 1280 * s) / 2;
+        const y = (window.innerHeight - 720 * s) / 2;
+        document.body.style.transform = `scale(${s})`;
+        document.body.style.left = x + 'px';
+        document.body.style.top = y + 'px';
+    }
+    scaleSlide();
+    window.addEventListener('resize', scaleSlide);
+    </script>
+</body>
+</html>

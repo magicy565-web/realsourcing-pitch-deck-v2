@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>老板是最忙的业务员</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { overflow:hidden; background:#000; }
+
+        /* 1280×720 严格容器 */
+        .slide {
+            width:1280px; height:720px;
+            background:radial-gradient(ellipse at 15% 50%, #1a2744 0%, #0F172A 55%);
+            color:#F8FAFC; overflow:hidden; position:relative;
+            font-family:'Inter','Noto Sans SC',sans-serif;
+        }
+
+        /* 角标 */
+        .corner { position:absolute; top:26px; right:44px; text-align:right;
+            font-size:10px; color:rgba(255,255,255,0.2); line-height:1.6;
+            font-family:'JetBrains Mono',monospace; }
+
+        /* ── 标题区  top:26  height:54 ── */
+        .hd { position:absolute; top:26px; left:44px; }
+        .hd h1 { font-size:32px; font-weight:800; letter-spacing:-0.5px; line-height:1.1; }
+        .hd h1 span { color:#f97316; }
+        .hd .sub { font-size:12px; color:#64748b; margin-top:4px; }
+
+        /* ── 主内容区  top:88  height:612  bottom:720 ── */
+        /* 手机: left:44  width:220  height:580 */
+        .phone-wrap { position:absolute; left:44px; top:88px; width:220px; height:580px; }
+        .phone-shell {
+            width:210px; height:540px;
+            background:#111; border-radius:32px; border:4px solid #2a3a52;
+            box-shadow:0 20px 50px rgba(0,0,0,.7),0 0 40px rgba(59,130,246,.08);
+            overflow:hidden; transform:rotate(-3deg);
+        }
+        .phone-screen { width:100%; height:100%; background:#f5f5f5; border-radius:28px; overflow:hidden; display:flex; flex-direction:column; }
+        .ps { height:20px; display:flex; justify-content:space-between; align-items:center; padding:4px 12px 0; font-size:7.5px; color:#333; background:#fff; flex-shrink:0; }
+        .wn { background:#ededed; height:34px; display:flex; align-items:center; justify-content:space-between; padding:0 10px; border-bottom:1px solid #d8d8d8; flex-shrink:0; }
+        .ws { background:#fff; margin:4px 8px; border-radius:4px; height:20px; display:flex; align-items:center; padding:0 8px; flex-shrink:0; }
+        .wl { flex:1; overflow:hidden; background:#f5f5f5; position:relative; }
+        .ci { background:#fff; display:flex; align-items:center; padding:7px 10px; gap:8px; border-bottom:1px solid #f0f0f0; position:relative; opacity:0; transform:translateX(-18px); transition:opacity .4s,transform .4s; }
+        .ci.vis { opacity:1; transform:translateX(0); }
+        .ca { width:30px; height:30px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; color:#fff; font-weight:700; }
+        .rd { position:absolute; top:4px; left:32px; background:#f00; color:#fff; font-size:6px; font-weight:700; border-radius:9px; padding:1px 3px; min-width:13px; text-align:center; line-height:11px; }
+        .ci-info { flex:1; min-width:0; }
+        .ci-name { font-size:8px; font-weight:600; color:#1a1a1a; }
+        .ci-msg  { font-size:7px; color:#888; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .ci-time { font-size:6.5px; color:#bbb; flex-shrink:0; }
+        .wb { height:32px; background:#f7f7f7; border-top:1px solid #e0e0e0; display:flex; justify-content:space-around; align-items:center; flex-shrink:0; }
+        .wt { display:flex; flex-direction:column; align-items:center; gap:1px; }
+        .wt-i { font-size:12px; }
+        .wt-l { font-size:6.5px; color:#888; }
+        .phone-caption { position:absolute; bottom:0; left:0; width:210px; text-align:center; font-size:11px; color:#94a3b8; }
+
+        /* 时间轴区: left:288  top:88  right:44  height:612 */
+        /* 内部: header(18) + gap(8) + chart(512) + gap(8) + stats(66) = 612 */
+        .tl-wrap { position:absolute; left:288px; top:88px; right:44px; height:612px; display:flex; flex-direction:column; gap:8px; }
+        .tl-header { font-size:10px; color:#475569; font-family:'JetBrains Mono',monospace; letter-spacing:1px; height:18px; flex-shrink:0; line-height:18px; }
+
+        /* chart 固定 512px */
+        .chart { position:relative; height:512px; flex-shrink:0; overflow:visible; }
+
+        /* baseline 在 chart 内 top:409px（80%处），下方留 103px 给时间标签 */
+        .baseline { position:absolute; left:0; right:0; top:409px; height:2px;
+            background:linear-gradient(90deg,rgba(248,113,113,.5) 0%,rgba(251,191,36,.5) 30%,rgba(74,222,128,.4) 60%,rgba(248,113,113,.5) 100%); }
+        .tlabel { position:absolute; top:418px; font-size:9px; color:#475569; font-family:'JetBrains Mono',monospace; transform:translateX(-50%); }
+        .zone { position:absolute; top:0; height:409px; border-radius:6px; }
+        .ann { position:absolute; font-size:9px; font-weight:600; line-height:1.5; opacity:0; transition:opacity .6s; }
+        .ann.vis { opacity:1; }
+
+        /* 气泡 */
+        .bub { position:absolute; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; transform:translateX(-50%) scale(0); transform-origin:center bottom; transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
+        .bub.pop { transform:translateX(-50%) scale(1); }
+        .bi { font-size:18px; }
+        .bl1 { font-size:8px; font-weight:700; margin-top:1px; }
+        .bl2 { font-size:8px; }
+        .stem { position:absolute; width:1px; transform:translateX(-50%) scaleY(0); transform-origin:bottom; transition:transform .3s; }
+        .stem.pop { transform:translateX(-50%) scaleY(1); }
+        .dot { position:absolute; width:7px; height:7px; border-radius:50%; transform:translate(-50%,-50%); top:409px; opacity:0; transition:opacity .3s; }
+        .dot.pop { opacity:1; }
+        .bt { position:absolute; font-size:8px; font-family:'JetBrains Mono',monospace; color:#f97316; transform:translateX(-50%); opacity:0; transition:opacity .3s .3s; }
+        .bt.pop { opacity:1; }
+
+        /* 游标 */
+        #cur { position:absolute; top:24px; width:2px; height:390px; background:linear-gradient(to bottom,rgba(251,191,36,0),rgba(251,191,36,.9),rgba(251,191,36,0)); border-radius:1px; box-shadow:0 0 8px rgba(251,191,36,.6); left:0; z-index:10; }
+        #ctb { position:absolute; top:-20px; left:50%; transform:translateX(-50%); background:#fbbf24; color:#000; font-size:8.5px; font-weight:700; font-family:'JetBrains Mono',monospace; padding:2px 6px; border-radius:3px; white-space:nowrap; }
+        #pf { position:absolute; top:408px; left:0; height:4px; background:linear-gradient(90deg,rgba(251,191,36,.3),rgba(251,191,36,.6)); width:0; border-radius:2px; }
+
+        /* stats 固定 66px */
+        .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; height:66px; flex-shrink:0; }
+        .sc { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:8px 14px; text-align:center; display:flex; flex-direction:column; justify-content:center; }
+        .sn { font-size:26px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+        .sl { font-size:10px; color:#64748b; margin-top:2px; }
+
+        /* replay */
+        #rb { position:absolute; bottom:20px; right:44px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.5); font-size:10px; font-family:'JetBrains Mono',monospace; padding:5px 12px; border-radius:6px; cursor:pointer; transition:all .2s; }
+        #rb:hover { background:rgba(255,255,255,.1); color:#fff; }
+
+        @keyframes pop { 0%{box-shadow:0 0 0 0 rgba(251,191,36,.5)} 70%{box-shadow:0 0 0 10px rgba(251,191,36,0)} 100%{box-shadow:0 0 0 0 rgba(251,191,36,0)} }
+        .bub.jp { animation:pop .6s ease-out; }
+        @keyframes flash { 0%{background:rgba(255,100,0,.25)} 100%{background:#fff} }
+        .ci.fl { animation:flash .5s ease-out; }
+    </style>
+</head>
+<body>
+<div class="slide">
+    <div class="corner">Pain Point<br>Factory Owner</div>
+
+    <div class="hd">
+        <h1>老板是最忙的 <span>业务员</span></h1>
+        <div class="sub">信息爆炸 + 决策过载 = 公司的天花板</div>
+    </div>
+
+    <!-- Phone -->
+    <div class="phone-wrap">
+        <div class="phone-shell">
+            <div class="phone-screen">
+                <div class="ps"><span id="pt" style="font-weight:700;">7:00</span><span>5G 🔋</span></div>
+                <div class="wn"><span style="font-size:12px;font-weight:700;color:#1a1a1a;">微信</span><div style="display:flex;gap:10px;font-size:14px;color:#555;">🔍 ＋</div></div>
+                <div class="ws"><span style="font-size:8.5px;color:#aaa;">🔍 搜索</span></div>
+                <div class="wl" id="wl"></div>
+                <div class="wb">
+                    <div class="wt"><div class="wt-i">💬</div><div class="wt-l" style="color:#07c160;">微信</div></div>
+                    <div class="wt"><div class="wt-i">👥</div><div class="wt-l">通讯录</div></div>
+                    <div class="wt"><div class="wt-i">🔍</div><div class="wt-l">发现</div></div>
+                    <div class="wt"><div class="wt-i">👤</div><div class="wt-l">我</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="phone-caption">每天 <span style="color:#f97316;font-weight:700;" id="mc">0</span> 条未读消息</div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="tl-wrap">
+        <div class="tl-header">老板的一天 — 决策密度热力图</div>
+        <div class="chart" id="chart">
+            <div class="zone" style="left:0%;width:11.8%;background:rgba(249,115,22,.08);"></div>
+            <div class="zone" style="left:64.7%;width:35.3%;background:rgba(249,115,22,.08);"></div>
+            <div class="baseline"></div>
+            <div id="pf"></div>
+            <div id="cur"><div id="ctb">07:00</div></div>
+            <div class="tlabel" style="left:0%;">07:00</div>
+            <div class="tlabel" style="left:11.8%;">09:00</div>
+            <div class="tlabel" style="left:29.4%;">12:00</div>
+            <div class="tlabel" style="left:47.1%;">15:00</div>
+            <div class="tlabel" style="left:64.7%;">18:00</div>
+            <div class="tlabel" style="left:82.4%;">21:00</div>
+            <div class="tlabel" style="left:99%;">24:00</div>
+            <div class="ann" id="a1" style="left:.5%;top:10px;color:#f97316;">🌅 早晨</div>
+            <div class="ann" id="a2" style="left:.5%;top:26px;color:#f97316;font-size:8.5px;line-height:1.4;">还没到公司<br>已处理 5 条</div>
+            <div class="ann" id="a3" style="left:18%;top:10px;color:#475569;font-size:9px;font-weight:500;">— 正常工作时间 —</div>
+            <div class="ann" id="a4" style="left:30%;top:18px;color:#64748b;font-size:8.5px;line-height:1.4;">午休?<br>不存在的</div>
+            <div class="ann" id="a5" style="left:65%;top:10px;color:#f97316;">🌙 夜晚</div>
+            <div class="ann" id="a6" style="left:65%;top:26px;color:#f97316;font-size:8.5px;line-height:1.4;">时差来了，欧美客户开始活跃<br>凌晨还在回消息</div>
+        </div>
+        <div class="stats">
+            <div class="sc"><div class="sn" id="sh" style="color:#f97316;">0h</div><div class="sl">有效工作时长/天</div></div>
+            <div class="sc"><div class="sn" id="sd" style="color:#f87171;">0</div><div class="sl">需拍板决策/天</div></div>
+            <div class="sc"><div class="sn" id="sf" style="color:#94a3b8;">—</div><div class="sl">真正属于自己的时间</div></div>
+        </div>
+    </div>
+
+    <button id="rb" onclick="go()">↺ 重新播放</button>
+</div>
+<script>
+var BASE=409;
+function tp(h,m){return((h-7)*60+m)/1020*100;}
+function hr(hex,a){hex=hex.replace('#','');if(hex.length===3)hex=hex.split('').map(function(c){return c+c;}).join('');return'rgba('+parseInt(hex.slice(0,2),16)+','+parseInt(hex.slice(2,4),16)+','+parseInt(hex.slice(4,6),16)+','+a+')';}
+
+var B=[
+    {h:7,m:15,i:'🏭',l1:'供应商',l2:'催款',  c:'#f97316',s:60,sh:72},
+    {h:7,m:50,i:'❤️',l1:'客户',  l2:'投诉',  c:'#f87171',s:56,sh:62},
+    {h:8,m:20,i:'💰',l1:'审核',  l2:'报价',  c:'#fbbf24',s:62,sh:84},
+    {h:9,m:30,i:'👥',l1:'人才',  l2:'招聘',  c:'#a78bfa',s:68,sh:105},
+    {h:10,m:15,i:'🤝',l1:'客户', l2:'管理',  c:'#f87171',s:72,sh:128},
+    {h:11,m:0, i:'🚢',l1:'物流', l2:'信息',  c:'#4ade80',s:62,sh:78},
+    {h:11,m:40,i:'🔧',l1:'产品', l2:'开发',  c:'#22d3ee',s:62,sh:96},
+    {h:12,m:30,i:'📋',l1:'关务', l2:'信息',  c:'#fbbf24',s:60,sh:68},
+    {h:13,m:30,i:'📊',l1:'税务', l2:'信息',  c:'#f97316',s:64,sh:90},
+    {h:14,m:30,i:'💹',l1:'销售', l2:'策略',  c:'#10b981',s:68,sh:118},
+    {h:15,m:30,i:'🔍',l1:'供应商',l2:'管理', c:'#3b82f6',s:64,sh:84},
+    {h:16,m:30,i:'🏭',l1:'销售', l2:'培训',  c:'#a78bfa',s:60,sh:72},
+    {h:17,m:30,i:'🚢',l1:'物流', l2:'跟踪',  c:'#22d3ee',s:58,sh:68},
+    {h:18,m:30,i:'❤️',l1:'客户', l2:'沟通',  c:'#f87171',s:64,sh:100},
+    {h:19,m:45,i:'💰',l1:'审核', l2:'报价',  c:'#fbbf24',s:68,sh:120},
+    {h:21,m:0, i:'📋',l1:'明日', l2:'计划',  c:'#10b981',s:64,sh:90},
+    {h:22,m:30,i:'🏭',l1:'供应商',l2:'问题', c:'#3b82f6',s:60,sh:72},
+    {h:23,m:50,i:'😤',l1:'客户', l2:'投诉',  c:'#f87171',s:62,sh:84},
+];
+var M=[
+    {bg:'#1677ff',lt:'外',bd:'99+',nm:'2024外贸客户群',  ms:'老板，美国客户催报价了！！',t:'刚刚'},
+    {bg:'#52c41a',lt:'供',bd:'47', nm:'供应商报价跟进群',ms:'今天能发货吗？客户在等',    t:'2分钟'},
+    {bg:'#722ed1',lt:'HR',bd:'23', nm:'HR招聘-销售岗',  ms:'这个候选人怎么样？',        t:'8分钟'},
+    {bg:'#fa8c16',lt:'生',bd:'18', nm:'生产进度日报',    ms:'3号线今天产能不足20%',      t:'15分钟'},
+    {bg:'#eb2f96',lt:'关',bd:'12', nm:'关务&税务',       ms:'这批货HS编码有问题',        t:'22分钟'},
+    {bg:'#13c2c2',lt:'王',bd:'8',  nm:'助理小王',        ms:'老板，有3件事需要您确认',   t:'30分钟'},
+    {bg:'#2f54eb',lt:'物',bd:'6',  nm:'物流跟踪',        ms:'货柜到港，需安排清关',      t:'1小时'},
+    {bg:'#07c160',lt:'企',bd:'5',  nm:'企业微信通知',    ms:'[新询盘] 有新的询盘待处理', t:'2小时'},
+    {bg:'#d46b08',lt:'产',bd:'3',  nm:'产品开发讨论',    ms:'新品打样出来了，请审核',    t:'3小时'},
+    {bg:'#389e0d',lt:'培',bd:'2',  nm:'销售培训群',      ms:'本周培训材料已上传',        t:'昨天'},
+];
+
+var timers=[];
+function sched(fn,d){timers.push(setTimeout(fn,d));}
+
+function go(){
+    timers.forEach(clearTimeout);timers=[];
+    document.getElementById('sh').textContent='0h';
+    document.getElementById('sd').textContent='0';
+    document.getElementById('sf').textContent='—';document.getElementById('sf').style.color='#94a3b8';
+    document.getElementById('mc').textContent='0';
+    document.getElementById('pt').textContent='7:00';
+    document.getElementById('wl').innerHTML='';
+    ['a1','a2','a3','a4','a5','a6'].forEach(function(id){document.getElementById(id).classList.remove('vis');});
+    var ch=document.getElementById('chart');
+    ch.querySelectorAll('.bub,.stem,.dot,.bt').forEach(function(e){e.remove();});
+
+    B.forEach(function(b,i){
+        var p=tp(b.h,b.m);
+        var st=BASE-b.sh, btp=st-b.s;
+        var d=document.createElement('div');d.className='dot';d.id='d'+i;d.style.cssText='left:'+p+'%;background:'+b.c+';';ch.appendChild(d);
+        var s=document.createElement('div');s.className='stem';s.id='s'+i;s.style.cssText='left:'+p+'%;top:'+st+'px;height:'+b.sh+'px;background:'+hr(b.c,.35)+';';ch.appendChild(s);
+        var bv=document.createElement('div');bv.className='bub';bv.id='b'+i;bv.style.cssText='width:'+b.s+'px;height:'+b.s+'px;left:'+p+'%;top:'+btp+'px;background:'+hr(b.c,.15)+';border:1.5px solid '+b.c+';';bv.innerHTML='<div class="bi">'+b.i+'</div><div class="bl1" style="color:'+b.c+'">'+b.l1+'</div><div class="bl2" style="color:'+b.c+'">'+b.l2+'</div>';ch.appendChild(bv);
+        var tv=document.createElement('div');tv.className='bt';tv.id='t'+i;tv.style.cssText='left:'+p+'%;top:'+(btp-16)+'px;';tv.textContent=String(b.h).padStart(2,'0')+':'+String(b.m).padStart(2,'0');ch.appendChild(tv);
+    });
+
+    var T=18000,R=1020,st0=null;
+    function frame(ts){
+        if(!st0)st0=ts;
+        var pr=Math.min((ts-st0)/T,1);
+        document.getElementById('cur').style.left=(pr*100)+'%';
+        document.getElementById('pf').style.width=(pr*100)+'%';
+        var mn=Math.round(pr*R),h=Math.floor(mn/60)+7,m=mn%60;
+        document.getElementById('ctb').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+        document.getElementById('pt').textContent=String(h%24).padStart(2,'0')+':'+String(m).padStart(2,'0');
+        if(Math.round(pr*16)>0)document.getElementById('sh').textContent=Math.round(pr*16)+'h';
+        if(Math.round(pr*100)>0)document.getElementById('sd').textContent=Math.round(pr*100)+'+';
+        if(pr>=.99){document.getElementById('sf').textContent='0';document.getElementById('sf').style.color='#ef4444';}
+        if(pr<1)requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    function ms(h,m){return((h-7)*60+m)/R*T;}
+    sched(function(){document.getElementById('a1').classList.add('vis');},200);
+    sched(function(){document.getElementById('a2').classList.add('vis');},600);
+    sched(function(){document.getElementById('a3').classList.add('vis');},ms(9,0));
+    sched(function(){document.getElementById('a4').classList.add('vis');},ms(12,0));
+    sched(function(){document.getElementById('a5').classList.add('vis');},ms(18,0));
+    sched(function(){document.getElementById('a6').classList.add('vis');},ms(18,30));
+
+    B.forEach(function(b,i){
+        sched(function(){
+            ['d'+i,'s'+i,'b'+i,'t'+i].forEach(function(id){
+                var el=document.getElementById(id);if(!el)return;
+                el.classList.add('pop');
+                if(id[0]==='b'){el.classList.add('jp');setTimeout(function(){el.classList.remove('jp');},700);}
+            });
+        },ms(b.h,b.m));
+    });
+
+    var mc=0;
+    M.forEach(function(msg,i){
+        sched(function(){
+            var list=document.getElementById('wl');
+            var item=document.createElement('div');item.className='ci';
+            item.innerHTML='<div class="ca" style="background:'+msg.bg+';">'+msg.lt+'</div><div class="rd">'+msg.bd+'</div><div class="ci-info"><div class="ci-name">'+msg.nm+'</div><div class="ci-msg">'+msg.ms+'</div></div><div class="ci-time">'+msg.t+'</div>';
+            list.insertBefore(item,list.firstChild);
+            requestAnimationFrame(function(){requestAnimationFrame(function(){item.classList.add('vis','fl');setTimeout(function(){item.classList.remove('fl');},600);});});
+            mc+=parseInt(msg.bd.replace('+',''))||5;
+            document.getElementById('mc').textContent=Math.min(mc,200)+(mc>=200?'+':'');
+        },(i/M.length)*T*.85+400);
+    });
+}
+window.addEventListener('load',function(){setTimeout(go,500);});
+</script>
+</body>
+</html>

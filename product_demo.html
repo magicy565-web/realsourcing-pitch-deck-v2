@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing - 产品演示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0F;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background: #0A0A0F;
+        }
+        /* Background Video Layer */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.15;
+            mix-blend-mode: screen;
+        }
+
+        /* Step Card */
+        .step-card {
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s ease;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .img-wrapper {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top left;
+            transition: transform 0.5s ease;
+        }
+
+        .step-card:hover .img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        /* Step Badge */
+        .step-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Connecting Arrow */
+        .arrow-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 24px;
+            animation: pulseArrow 2s infinite;
+        }
+
+        @keyframes pulseArrow {
+            0% { opacity: 0.2; transform: translateX(0); }
+            50% { opacity: 0.8; transform: translateX(5px); }
+            100% { opacity: 0.2; transform: translateX(0); }
+        }
+
+        /* Highlight Overlay */
+        .highlight-overlay {
+            position: absolute;
+            border: 2px solid #8B5CF6;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            animation: pulseBorder 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulseBorder {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Animations */
+        .fade-in-right {
+            animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        @keyframes fadeInRight {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.3s; }
+        .delay-300 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYmdfbG9vcF80cw.mp4?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZbWRmYkc5dmNGODBjdy5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=KqVmt-eQRDR-lqskSjsovy2LWMMndkQC1OELVUVlDykneGYofW8anJ2NnlaBgeyfunksy7xalModFLHtcdjtub7T74U8~jlom0W5e0tgJsqbJVmjXVW3Gfjwz3rR6Otu0UXY3jSnUaeF8UViZg~gS1u8P6XF2~XtIV3Uuijb0gUodk1zqqmYih2XbuygXRAaVseJcYv7IQ6GvppWSoYPy7FMbDvAOfvQWGnzp6t9qlbw9Gv-l9ogtEQAuwcmBzZp6fBNu1dEnhVzF4ftFK8-6d2gGoSKi2EnjalQUzRU2NXGrmN7RaD0O-dHDlcuz4Ic0u78TgicVAy2-~L1XqDYiw__" type="video/mp4">
+        </video>
+
+        <!-- Header -->
+        <div class="relative z-10 px-12 pt-10 pb-8 text-center">
+            <div class="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+                <span class="text-xs font-medium text-gray-300 tracking-wide">USER JOURNEY</span>
+            </div>
+            <h1 class="text-4xl font-bold text-white tracking-tight mb-2">从想法到订单只需 3 步</h1>
+            <p class="text-gray-400 text-sm max-w-2xl mx-auto">AI Agent 全程接管繁琐的寻源流程，让采购像网购一样简单</p>
+        </div>
+
+        <!-- Journey Flow -->
+        <div class="relative z-10 px-12 flex items-center justify-between h-[480px] gap-6">
+            
+            <!-- Step 1: Input -->
+            <div class="step-card flex-1 fade-in-right delay-100">
+                <div class="step-badge">STEP 01</div>
+                <div class="img-wrapper">
+                    <img src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvYWlfY2hhdA.png?x-oss-process=image/resize,w_1560,h_1560/format,webp&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZZV2xmWTJoaGRBLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE1NjAsaF8xNTYwL2Zvcm1hdCx3ZWJwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=FD9WxMS19kzX5PDqDF7AN7OJiqvpZiJRLxa9HNJs~5uzDZUkzHIKOP9SMTrCT2GzPIb8eon9mV55eXJDQyJJhbfTvzR0efIN~AcFBgAWV3RmfTCFbcDsyTcsOF41l6acQvpAR1RZpVxqNVgq4mHi6W88ysZi58iGS0gHqQjCBFwghvLUYn3kAxZVsDC8-7gFjpIdJP-s0mL13unO9EW-ynaJfFhjVqI772r0hNShCUOMxoGFLjxcBZTQCaLPgt7anFOqd4FnGVz04s9Z8uAprWlSgfLTr0sCTaFBLB5Xh~MQFVQuxY94rrxBVgHH6a9k6C7Ebh-~ZHkMCLC3~5B-dA__" alt="AI Chat Input">
+                    <!-- Highlight on Input Area -->
+                    <div class="highlight-overlay" style="bottom: 20%; left: 10%; width: 80%; height: 15%;"></div>
+                </div>
+                <div class="p-5 border-t border-white/5 bg-black/20">
+                    <h3 class="text-lg font-bold text-white mb-1">模糊需求输入</h3>
+                    <p class="text-xs text-gray-400">"找一款类似 TikTok 爆款的耳机..."</p>
+                    <div class="mt-2 flex gap-2">
+                        <span class="text-[10px] bg-white/10 px-2 py-1 rounded text-gray-300">自然语言</span>
+                        <span class="text-[10px] bg-white/10 px-2 py-1 rounded text-gray-300">多模态</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow-connector">→</div>
+
+            <!-- Step 2: Process -->
+            <div class="step-card flex-1 fade-in-right delay-200">
+                <div class="step-badge bg-blue-600">STEP 02</div>
+                <div class="img-wrapper">
+                    <img src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvc291cmNpbmdfaW50ZWxsaWdlbmNl.png?x-oss-process=image/resize,w_1560,h_1560/format,webp&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZjMjkxY21OcGJtZGZhVzUwWld4c2FXZGxibU5sLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE1NjAsaF8xNTYwL2Zvcm1hdCx3ZWJwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=Cha3~EBevSBVfjs7a3rdpnMAW-P2JWAfJVXIVJgo46wC5~RpiJQxy-zMfeez7lbea8oeLc-geoOrfkrO4VDRZUB6GqDTzJ35z9gljLjaaJHKKe5eypBHg6OVKMEIBG7QjYQACHJ0C~yGUKcTL0wxdL8LVBUIhMYB-hLkqbtaHkgXTX4m9phRZPNOXlGst7XHRp2OBJMLATcaUYTiZHg2jk~TTP5gtKBd8RMaBYV3EhenbulryczSrmS~1EqJ4Xj~ehjz5ZCzpJlObMn6RaX8gSGQmL2lkxOC-gYOQ5kAQkxLA9PgtVcZnTQyqhMg6Rbt5DjrE-yyKShymtGYQFhtbQ__" alt="Sourcing Intelligence">
+                    <!-- Highlight on Specs -->
+                    <div class="highlight-overlay" style="top: 30%; left: 10%; width: 80%; height: 40%;"></div>
+                </div>
+                <div class="p-5 border-t border-white/5 bg-black/20">
+                    <h3 class="text-lg font-bold text-white mb-1">AI 结构化解析</h3>
+                    <p class="text-xs text-gray-400">自动提取材质、芯片、频响等参数</p>
+                    <div class="mt-2 flex gap-2">
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-1 rounded">参数提取</span>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-1 rounded">规格标准化</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow-connector">→</div>
+
+            <!-- Step 3: Output -->
+            <div class="step-card flex-1 fade-in-right delay-300">
+                <div class="step-badge bg-green-600">STEP 03</div>
+                <div class="img-wrapper">
+                    <img src="https://private-us-east-1.manuscdn.com/sessionFile/gK0DsYJo7whTTKS5LP1SYU/sandbox/slides_resource_ifk6rlj4rcas1z0drpfcb-03cc1af2-e2b-prod-sg1_1772269572146_na1fn_L2hvbWUvdWJ1bnR1L3JlYWxzb3VyY2luZ19waXRjaF9jbi9hc3NldHMvZmFjdG9yeV9kZXRhaWw.png?x-oss-process=image/resize,w_1560,h_1560/format,webp&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvZ0swRHNZSm83d2hUVEtTNUxQMVNZVS9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pZms2cmxqNHJjYXMxejBkcnBmY2ItMDNjYzFhZjItZTJiLXByb2Qtc2cxXzE3NzIyNjk1NzIxNDZfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSmxZV3h6YjNWeVkybHVaMTl3YVhSamFGOWpiaTloYzNObGRITXZabUZqZEc5eWVWOWtaWFJoYVd3LnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE1NjAsaF8xNTYwL2Zvcm1hdCx3ZWJwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=cQj8KsxXS4IepX7P3h0U3EIzidOyxKoC5-bxKjLLFLVzgmw-yrMjii1SVlonDquq9v8IyZLMUTQloYtTsGCtVQV-e6gFAVo8yCeayFnRoq3qZX51~VzP8Zozb5Z99B1qzaGpJCI3RrT9FpiTL8nNT1DvftGbUl5DRFECPKU-GGdi7oYfI5NS7lsYPC23iOtseANafS5Tcs7gdNUgWd3I7kxchTzAVHMoU-pu2FumfOEOJ8aF2u75grPMr-s3Id-XU44~R~HtaYZwEhcornqPkC2clPfkr~ifiaEdrnApC2QalJCt~vFWOJya9M8rZQND1IavbmdmHN~invL4-wIJBQ__" alt="Factory Match">
+                    <!-- Highlight on Match Score -->
+                    <div class="highlight-overlay" style="top: 20%; right: 10%; width: 30%; height: 20%;"></div>
+                </div>
+                <div class="p-5 border-t border-white/5 bg-black/20">
+                    <h3 class="text-lg font-bold text-white mb-1">精准匹配与报价</h3>
+                    <p class="text-xs text-gray-400">AMR 评分筛选，自动生成对比报价</p>
+                    <div class="mt-2 flex gap-2">
+                        <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-1 rounded">AMR 评分</span>
+                        <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-1 rounded">自动报价</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

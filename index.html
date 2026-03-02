@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealSourcing Pitch Deck 2026 - 智能采购操作系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #020208; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+
+        /* ── Slide Viewport ── */
+        #slide-viewport {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: #020208;
+        }
+        #slide-frame {
+            width: 1280px; height: 720px;
+            border: none; display: block;
+            transform-origin: center center;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        /* ── Top Bar ── */
+        #top-bar {
+            position: fixed; top: 0; left: 0; right: 0; height: 44px;
+            background: rgba(5,5,16,0.95); border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 1000; backdrop-filter: blur(12px);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #top-bar:hover, #top-bar.visible { opacity: 1; }
+        .tb-brand { font-size: 13px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .tb-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: #4F6EF7; box-shadow: 0 0 8px #4F6EF7; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .tb-slide-info { font-size: 11px; color: rgba(255,255,255,0.4); font-family: 'JetBrains Mono', monospace; }
+        .tb-controls { display: flex; align-items: center; gap: 8px; }
+        .tb-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.7);
+            cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .tb-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+        .tb-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* ── Bottom Nav ── */
+        #bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
+            background: rgba(5,5,16,0.95); border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 0 20px; z-index: 1000; backdrop-filter: blur(12px);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #bottom-nav:hover, #bottom-nav.visible { opacity: 1; }
+        .nav-dot {
+            width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.2s; font-family: 'JetBrains Mono', monospace;
+        }
+        .nav-dot:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
+        .nav-dot.active { background: rgba(79,110,247,0.2); border-color: rgba(79,110,247,0.5); color: #8BA4FF; }
+        .nav-section-label {
+            font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
+            text-transform: uppercase; padding: 0 8px; white-space: nowrap;
+        }
+        .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.06); margin: 0 4px; }
+
+        /* ── Progress Bar ── */
+        #progress-bar {
+            position: fixed; bottom: 56px; left: 0; height: 2px;
+            background: linear-gradient(90deg, #4F6EF7, #8B5CF6, #10B981);
+            z-index: 1001; transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        /* ── Keyboard hint ── */
+        #key-hint {
+            position: fixed; bottom: 68px; right: 20px;
+            font-size: 10px; color: rgba(255,255,255,0.2);
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        body:hover #key-hint { opacity: 1; }
+
+        /* ── Transition overlay ── */
+        #transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020208; z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        #transition-overlay.active { opacity: 1; pointer-events: all; }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div id="top-bar">
+    <div class="tb-brand">
+        <div class="tb-brand-dot"></div>
+        RealSourcing &middot; Pitch Deck 2026
+    </div>
+    <div class="tb-slide-info" id="slide-info">Slide 1 / 16</div>
+    <div class="tb-controls">
+        <button class="tb-btn" id="btn-prev" onclick="navigate(-1)">&#8592; Prev</button>
+        <button class="tb-btn" id="btn-next" onclick="navigate(1)">Next &#8594;</button>
+        <button class="tb-btn" onclick="toggleFullscreen()">&#9974; Fullscreen</button>
+    </div>
+</div>
+
+<!-- Slide Viewport -->
+<div id="slide-viewport">
+    <iframe id="slide-frame" src="cover.html" scrolling="no"></iframe>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Bottom Nav -->
+<div id="bottom-nav">
+    <span class="nav-section-label">开篇</span>
+    <div class="nav-dot active" onclick="goTo(0)" title="封面">01</div>
+    <div class="nav-dot" onclick="goTo(1)" title="全球贸易3.0">02</div>
+    <div class="nav-dot" onclick="goTo(2)" title="AI守门员">03</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">产品</span>
+    <div class="nav-dot" onclick="goTo(3)" title="老板数字分身">04</div>
+    <div class="nav-dot" onclick="goTo(4)" title="Commander OS">05</div>
+    <div class="nav-dot" onclick="goTo(5)" title="解决方案">06</div>
+    <div class="nav-dot" onclick="goTo(6)" title="Commander Agent 多智能体部署">07</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">平台</span>
+    <div class="nav-dot" onclick="goTo(7)" title="平台全景">08</div>
+    <div class="nav-dot" onclick="goTo(9)" title="AMR模型">10</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">商业</span>
+    <div class="nav-dot" onclick="goTo(10)" title="商业模式">11</div>
+    <div class="nav-dot" onclick="goTo(11)" title="牵引力">12</div>
+    <div class="nav-dot" onclick="goTo(12)" title="为什么是现在">13</div>
+    <div class="nav-dot" onclick="goTo(13)" title="竞争格局">14</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">融资</span>
+    <div class="nav-dot" onclick="goTo(14)" title="团队">15</div>
+    <div class="nav-dot" onclick="goTo(15)" title="融资需求">16</div>
+</div>
+
+<!-- Keyboard Hint -->
+<div id="key-hint">&#8592; &#8594; Arrow Keys &middot; Space to advance</div>
+
+<!-- Transition Overlay -->
+<div id="transition-overlay"></div>
+
+<script>
+    const slides = [
+        { file: 'cover.html',                  title: '封面：智能采购操作系统' },
+        { file: 'paradigm_shift.html',          title: '范式转移：全球贸易3.0大洗牌' },
+        { file: 'ai_gatekeeper.html',           title: 'AI已成为采购守门员' },
+        { file: 'digital_twin_strategy.html',   title: '老板的数字分身' },
+        { file: 'commander_os_product.html',    title: 'Commander OS' },
+        { file: 'solution_overview.html',       title: '解决方案' },
+        { file: 'factory_value.html',           title: 'Commander Agent 多智能体部署' },
+        { file: 'platform_overview.html',       title: '平台全景' },
+        { file: 'amr.html',                     title: 'AMR：重新定义好工厂' },
+        { file: 'business_model.html',          title: '商业模式：价值飞轮' },
+        { file: 'traction.html',                title: '牵引力：早期验证' },
+        { file: 'why_now.html',                 title: '为什么是现在' },
+        { file: 'competition.html',             title: '竞争格局' },
+        { file: 'team.html',                    title: '核心团队' },
+        { file: 'ask_closing.html',             title: '融资需求' },
+    ];
+
+    let current = 0;
+    const frame = document.getElementById('slide-frame');
+    const overlay = document.getElementById('transition-overlay');
+    const topBar = document.getElementById('top-bar');
+    const bottomNav = document.getElementById('bottom-nav');
+    const progressBar = document.getElementById('progress-bar');
+    const slideInfo = document.getElementById('slide-info');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    function scaleSlide() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight - 44 - 56; // minus top/bottom bars
+        const scaleX = vw / 1280;
+        const scaleY = vh / 720;
+        const scale = Math.min(scaleX, scaleY) * 0.98;
+        frame.style.transform = `scale(${scale})`;
+        document.getElementById('slide-viewport').style.top = '44px';
+        document.getElementById('slide-viewport').style.height = `calc(100% - 100px)`;
+    }
+
+    function updateNav() {
+        const dots = document.querySelectorAll('.nav-dot');
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        slideInfo.textContent = `Slide ${current + 1} / ${slides.length} · ${slides[current].title}`;
+        btnPrev.disabled = current === 0;
+        btnNext.disabled = current === slides.length - 1;
+        const pct = ((current + 1) / slides.length) * 100;
+        progressBar.style.width = pct + '%';
+    }
+
+    function goTo(index) {
+        if (index < 0 || index >= slides.length || index === current) return;
+        overlay.classList.add('active');
+        setTimeout(() => {
+            current = index;
+            // Add cache-busting timestamp
+            const timestamp = new Date().getTime();
+            frame.src = slides[index].file + '?t=' + timestamp;
+            updateNav();
+            setTimeout(() => overlay.classList.remove('active'), 100);
+        }, 200);
+    }
+
+    function navigate(dir) {
+        goTo(current + dir);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+            e.preventDefault(); navigate(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault(); navigate(-1);
+        } else if (e.key === 'Home') {
+            goTo(0);
+        } else if (e.key === 'End') {
+            goTo(slides.length - 1);
+        }
+    });
+
+    // Show/hide UI on mouse move
+    let uiTimer;
+    document.addEventListener('mousemove', () => {
+        topBar.classList.add('visible');
+        bottomNav.classList.add('visible');
+        clearTimeout(uiTimer);
+        uiTimer = setTimeout(() => {
+            topBar.classList.remove('visible');
+            bottomNav.classList.remove('visible');
+        }, 3000);
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 60) navigate(dx < 0 ? 1 : -1);
+    });
+
+    // Fullscreen
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // Init
+    window.addEventListener('resize', scaleSlide);
+    scaleSlide();
+    updateNav();
+    // Show UI briefly on load
+    topBar.classList.add('visible');
+    bottomNav.classList.add('visible');
+    setTimeout(() => {
+        topBar.classList.remove('visible');
+        bottomNav.classList.remove('visible');
+    }, 4000);
+</script>
+</body>
+</html>
