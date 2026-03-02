@@ -11,7 +11,7 @@
         .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
 
         /* Background */
-        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.1; }
+        .video-bg-static { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.1; }
         .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
             background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(79,110,247,0.1) 0%, transparent 70%),
                         linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.6) 50%, rgba(5,5,16,0.9) 100%); }
@@ -33,25 +33,24 @@
         .main-layout { position:absolute; top:110px; left:0; right:0; bottom:70px; z-index:10;
             display:grid; grid-template-columns:1fr 320px 1fr; gap:0; padding:0 40px; align-items:center; }
 
-        /* Left Panel: Buyers */
-        .buyer-panel { background:rgba(79,110,247,0.04); border:1px solid rgba(79,110,247,0.12);
-            border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
-            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
-        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
-        .tag-blue { color:#4F6EF7; }
-        .tag-green { color:#10B981; }
-        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
-        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
-        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
-            background:rgba(79,110,247,0.06); border:1px solid rgba(79,110,247,0.10); border-radius:12px; }
-        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
-        .feature-text { flex:1; }
-        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
-        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
-        .value-box { background:rgba(79,110,247,0.08); border:1px solid rgba(79,110,247,0.2);
-            border-radius:12px; padding:12px 14px; margin-top:12px; }
-        .value-label { font-size:10px; font-weight:700; color:#4F6EF7; letter-spacing:1px; margin-bottom:4px; }
-        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
+        /* Left Panel: Video & Carousel */
+        .video-panel { background:rgba(79,110,247,0.04); border:1px solid rgba(79,110,247,0.12);
+            border-radius:20px; padding:20px; height:480px; display:flex; flex-direction:column; gap:20px;
+            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; position:relative; overflow:hidden; }
+        
+        .video-container { width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); }
+        .main-video { width:100%; height:100%; object-fit:cover; }
+
+        .carousel-container { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; }
+        .carousel-item { position:absolute; opacity:0; transform:translateY(20px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1); text-align:center; width:100%; }
+        .carousel-item.active { opacity:1; transform:translateY(0); }
+        
+        .carousel-title { font-size:28px; font-weight:900; color:#fff; margin-bottom:12px; letter-spacing:1px; }
+        .carousel-desc { font-size:14px; color:rgba(255,255,255,0.5); letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+
+        .carousel-dots { display:flex; gap:10px; margin-top:20px; justify-content:center; }
+        .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.3s; }
+        .dot.active { background:#4F6EF7; transform:scale(1.4); box-shadow:0 0 10px rgba(79,110,247,0.5); }
 
         /* Center Hub */
         .hub-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
@@ -91,9 +90,20 @@
         .factory-panel { background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12);
             border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
             opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
-        .feature-item-green { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); }
-        .value-box-green { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
-        .value-label-green { color:#10B981; }
+        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
+        .tag-green { color:#10B981; }
+        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
+        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
+        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
+            background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); border-radius:12px; }
+        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+        .feature-text { flex:1; }
+        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
+        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
+        .value-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
+            border-radius:12px; padding:12px 14px; margin-top:12px; }
+        .value-label { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:4px; }
+        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
 
         /* Bottom trust bar */
         .trust-bar { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
@@ -120,7 +130,7 @@
 </head>
 <body>
 <div class="slide-container">
-    <video class="video-bg" autoplay loop muted playsinline>
+    <video class="video-bg-static" autoplay loop muted playsinline>
         <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
@@ -135,43 +145,40 @@
 
     <!-- Main Layout -->
     <div class="main-layout">
-        <!-- Left: Buyers -->
-        <div class="buyer-panel">
+        <!-- Left: Video & Carousel -->
+        <div class="video-panel">
             <div class="panel-tag tag-blue">DEMAND SIDE &middot; 需求侧</div>
-            <div class="panel-title">全球买家</div>
-            <div class="feature-list">
-                <div class="feature-item">
-                    <span class="feature-icon">&#9889;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">15 分钟极速匹配</div>
-                        <div class="feature-desc">AI 理解需求，自动筛选最优工厂</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128172;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">30 分钟透明报价</div>
-                        <div class="feature-desc">Agent 自动谈判，价格实时可见</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128247;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">Webinar 直连工厂</div>
-                        <div class="feature-desc">视频询盘，零时差直接沟通</div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">&#128200;</span>
-                    <div class="feature-text">
-                        <div class="feature-title">全程可视化追踪</div>
-                        <div class="feature-desc">订单状态实时更新，风险提前预警</div>
-                    </div>
-                </div>
+            
+            <div class="video-container">
+                <video class="main-video" autoplay loop muted playsinline>
+                    <source src="assets/realsourcing_16s.mp4" type="video/mp4">
+                </video>
             </div>
-            <div class="value-box">
-                <div class="value-label">&#10024; 核心价值</div>
-                <div class="value-text">像网购一样简单的 B2B 采购体验</div>
+
+            <div class="carousel-container">
+                <div class="carousel-item active" data-index="0">
+                    <div class="carousel-title">1. 搜索产品</div>
+                    <div class="carousel-desc">AI 理解需求，自动筛选最优工厂</div>
+                </div>
+                <div class="carousel-item" data-index="1">
+                    <div class="carousel-title">2. 工厂响应</div>
+                    <div class="carousel-desc">Agent 自动谈判，价格实时可见</div>
+                </div>
+                <div class="carousel-item" data-index="2">
+                    <div class="carousel-title">3. 实时会议</div>
+                    <div class="carousel-desc">视频询盘，零时差直接沟通</div>
+                </div>
+                <div class="carousel-item" data-index="3">
+                    <div class="carousel-title">4. 合同签署</div>
+                    <div class="carousel-desc">订单状态实时更新，风险提前预警</div>
+                </div>
+
+                <div class="carousel-dots">
+                    <div class="dot active" data-index="0"></div>
+                    <div class="dot" data-index="1"></div>
+                    <div class="dot" data-index="2"></div>
+                    <div class="dot" data-index="3"></div>
+                </div>
             </div>
         </div>
 
@@ -182,7 +189,7 @@
                 <div class="hub-ring hub-ring-2"></div>
                 <div class="hub-ring hub-ring-1"></div>
                 <div class="hub-core">
-                    <div class="hub-emoji">&#129504;</div>
+                    <div class="hub-emoji">🧠</div>
                     <div class="hub-name">RealSourcing</div>
                     <div class="hub-sublabel">INTELLIGENT OS</div>
                 </div>
@@ -209,37 +216,37 @@
             <div class="panel-tag tag-green">SUPPLY SIDE &middot; 供给侧</div>
             <div class="panel-title">数字工厂</div>
             <div class="feature-list">
-                <div class="feature-item feature-item-green">
-                    <span class="feature-icon">&#129302;</span>
+                <div class="feature-item">
+                    <span class="feature-icon">🤖</span>
                     <div class="feature-text">
                         <div class="feature-title">0 成本自动获客</div>
                         <div class="feature-desc">AI Agent 全球搜寻订单，无需展会</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
-                    <span class="feature-icon">&#128483;</span>
+                <div class="feature-item">
+                    <span class="feature-icon">🗣️</span>
                     <div class="feature-text">
                         <div class="feature-title">AI 自动接单谈判</div>
                         <div class="feature-desc">7x24 小时响应，多语言无障碍</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
-                    <span class="feature-icon">&#127981;</span>
+                <div class="feature-item">
+                    <span class="feature-icon">🏭</span>
                     <div class="feature-text">
                         <div class="feature-title">闲置产能智能填补</div>
                         <div class="feature-desc">精准匹配订单，最大化产能利用率</div>
                     </div>
                 </div>
-                <div class="feature-item feature-item-green">
-                    <span class="feature-icon">&#128202;</span>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
                     <div class="feature-text">
                         <div class="feature-title">AMR 数字画像</div>
                         <div class="feature-desc">100+ 维度评分，建立可信数字档案</div>
                     </div>
                 </div>
             </div>
-            <div class="value-box value-box-green">
-                <div class="value-label value-label-green">&#127775; 核心价值</div>
+            <div class="value-box">
+                <div class="value-label">🌟 核心价值</div>
                 <div class="value-text">老板的数字分身，永不休息的外贸部</div>
             </div>
         </div>
@@ -248,23 +255,23 @@
     <!-- Trust Bar -->
     <div class="trust-bar">
         <div class="trust-item">
-            <span class="trust-icon">&#128274;</span>
+            <span class="trust-icon">🔒</span>
             <span class="trust-text">资金托管保障</span>
         </div>
         <div class="trust-item">
-            <span class="trust-icon">&#128269;</span>
+            <span class="trust-icon">🔍</span>
             <span class="trust-text">实地验厂报告</span>
         </div>
         <div class="trust-item">
-            <span class="trust-icon">&#9878;</span>
+            <span class="trust-icon">⚖️</span>
             <span class="trust-text">履约纠纷仲裁</span>
         </div>
         <div class="trust-item">
-            <span class="trust-icon">&#127759;</span>
+            <span class="trust-icon">🌍</span>
             <span class="trust-text">全球物流追踪</span>
         </div>
         <div class="trust-item">
-            <span class="trust-icon">&#9733;</span>
+            <span class="trust-icon">★</span>
             <span class="trust-text">AMR 信用评级</span>
         </div>
     </div>
@@ -272,5 +279,28 @@
     <div class="bottom-bar"></div>
     <div class="slide-num">08 / 16</div>
 </div>
+
+<script>
+    let currentIndex = 0;
+    const items = document.querySelectorAll('.carousel-item');
+    const dots = document.querySelectorAll('.dot');
+    const totalItems = items.length;
+
+    function showSlide(index) {
+        items.forEach(item => item.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        items[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        showSlide(currentIndex);
+    }
+
+    // Auto switch every 4 seconds
+    setInterval(nextSlide, 4000);
+</script>
 </body>
 </html>
