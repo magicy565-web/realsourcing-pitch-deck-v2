@@ -30,91 +30,102 @@
         .title-new { background:linear-gradient(135deg,#4F6EF7,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .subtitle-tag { font-size:14px; color:rgba(255,255,255,0.4); margin-top:6px; }
 
-        /* Main Layout: 3 columns */
-        .main-layout { position:absolute; top:130px; left:0; right:0; bottom:60px; z-index:10;
-            display:grid; grid-template-columns:1fr 80px 1fr; gap:0; padding:0 60px; align-items:center; }
+        /* Main Layout: 2 columns with 2x2 grid */
+        .main-layout { position:absolute; top:130px; left:0; right:0; bottom:100px; z-index:10;
+            display:grid; grid-template-columns:1fr 60px 1fr; gap:0; padding:0 60px; align-items:stretch; }
 
-        /* Left Panel - Old World */
-        .panel-old { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
-            border-radius:20px; padding:28px; height:100%;
-            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
-        .panel-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
-            margin-bottom:16px; }
-        .label-old { color:rgba(255,255,255,0.3); }
-        .panel-title { font-size:20px; font-weight:800; margin-bottom:20px; }
-        .title-old-text { color:rgba(255,255,255,0.5); }
+        /* Side Panels */
+        .side-panel { display:flex; flex-direction:column; gap:16px; }
 
-        /* Ship SVG area */
-        .ship-area { display:flex; justify-content:center; align-items:center; margin-bottom:20px; height:120px; }
-        .ship-svg { opacity:0.4; }
+        /* Top Large Card */
+        .top-card { 
+            background:rgba(255,255,255,0.02); 
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:16px; 
+            padding:20px; 
+            height:220px;
+            display:flex;
+            flex-direction:column;
+            position:relative;
+            overflow:hidden;
+        }
+        .panel-new .top-card {
+            background:rgba(79,110,247,0.04);
+            border-color:rgba(79,110,247,0.15);
+        }
 
-        /* Old world stats */
-        .old-stats { display:flex; flex-direction:column; gap:10px; }
-        .stat-row { display:flex; align-items:center; gap:10px; padding:10px 14px;
-            background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid rgba(255,255,255,0.05); }
-        .stat-icon { font-size:18px; }
-        .stat-text { font-size:13px; color:rgba(255,255,255,0.5); }
-        .stat-num { font-size:13px; font-weight:700; color:rgba(255,255,255,0.3); }
+        .card-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; opacity:0.5; }
+        .card-title { font-size:20px; font-weight:800; margin-bottom:12px; }
+        .panel-new .card-title { background:linear-gradient(135deg,#4F6EF7,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+        .card-illu { 
+            flex:1; 
+            display:flex; 
+            justify-content:center; 
+            align-items:center; 
+            background:rgba(0,0,0,0.2); 
+            border-radius:12px;
+            overflow:hidden;
+        }
+        .card-illu img { width:100%; height:100%; object-fit:contain; opacity:0.6; }
+        .panel-new .card-illu img { opacity:0.9; }
+
+        /* 2x2 Grid below top card */
+        .card-grid { 
+            display:grid; 
+            grid-template-columns:1fr 1fr; 
+            gap:12px; 
+            flex:1;
+        }
+
+        .sub-card {
+            background:rgba(255,255,255,0.02);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:12px;
+            padding:12px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+        .panel-new .sub-card {
+            background:rgba(79,110,247,0.04);
+            border-color:rgba(79,110,247,0.12);
+        }
+
+        .sub-card-header { display:flex; align-items:center; gap:8px; }
+        .sub-card-icon { font-size:16px; }
+        .sub-card-title { font-size:12px; font-weight:600; color:rgba(255,255,255,0.6); }
+        .sub-card-val { font-size:14px; font-weight:800; color:#fff; margin-top:auto; }
+        .panel-new .sub-card-val { color:#4F6EF7; }
+        .val-green { color:#10B981 !important; }
+        .val-purple { color:#8B5CF6 !important; }
 
         /* Center Divider */
         .divider { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
-        .lightning { font-size:32px; animation:lightningPulse 2s ease-in-out infinite; }
+        .lightning { font-size:24px; animation:lightningPulse 2s ease-in-out infinite; }
         @keyframes lightningPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.9)} }
-        .divider-line { width:2px; height:80px;
-            background:linear-gradient(180deg, transparent, #4F6EF7, #8B5CF6, transparent); }
-        .divider-text { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-            color:#4F6EF7; writing-mode:vertical-rl; text-orientation:mixed; }
-
-        /* Right Panel - New World */
-        .panel-new { background:rgba(79,110,247,0.04); border:1px solid rgba(79,110,247,0.15);
-            border-radius:20px; padding:28px; height:100%;
-            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
-        .label-new { color:#4F6EF7; }
-        .title-new-text { background:linear-gradient(135deg,#4F6EF7,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-
-        /* Drone network */
-        .drone-area { display:flex; justify-content:center; align-items:center; margin-bottom:20px; height:120px; position:relative; }
-        .drone { position:absolute; font-size:20px; animation:droneFloat 3s ease-in-out infinite; }
-        .drone-1 { top:10px; left:40px; animation-delay:0s; }
-        .drone-2 { top:5px; right:60px; animation-delay:0.5s; }
-        .drone-3 { bottom:15px; left:80px; animation-delay:1s; }
-        .drone-4 { bottom:10px; right:40px; animation-delay:1.5s; }
-        .drone-5 { top:50%; left:50%; transform:translate(-50%,-50%); animation-delay:0.8s; font-size:28px; }
-        @keyframes droneFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        .drone-3, .drone-4 { animation-name:droneFloat2; }
-        @keyframes droneFloat2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
-        .drone-5 { animation-name:droneFloat3; }
-        @keyframes droneFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.1)} }
-
-        /* New world stats */
-        .new-stats { display:flex; flex-direction:column; gap:10px; }
-        .stat-row-new { display:flex; align-items:center; justify-content:space-between; padding:10px 14px;
-            background:rgba(79,110,247,0.06); border-radius:10px; border:1px solid rgba(79,110,247,0.12); }
-        .stat-label { font-size:12px; color:rgba(255,255,255,0.6); }
-        .stat-val { font-size:14px; font-weight:800; }
-        .val-blue { color:#4F6EF7; }
-        .val-green { color:#10B981; }
-        .val-purple { color:#8B5CF6; }
+        .divider-line { width:1px; height:100px; background:linear-gradient(180deg, transparent, #4F6EF7, #8B5CF6, transparent); }
+        .divider-text { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#4F6EF7; writing-mode:vertical-rl; }
 
         /* Bottom Data Bar */
-        .data-bar { position:absolute; bottom:0; left:0; right:0; height:60px; z-index:10;
+        .data-bar { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
             display:flex; align-items:center; justify-content:center; gap:0;
             border-top:1px solid rgba(255,255,255,0.05);
             opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.2s; }
         .data-item { display:flex; flex-direction:column; align-items:center; padding:0 40px;
             border-right:1px solid rgba(255,255,255,0.06); }
         .data-item:last-child { border-right:none; }
-        .data-num { font-size:20px; font-weight:900; }
-        .data-label { font-size:10px; color:rgba(255,255,255,0.35); margin-top:2px; letter-spacing:1px; }
+        .data-num { font-size:22px; font-weight:900; }
+        .data-label { font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; letter-spacing:1px; text-transform:uppercase; }
         .num-blue { color:#4F6EF7; }
         .num-red { color:#EF4444; }
         .num-green { color:#10B981; }
 
-        /* Bottom quote */
-        .bottom-quote { position:absolute; bottom:68px; left:0; right:0; text-align:center; z-index:10;
-            font-size:13px; color:rgba(255,255,255,0.35); font-style:italic;
+        /* Bottom Quote */
+        .bottom-quote { position:absolute; bottom:85px; left:0; right:0; text-align:center; z-index:10;
+            font-size:13px; color:rgba(255,255,255,0.3);
             opacity:0; animation:fadeIn 0.8s forwards 1.5s; }
-        .bottom-quote .em { color:rgba(255,255,255,0.7); font-style:normal; font-weight:600; }
+        .bottom-quote .em { color:rgba(255,255,255,0.6); font-weight:600; }
 
         /* Slide num */
         .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
@@ -149,52 +160,45 @@
         <div class="subtitle-tag">AI 重构供应链 &middot; 旧地图已失效 &middot; 新大陆正在涌现</div>
     </div>
 
-    <!-- Main 3-column layout -->
+    <!-- Main Layout -->
     <div class="main-layout">
         <!-- Left: Old World -->
-        <div class="panel-old">
-            <div class="panel-label label-old">OLD WORLD &middot; 旧世界</div>
-            <div class="panel-title title-old-text">大单 &middot; 低频 &middot; 长周期</div>
-            <!-- Ship illustration via CSS -->
-            <div class="ship-area">
-                <svg class="ship-svg" width="200" height="100" viewBox="0 0 200 100" fill="none">
-                    <!-- Water -->
-                    <path d="M0 70 Q50 60 100 70 Q150 80 200 70 L200 100 L0 100 Z" fill="rgba(100,116,139,0.2)"/>
-                    <!-- Hull -->
-                    <rect x="20" y="45" width="160" height="30" rx="4" fill="rgba(100,116,139,0.3)" stroke="rgba(100,116,139,0.4)" stroke-width="1"/>
-                    <!-- Containers -->
-                    <rect x="30" y="28" width="35" height="18" rx="2" fill="rgba(100,116,139,0.25)" stroke="rgba(100,116,139,0.3)" stroke-width="1"/>
-                    <rect x="70" y="28" width="35" height="18" rx="2" fill="rgba(100,116,139,0.2)" stroke="rgba(100,116,139,0.3)" stroke-width="1"/>
-                    <rect x="110" y="28" width="35" height="18" rx="2" fill="rgba(100,116,139,0.25)" stroke="rgba(100,116,139,0.3)" stroke-width="1"/>
-                    <!-- Bridge -->
-                    <rect x="148" y="18" width="24" height="28" rx="2" fill="rgba(100,116,139,0.3)" stroke="rgba(100,116,139,0.4)" stroke-width="1"/>
-                    <!-- Chimney -->
-                    <rect x="155" y="8" width="8" height="14" rx="1" fill="rgba(100,116,139,0.4)"/>
-                    <!-- Smoke -->
-                    <circle cx="159" cy="6" r="3" fill="rgba(100,116,139,0.15)"/>
-                    <circle cx="162" cy="3" r="2" fill="rgba(100,116,139,0.1)"/>
-                </svg>
+        <div class="side-panel panel-old">
+            <div class="top-card">
+                <div class="card-label">OLD WORLD &middot; 旧世界</div>
+                <div class="card-title">大单 &middot; 低频 &middot; 长周期</div>
+                <div class="card-illu">
+                    <img src="./assets/trade_old_world_2d.png" alt="Old World Trade">
+                </div>
             </div>
-            <div class="old-stats">
-                <div class="stat-row">
-                    <span class="stat-icon">&#128197;</span>
-                    <span class="stat-text">采购周期</span>
-                    <span class="stat-num">3-6 个月</span>
+            <div class="card-grid">
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">📅</span>
+                        <span class="sub-card-title">采购周期</span>
+                    </div>
+                    <div class="sub-card-val">3-6 个月</div>
                 </div>
-                <div class="stat-row">
-                    <span class="stat-icon">&#128196;</span>
-                    <span class="stat-text">信息来源</span>
-                    <span class="stat-num">展会 / 中间商</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">📄</span>
+                        <span class="sub-card-title">信息来源</span>
+                    </div>
+                    <div class="sub-card-val">展会 / 中间商</div>
                 </div>
-                <div class="stat-row">
-                    <span class="stat-icon">&#128100;</span>
-                    <span class="stat-text">外贸业务员</span>
-                    <span class="stat-num" style="color:#EF4444;">岗位 -35%</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">👤</span>
+                        <span class="sub-card-title">外贸业务员</span>
+                    </div>
+                    <div class="sub-card-val" style="color:#EF4444;">岗位 -35%</div>
                 </div>
-                <div class="stat-row">
-                    <span class="stat-icon">&#128683;</span>
-                    <span class="stat-text">信任机制</span>
-                    <span class="stat-num">人情 / 资历</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">🚫</span>
+                        <span class="sub-card-title">信任机制</span>
+                    </div>
+                    <div class="sub-card-val">人情 / 资历</div>
                 </div>
             </div>
         </div>
@@ -202,47 +206,49 @@
         <!-- Center Divider -->
         <div class="divider">
             <div class="divider-line"></div>
-            <div class="lightning">&#9889;</div>
+            <div class="lightning">⚡</div>
             <div class="divider-text">范式转移</div>
-            <div class="lightning" style="animation-delay:1s;">&#9889;</div>
+            <div class="lightning" style="animation-delay:1s;">⚡</div>
             <div class="divider-line"></div>
         </div>
 
         <!-- Right: New World -->
-        <div class="panel-new">
-            <div class="panel-label label-new">NEW WORLD &middot; 新世界</div>
-            <div class="panel-title title-new-text">小单 &middot; 高频 &middot; 即时响应</div>
-            <!-- Drone network illustration -->
-            <div class="drone-area">
-                <div class="drone drone-1">&#128230;</div>
-                <div class="drone drone-2">&#128230;</div>
-                <div class="drone drone-3">&#128230;</div>
-                <div class="drone drone-4">&#128230;</div>
-                <div class="drone drone-5">&#129302;</div>
-                <!-- Connection lines via SVG -->
-                <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.2" viewBox="0 0 300 120">
-                    <line x1="60" y1="20" x2="150" y2="60" stroke="#4F6EF7" stroke-width="1" stroke-dasharray="4,4"/>
-                    <line x1="240" y1="15" x2="150" y2="60" stroke="#4F6EF7" stroke-width="1" stroke-dasharray="4,4"/>
-                    <line x1="90" y1="100" x2="150" y2="60" stroke="#4F6EF7" stroke-width="1" stroke-dasharray="4,4"/>
-                    <line x1="220" y1="95" x2="150" y2="60" stroke="#4F6EF7" stroke-width="1" stroke-dasharray="4,4"/>
-                </svg>
+        <div class="side-panel panel-new">
+            <div class="top-card">
+                <div class="card-label">NEW WORLD &middot; 新世界</div>
+                <div class="card-title">小单 &middot; 高频 &middot; 即时响应</div>
+                <div class="card-illu">
+                    <img src="./assets/trade_new_world_2d.png" alt="New World Trade">
+                </div>
             </div>
-            <div class="new-stats">
-                <div class="stat-row-new">
-                    <span class="stat-label">Dropshipping 市场规模</span>
-                    <span class="stat-val val-blue">$3,650 亿</span>
+            <div class="card-grid">
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">📦</span>
+                        <span class="sub-card-title">Dropshipping 市场</span>
+                    </div>
+                    <div class="sub-card-val">$3,650 亿</div>
                 </div>
-                <div class="stat-row-new">
-                    <span class="stat-label">AI Agent 效率提升</span>
-                    <span class="stat-val val-green">+100x</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">🤖</span>
+                        <span class="sub-card-title">AI Agent 效率</span>
+                    </div>
+                    <div class="sub-card-val val-green">+100x</div>
                 </div>
-                <div class="stat-row-new">
-                    <span class="stat-label">B2B 买家使用 AI 采购</span>
-                    <span class="stat-val val-blue">90%</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">📱</span>
+                        <span class="sub-card-title">B2B 买家 AI 采购</span>
+                    </div>
+                    <div class="sub-card-val">90%</div>
                 </div>
-                <div class="stat-row-new">
-                    <span class="stat-label">新信任机制</span>
-                    <span class="stat-val val-purple">AMR 评分</span>
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <span class="sub-card-icon">⭐</span>
+                        <span class="sub-card-title">新信任机制</span>
+                    </div>
+                    <div class="sub-card-val val-purple">AMR 评分</div>
                 </div>
             </div>
         </div>
