@@ -40,44 +40,28 @@
         .hstat-label { font-size:10px; color:rgba(255,255,255,0.35); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
 
         /* ── Cards Grid ── */
-        .cards-grid { position:absolute; top:98px; left:44px; right:44px; bottom:18px;
+        .cards-grid { position:absolute; top:96px; left:44px; right:44px; bottom:12px;
             display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
             gap:10px; z-index:10; }
 
-        /* ── Card ── */
+        /* ── Card: 头像(左) + 内容(中) + 截图(右) ── */
         .user-card { position:relative; border-radius:14px; overflow:hidden;
             background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07);
             display:flex; flex-direction:row;
             opacity:0; animation:fadeInUp 0.65s ease-out forwards; }
 
-        /* Top accent line */
         .top-line { position:absolute; top:0; left:0; right:0; height:2px; z-index:5; }
 
-        /* ── Avatar panel ── */
-        .card-avatar { width:90px; flex-shrink:0; position:relative; overflow:hidden; }
+        /* ── Avatar panel (左) ── */
+        .card-avatar { width:100px; flex-shrink:0; position:relative; overflow:hidden; }
         .card-avatar img { width:100%; height:100%; object-fit:cover; object-position:top center;
-            display:block; filter:brightness(0.85) saturate(0.9); }
+            display:block; filter:brightness(0.88) saturate(0.88); }
+        /* 右侧渐隐融合 */
         .card-avatar::after { content:''; position:absolute; inset:0;
-            background:linear-gradient(90deg, transparent 55%, rgba(2,2,8,0.55) 100%); }
+            background:linear-gradient(90deg, transparent 50%, rgba(2,2,8,0.7) 100%); }
 
-        /* ── Chat screenshot panel ── */
-        .card-chat { width:148px; flex-shrink:0; position:relative; overflow:hidden;
-            border-left:1px solid rgba(255,255,255,0.05);
-            border-right:1px solid rgba(255,255,255,0.05); }
-        .card-chat img { width:100%; height:100%; object-fit:cover; object-position:top center;
-            display:block; }
-        /* WhatsApp-style overlay tint to blend with dark theme */
-        .card-chat::before { content:''; position:absolute; inset:0; z-index:2;
-            background:linear-gradient(180deg,
-                rgba(2,2,8,0.15) 0%,
-                rgba(2,2,8,0.05) 40%,
-                rgba(2,2,8,0.35) 100%); pointer-events:none; }
-        /* Left fade to merge with avatar */
-        .card-chat::after { content:''; position:absolute; top:0; left:0; bottom:0; width:20px; z-index:3;
-            background:linear-gradient(90deg, rgba(2,2,8,0.5) 0%, transparent 100%); pointer-events:none; }
-
-        /* ── Content panel ── */
-        .card-body { flex:1; padding:13px 14px; display:flex; flex-direction:column; gap:8px; justify-content:center; }
+        /* ── Content panel (中) ── */
+        .card-body { flex:1; padding:14px 16px; display:flex; flex-direction:column; gap:9px; justify-content:center; }
 
         .user-info { display:flex; flex-direction:column; gap:2px; }
         .user-name { font-size:13px; font-weight:800; color:#fff; }
@@ -87,32 +71,45 @@
         .big-num { font-size:26px; font-weight:900; line-height:1; }
         .big-unit { font-size:11px; font-weight:600; color:rgba(255,255,255,0.5); }
 
-        /* Quotes */
         .quotes { display:flex; flex-direction:column; gap:5px; }
-        .quote-bubble { border-radius:7px; padding:5px 10px; font-size:11.5px; font-weight:600;
-            border:1px solid; line-height:1.45; }
-        .quote-bubble.main { font-weight:700; font-size:12px; }
+        .quote-bubble { border-radius:7px; padding:6px 11px; font-size:13px; font-weight:600;
+            border:1px solid; line-height:1.5; }
+        .quote-bubble.main { font-weight:800; font-size:13.5px; }
+
+        /* ── Chat screenshot panel (右) ── */
+        .card-chat { width:150px; flex-shrink:0; position:relative; overflow:hidden; }
+        .card-chat img { width:100%; height:100%; object-fit:cover; object-position:top center;
+            display:block; }
+        /* 深色融合：左侧渐隐 + 全局深色蒙版 */
+        .card-chat::before {
+            content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+            background:
+                linear-gradient(90deg, rgba(2,2,8,0.72) 0%, rgba(2,2,8,0.25) 35%, rgba(2,2,8,0.25) 70%, rgba(2,2,8,0.55) 100%),
+                linear-gradient(180deg, rgba(2,2,8,0.3) 0%, rgba(2,2,8,0.1) 30%, rgba(2,2,8,0.1) 70%, rgba(2,2,8,0.5) 100%);
+        }
+        /* mix-blend-mode 让白色背景变暗 */
+        .card-chat img { mix-blend-mode: luminosity; opacity: 0.75; }
 
         /* ── Card color themes ── */
         .card-1 { animation-delay:0.25s; border-color:rgba(79,110,247,0.2); }
         .card-1 .top-line { background:linear-gradient(90deg,#4F6EF7,#8B5CF6); }
         .card-1 .big-num { color:#8BA4FF; }
-        .card-1 .quote-bubble { background:rgba(79,110,247,0.08); border-color:rgba(79,110,247,0.22); color:#A5B8FF; }
+        .card-1 .quote-bubble { background:rgba(79,110,247,0.09); border-color:rgba(79,110,247,0.25); color:#B8C8FF; }
 
         .card-2 { animation-delay:0.4s; border-color:rgba(16,185,129,0.2); }
         .card-2 .top-line { background:linear-gradient(90deg,#10B981,#34D399); }
         .card-2 .big-num { color:#34D399; }
-        .card-2 .quote-bubble { background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.22); color:#6EE7B7; }
+        .card-2 .quote-bubble { background:rgba(16,185,129,0.09); border-color:rgba(16,185,129,0.25); color:#86EFAC; }
 
         .card-3 { animation-delay:0.55s; border-color:rgba(249,115,22,0.2); }
         .card-3 .top-line { background:linear-gradient(90deg,#F97316,#FBBF24); }
         .card-3 .big-num { color:#FDBA74; }
-        .card-3 .quote-bubble { background:rgba(249,115,22,0.08); border-color:rgba(249,115,22,0.22); color:#FCD34D; }
+        .card-3 .quote-bubble { background:rgba(249,115,22,0.09); border-color:rgba(249,115,22,0.25); color:#FDE68A; }
 
         .card-4 { animation-delay:0.7s; border-color:rgba(139,92,246,0.2); }
         .card-4 .top-line { background:linear-gradient(90deg,#8B5CF6,#EC4899); }
         .card-4 .big-num { color:#C4B5FD; }
-        .card-4 .quote-bubble { background:rgba(139,92,246,0.08); border-color:rgba(139,92,246,0.22); color:#DDD6FE; }
+        .card-4 .quote-bubble { background:rgba(139,92,246,0.09); border-color:rgba(139,92,246,0.25); color:#E9D5FF; }
 
         /* ── Bottom ── */
         .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
@@ -148,13 +145,12 @@
     <!-- Cards -->
     <div class="cards-grid">
 
-        <!-- Card 1: Jake 美国大学生 (无截图，用卡通头像撑满) -->
+        <!-- Card 1: Jake 美国大学生（无截图） -->
         <div class="user-card card-1">
             <div class="top-line"></div>
-            <div class="card-avatar" style="width:110px;">
+            <div class="card-avatar" style="width:120px;">
                 <img src="assets/avatar_jake.jpg" alt="Jake">
             </div>
-            <!-- 无聊天截图，直接内容区 -->
             <div class="card-body">
                 <div class="user-info">
                     <div class="user-name">Jake &nbsp;·&nbsp; 22 &nbsp;·&nbsp; 🇺🇸 美国</div>
@@ -177,9 +173,6 @@
             <div class="card-avatar">
                 <img src="assets/avatar_marco_sofia.jpg" alt="Marco & Sofia">
             </div>
-            <div class="card-chat">
-                <img src="assets/chat_marco1.jpg" alt="WhatsApp chat">
-            </div>
             <div class="card-body">
                 <div class="user-info">
                     <div class="user-name">Marco &amp; Sofia &nbsp;·&nbsp; 45 &nbsp;·&nbsp; 🇮🇹 意大利</div>
@@ -194,6 +187,9 @@
                     <div class="quote-bubble">"半年省下的钱，够我们开第二家店了。"</div>
                 </div>
             </div>
+            <div class="card-chat">
+                <img src="assets/chat_marco1.jpg" alt="WhatsApp chat">
+            </div>
         </div>
 
         <!-- Card 3: Arman 哈萨克斯坦汽配商 -->
@@ -201,9 +197,6 @@
             <div class="top-line"></div>
             <div class="card-avatar">
                 <img src="assets/avatar_arman.jpg" alt="Arman">
-            </div>
-            <div class="card-chat">
-                <img src="assets/chat_arman.jpg" alt="WhatsApp chat">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -219,6 +212,9 @@
                     <div class="quote-bubble">"没加一个人，收入涨了 40%。"</div>
                 </div>
             </div>
+            <div class="card-chat">
+                <img src="assets/chat_arman.jpg" alt="WhatsApp chat">
+            </div>
         </div>
 
         <!-- Card 4: Youssef 埃及毛毯商 -->
@@ -226,9 +222,6 @@
             <div class="top-line"></div>
             <div class="card-avatar">
                 <img src="assets/avatar_youssef.jpg" alt="Youssef">
-            </div>
-            <div class="card-chat">
-                <img src="assets/chat_youssef.jpg" alt="WhatsApp chat">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -243,6 +236,9 @@
                     <div class="quote-bubble main">"没想到我们的毛毯能卖到德国，<br>而且利润比本地还高。"</div>
                     <div class="quote-bubble">"从中国直运，我连仓库都不用租了。"</div>
                 </div>
+            </div>
+            <div class="card-chat">
+                <img src="assets/chat_youssef.jpg" alt="WhatsApp chat">
             </div>
         </div>
 
