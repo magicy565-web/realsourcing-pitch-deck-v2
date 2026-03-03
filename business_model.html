@@ -100,13 +100,29 @@
     var ctx=canvas.getContext('2d');
     var W=1280,H=720-88;
     canvas.width=W; canvas.height=H;
-    var RA=158,RB=112,RC=82;
+    var RA=148,RB=105,RC=76;
     var TA=36,TB=26,TC=19;
     var pA=RA-14,pB=RB-10,pC=RC-8;
-    var AX=W/2-(pA+pB)/2-20, AY=H-55;
-    var BX=AX+(pA+pB), BY=AY;
-    var angBC=-Math.PI*0.60;
-    var CX=BX+(pB+pC)*Math.cos(angBC), CY=BY+(pB+pC)*Math.sin(angBC);
+    // 计算三齿轮整体包围盒，使其在画布内居中
+    // A(左下) B(右下) C(顶部) 三角形布局
+    var angBC=-Math.PI*0.62; // B到C的角度（偏左上）
+    // 先以原点计算相对坐标
+    var relAX=0, relAY=0;
+    var relBX=pA+pB, relBY=0;
+    var relCX=relBX+(pB+pC)*Math.cos(angBC), relCY=relBY+(pB+pC)*Math.sin(angBC);
+    // 包围盒
+    var minX=Math.min(relAX-RA, relBX-RB, relCX-RC);
+    var maxX=Math.max(relAX+RA, relBX+RB, relCX+RC);
+    var minY=Math.min(relAY-RA, relBY-RB, relCY-RC);
+    var maxY=Math.max(relAY+RA, relBY+RB, relCY+RC);
+    var gearW=maxX-minX, gearH=maxY-minY;
+    // 可用区域：canvas W×H，留出标签空间
+    var usableW=W-280, usableH=H-80;
+    var offsetX=(W-usableW)/2 + usableW/2 - (minX+gearW/2);
+    var offsetY=80 + usableH/2 - (minY+gearH/2) + 10;
+    var AX=relAX+offsetX, AY=relAY+offsetY;
+    var BX=relBX+offsetX, BY=relBY+offsetY;
+    var CX=relCX+offsetX, CY=relCY+offsetY;
     var rAB=TA/TB, rBC=TB/TC;
     var DUR=13000;
     var t0=null,lt=null,aA=0,aB=0,aC=0;
