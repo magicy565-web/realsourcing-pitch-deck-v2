@@ -86,24 +86,32 @@
         .hub-stat-num { font-size:18px; font-weight:900; color:#4F6EF7; }
         .hub-stat-label { font-size:9px; color:rgba(255,255,255,0.35); margin-top:2px; }
 
-        /* Right Panel: Factories */
+        /* Right Panel: Factory Video & Carousel */
         .factory-panel { background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12);
-            border-radius:20px; padding:28px; height:480px; display:flex; flex-direction:column;
-            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
-        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; }
+            border-radius:20px; padding:20px; height:480px; display:flex; flex-direction:column; gap:20px;
+            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; position:relative; overflow:hidden; }
+        .panel-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:0; }
         .tag-green { color:#10B981; }
-        .panel-title { font-size:22px; font-weight:800; margin-bottom:20px; }
-        .feature-list { display:flex; flex-direction:column; gap:10px; flex:1; }
-        .feature-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px;
-            background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.10); border-radius:12px; }
-        .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
-        .feature-text { flex:1; }
-        .feature-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:3px; }
-        .feature-desc { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4; }
-        .value-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
-            border-radius:12px; padding:12px 14px; margin-top:12px; }
-        .value-label { font-size:10px; font-weight:700; color:#10B981; letter-spacing:1px; margin-bottom:4px; }
-        .value-text { font-size:12px; color:rgba(255,255,255,0.6); }
+
+        /* Factory carousel items */
+        .factory-carousel-container { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; }
+        .factory-carousel-item { position:absolute; opacity:0; transform:translateY(20px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1); text-align:center; width:100%; }
+        .factory-carousel-item.active { opacity:1; transform:translateY(0); }
+        .factory-carousel-title { font-size:24px; font-weight:900; color:#fff; margin-bottom:10px; letter-spacing:0.5px; }
+        .factory-carousel-desc { font-size:12px; color:rgba(255,255,255,0.5); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; }
+        .factory-notification { background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.3); border-radius:10px;
+            padding:10px 14px; margin-top:12px; font-size:12px; color:rgba(251,191,36,0.9); text-align:left; line-height:1.5; }
+
+        /* Progress bar */
+        .progress-wrap { width:100%; padding:0 4px; }
+        .progress-label { display:flex; justify-content:space-between; font-size:10px; color:rgba(255,255,255,0.4); margin-bottom:6px; font-family:'JetBrains Mono',monospace; }
+        .progress-track { width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
+        .progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#10B981,#4F6EF7); transition:width 3.5s cubic-bezier(0.4,0,0.2,1); box-shadow:0 0 8px rgba(16,185,129,0.5); }
+
+        /* Factory carousel dots */
+        .factory-dots { display:flex; gap:10px; margin-top:14px; justify-content:center; }
+        .factory-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.3s; }
+        .factory-dot.active { background:#10B981; transform:scale(1.4); box-shadow:0 0 10px rgba(16,185,129,0.5); }
 
         /* Bottom trust bar */
         .trust-bar { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
@@ -211,43 +219,50 @@
             </div>
         </div>
 
-        <!-- Right: Factories -->
+        <!-- Right: Factory Video & Carousel -->
         <div class="factory-panel">
             <div class="panel-tag tag-green">SUPPLY SIDE &middot; 供给侧</div>
-            <div class="panel-title">数字工厂</div>
-            <div class="feature-list">
-                <div class="feature-item">
-                    <span class="feature-icon">🤖</span>
-                    <div class="feature-text">
-                        <div class="feature-title">0 成本自动获客</div>
-                        <div class="feature-desc">AI Agent 全球搜寻订单，无需展会</div>
-                    </div>
+
+            <div class="video-container">
+                <video class="main-video" id="factory-video" autoplay muted playsinline>
+                    <source src="assets/factory_digital_v2.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="factory-carousel-container">
+                <div class="factory-carousel-item active" data-index="0">
+                    <div class="factory-carousel-title">1. AI 深度学习</div>
+                    <div class="factory-carousel-desc">AI Agent 深度学习工厂能力</div>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">🗣️</span>
-                    <div class="feature-text">
-                        <div class="feature-title">AI 自动接单谈判</div>
-                        <div class="feature-desc">7x24 小时响应，多语言无障碍</div>
-                    </div>
+                <div class="factory-carousel-item" data-index="1">
+                    <div class="factory-carousel-title">2. 社媒托管</div>
+                    <div class="factory-carousel-desc">托管社交媒体 · 24小时跨时区回复</div>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">🏭</span>
-                    <div class="feature-text">
-                        <div class="feature-title">闲置产能智能填补</div>
-                        <div class="feature-desc">精准匹配订单，最大化产能利用率</div>
-                    </div>
+                <div class="factory-carousel-item" data-index="2">
+                    <div class="factory-carousel-title">3. 产能可视化</div>
+                    <div class="factory-notification">📢 通知：本月还有 30% 的产能闲置，可以增加销售渠道</div>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">📊</span>
-                    <div class="feature-text">
-                        <div class="feature-title">AMR 数字画像</div>
-                        <div class="feature-desc">100+ 维度评分，建立可信数字档案</div>
-                    </div>
+                <div class="factory-carousel-item" data-index="3">
+                    <div class="factory-carousel-title">4. AMR 数字评分</div>
+                    <div class="factory-carousel-desc">建立工厂 AMR 数据五维图</div>
+                </div>
+
+                <div class="factory-dots">
+                    <div class="factory-dot active" data-index="0"></div>
+                    <div class="factory-dot" data-index="1"></div>
+                    <div class="factory-dot" data-index="2"></div>
+                    <div class="factory-dot" data-index="3"></div>
                 </div>
             </div>
-            <div class="value-box">
-                <div class="value-label">🌟 核心价值</div>
-                <div class="value-text">老板的数字分身，永不休息的外贸部</div>
+
+            <div class="progress-wrap">
+                <div class="progress-label">
+                    <span id="progress-stage-label">数字化程度</span>
+                    <span id="progress-pct">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -281,6 +296,7 @@
 </div>
 
 <script>
+    // ---- Left panel carousel (demand side) ----
     let currentIndex = 0;
     const items = document.querySelectorAll('.carousel-item');
     const dots = document.querySelectorAll('.dot');
@@ -289,18 +305,52 @@
     function showSlide(index) {
         items.forEach(item => item.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
         items[index].classList.add('active');
         dots[index].classList.add('active');
     }
-
     function nextSlide() {
         currentIndex = (currentIndex + 1) % totalItems;
         showSlide(currentIndex);
     }
-
-    // Auto switch every 4 seconds
     setInterval(nextSlide, 4000);
+
+    // ---- Right panel factory carousel + progress bar ----
+    const factoryItems = document.querySelectorAll('.factory-carousel-item');
+    const factoryDots  = document.querySelectorAll('.factory-dot');
+    const progressFill = document.getElementById('progress-fill');
+    const progressPct  = document.getElementById('progress-pct');
+    const progressValues = [25, 50, 75, 100];
+    let factoryIndex = 0;
+
+    function showFactory(index) {
+        factoryItems.forEach(el => el.classList.remove('active'));
+        factoryDots.forEach(el => el.classList.remove('active'));
+        factoryItems[index].classList.add('active');
+        factoryDots[index].classList.add('active');
+        const pct = progressValues[index];
+        progressFill.style.width = pct + '%';
+        progressPct.textContent  = pct + '%';
+    }
+
+    // Start first progress bar after 0.5s (let animation settle)
+    setTimeout(() => showFactory(0), 500);
+
+    // Sync with video: switch every 4 seconds
+    setInterval(() => {
+        factoryIndex = (factoryIndex + 1) % factoryItems.length;
+        showFactory(factoryIndex);
+    }, 4000);
+
+    // Loop factory video
+    const factoryVideo = document.getElementById('factory-video');
+    if (factoryVideo) {
+        factoryVideo.addEventListener('ended', () => {
+            factoryVideo.currentTime = 0;
+            factoryVideo.play();
+            factoryIndex = 0;
+            showFactory(0);
+        });
+    }
 </script>
 </body>
 </html>

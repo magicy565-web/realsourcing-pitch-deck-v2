@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>RealSourcing - Slide 11 - Webinar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 1280px; height: 720px;
+  overflow: hidden;
+  background: #050510;
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+.slide {
+  width: 1280px; height: 720px;
+  position: relative; overflow: hidden;
+  background: #050510; color: #fff;
+}
+
+/* ── Background ── */
+.bg-glow {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 65% 80% at 68% 50%, rgba(79,110,247,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 18% 45%, rgba(124,58,237,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 35% at 90% 75%, rgba(16,185,129,0.07) 0%, transparent 55%);
+}
+.grid-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(79,110,247,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,110,247,0.025) 1px, transparent 1px);
+  background-size: 55px 55px;
+}
+
+/* ── Left Text Panel ── */
+.left-panel {
+  position: absolute;
+  left: 52px; top: 50%;
+  transform: translateY(-50%);
+  width: 250px; z-index: 20;
+  opacity: 0;
+  animation: slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.3s;
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translate(-28px, -50%); }
+  to   { opacity: 1; transform: translate(0, -50%); }
+}
+.section-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+  color: #4F6EF7; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-tag::before {
+  content: ''; width: 18px; height: 2px;
+  background: linear-gradient(90deg, #4F6EF7, #8B5CF6); flex-shrink: 0;
+}
+.main-title {
+  font-size: 34px; font-weight: 900; line-height: 1.2; letter-spacing: -0.8px;
+  margin-bottom: 14px;
+}
+.title-em {
+  background: linear-gradient(135deg, #4F6EF7, #8B5CF6, #10B981);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subtitle {
+  font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7;
+}
+
+/* ── Devices Container ── */
+.devices-wrap {
+  position: absolute;
+  left: 300px; top: 0; right: 0; bottom: 0;
+  z-index: 10;
+}
+
+/* ── MacBook Pro ── */
+.macbook-wrap {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  animation: macIn 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.5s, floatMac 8s ease-in-out infinite 1.8s;
+}
+@keyframes macIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(-40px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+@keyframes floatMac {
+  0%,100% { transform: translateY(calc(-50% + 0px)); }
+  50%     { transform: translateY(calc(-50% - 7px)); }
+}
+
+.mac-3d {
+  width: 570px;
+  transform: perspective(1400px) rotateY(-18deg) rotateX(5deg) rotateZ(-1deg);
+  transform-style: preserve-3d;
+}
+.mac-screen-outer {
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(180deg, #2E2E32 0%, #1E1E22 100%);
+  padding: 10px 10px 0;
+  box-shadow:
+    -25px 30px 80px rgba(0,0,0,0.8),
+    -10px 10px 40px rgba(79,110,247,0.22),
+    0 0 0 1px rgba(255,255,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+/* Camera notch */
+.mac-camera-row {
+  display: flex; justify-content: center; margin-bottom: 6px;
+}
+.mac-camera {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+}
+/* macOS chrome bar */
+.mac-chrome-bar {
+  background: linear-gradient(180deg, #323236 0%, #28282C 100%);
+  border-radius: 6px 6px 0 0;
+  padding: 7px 12px 6px;
+  display: flex; align-items: center; gap: 10px;
+}
+.tls { display: flex; gap: 5px; align-items: center; }
+.tl { width: 10px; height: 10px; border-radius: 50%; }
+.tl-r { background: #FF5F57; box-shadow: 0 0 4px rgba(255,95,87,0.7); }
+.tl-y { background: #FEBC2E; box-shadow: 0 0 4px rgba(254,188,46,0.7); }
+.tl-g { background: #28C840; box-shadow: 0 0 4px rgba(40,200,64,0.7); }
+.mac-addr {
+  flex: 1; height: 20px; border-radius: 4px;
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; gap: 5px; padding: 0 8px;
+  font-size: 9px; color: rgba(255,255,255,0.5);
+}
+.mac-addr b { color: rgba(255,255,255,0.8); font-weight: 600; }
+/* Screen content */
+.mac-screen {
+  background: #0A0A18;
+  overflow: hidden;
+  position: relative;
+  max-height: 330px;
+}
+.mac-screen img { width: 100%; display: block; }
+.mac-screen .gloss {
+  position: absolute; top: 0; left: 0; right: 0; height: 25%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+  pointer-events: none; z-index: 3;
+}
+.mac-screen .fade-btm {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 55px;
+  background: linear-gradient(0deg, #050510 0%, transparent 100%);
+  pointer-events: none; z-index: 4;
+}
+/* Keyboard base */
+.mac-keyboard {
+  background: linear-gradient(180deg, #3A3A3E 0%, #2C2C30 50%, #242428 100%);
+  height: 16px;
+  border-radius: 0 0 6px 6px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+.mac-keyboard::after {
+  content: '';
+  position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+  width: 90px; height: 5px; border-radius: 3px;
+  background: rgba(0,0,0,0.25);
+}
+/* Hinge */
+.mac-hinge {
+  height: 3px;
+  background: linear-gradient(90deg, #1A1A1E 0%, #2A2A2E 50%, #1A1A1E 100%);
+}
+/* Bottom foot */
+.mac-foot {
+  background: linear-gradient(180deg, #2C2C30 0%, #1E1E22 100%);
+  height: 6px; border-radius: 0 0 8px 8px;
+}
+/* Shadow */
+.mac-shadow {
+  width: 90%; height: 18px; margin: 0 auto;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
+  margin-top: 2px;
+}
+
+/* ── iPhone 15 Pro ── */
+.iphone-wrap {
+  position: absolute;
+  right: 22px; top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  animation: iphoneIn 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.8s, floatPhone 7s ease-in-out infinite 2.4s;
+}
+@keyframes iphoneIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(40px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+@keyframes floatPhone {
+  0%,100% { transform: translateY(calc(-50% + 0px)); }
+  50%     { transform: translateY(calc(-50% - 10px)); }
+}
+
+/* iPhone 15 Pro body — titanium finish, 19.5:9 ratio */
+.iphone-body {
+  width: 220px;
+  transform: perspective(900px) rotateY(16deg) rotateX(-4deg) rotateZ(1.5deg);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+/* Outer titanium frame */
+.iphone-frame {
+  border-radius: 52px;
+  background:
+    linear-gradient(145deg,
+      #8E8E93 0%,
+      #6E6E73 15%,
+      #4A4A4F 30%,
+      #3A3A3F 50%,
+      #4A4A4F 70%,
+      #6E6E73 85%,
+      #8E8E93 100%
+    );
+  padding: 3px;
+  box-shadow:
+    20px 40px 80px rgba(0,0,0,0.9),
+    8px 15px 40px rgba(124,58,237,0.3),
+    0 0 0 0.5px rgba(255,255,255,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -1px 0 rgba(0,0,0,0.5);
+}
+
+/* Inner glass back */
+.iphone-inner {
+  border-radius: 49px;
+  background: linear-gradient(160deg, #1C1C1E 0%, #111113 60%, #0D0D0F 100%);
+  padding: 8px 6px 8px;
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle glass sheen on back */
+.iphone-inner::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+  border-radius: 49px 49px 0 0;
+  pointer-events: none;
+}
+
+/* Side buttons — volume */
+.btn-volume-up {
+  position: absolute; left: -4px; top: 110px;
+  width: 3.5px; height: 28px; border-radius: 2px 0 0 2px;
+  background: linear-gradient(90deg, #5A5A5E 0%, #4A4A4E 100%);
+  box-shadow: -1px 0 3px rgba(0,0,0,0.5);
+}
+.btn-volume-down {
+  position: absolute; left: -4px; top: 148px;
+  width: 3.5px; height: 28px; border-radius: 2px 0 0 2px;
+  background: linear-gradient(90deg, #5A5A5E 0%, #4A4A4E 100%);
+  box-shadow: -1px 0 3px rgba(0,0,0,0.5);
+}
+.btn-mute {
+  position: absolute; left: -4px; top: 80px;
+  width: 3.5px; height: 20px; border-radius: 2px 0 0 2px;
+  background: linear-gradient(90deg, #5A5A5E 0%, #4A4A4E 100%);
+  box-shadow: -1px 0 3px rgba(0,0,0,0.5);
+}
+/* Power button */
+.btn-power {
+  position: absolute; right: -4px; top: 120px;
+  width: 3.5px; height: 55px; border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, #4A4A4E 0%, #5A5A5E 100%);
+  box-shadow: 1px 0 3px rgba(0,0,0,0.5);
+}
+
+/* Dynamic Island — compact */
+.dynamic-island {
+  width: 80px; height: 22px;
+  background: #000;
+  border-radius: 14px;
+  margin: 0 auto 6px;
+  position: relative; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+}
+.di-inner {
+  display: flex; align-items: center; gap: 8px;
+}
+.di-camera-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #0A0A0A;
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.di-camera-dot::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 3px; height: 3px; border-radius: 50%;
+  background: #050505;
+  box-shadow: 0 0 3px rgba(79,110,247,0.3);
+}
+.di-face-id {
+  width: 2px; height: 10px; border-radius: 2px;
+  background: #0A0A0A;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Phone screen — matches screenshot ratio 1100:1545 = 0.712 */
+.iphone-screen {
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  aspect-ratio: 1100 / 1545;
+}
+.iphone-screen img {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover;
+  object-position: center center;
+}
+.iphone-screen .gloss {
+  position: absolute; top: 0; left: 0; right: 0; height: 20%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+  pointer-events: none; z-index: 3;
+}
+.iphone-screen .fade-btm {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
+  background: linear-gradient(0deg, #050510 0%, transparent 100%);
+  pointer-events: none; z-index: 4;
+}
+
+/* Home indicator */
+.home-indicator {
+  width: 110px; height: 4px; border-radius: 2px;
+  background: rgba(255,255,255,0.28);
+  margin: 10px auto 0;
+}
+
+/* Camera module on back (decorative, shows on 3D angle) */
+.camera-module {
+  position: absolute; top: 18px; left: 18px;
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #2A2A2E 0%, #1A1A1E 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  /* Only visible on back face — hidden behind screen in front view */
+  z-index: -1;
+}
+
+/* ── Floating live badge ── */
+.float-badge {
+  position: absolute;
+  bottom: 160px; left: 300px;
+  background: rgba(10,10,24,0.92);
+  border: 1px solid rgba(79,110,247,0.4);
+  border-radius: 14px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 8px 30px rgba(79,110,247,0.25);
+  z-index: 25;
+  opacity: 0;
+  animation: badgeIn 0.7s ease forwards 1.5s;
+  backdrop-filter: blur(10px);
+}
+@keyframes badgeIn {
+  from { opacity: 0; transform: scale(0.85) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.badge-live-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: #EF4444; box-shadow: 0 0 8px #EF4444;
+  animation: liveBlink 1.2s ease-in-out infinite;
+}
+@keyframes liveBlink {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+.badge-text { display: flex; flex-direction: column; gap: 2px; }
+.badge-title { font-size: 11px; font-weight: 700; color: #fff; }
+.badge-sub { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+/* ── Bottom bar ── */
+.bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 30;
+  background: linear-gradient(90deg, #4F6EF7, #8B5CF6, #10B981);
+}
+.slide-num {
+  position: absolute; bottom: 8px; right: 36px;
+  font-size: 10px; color: rgba(255,255,255,0.15);
+  font-family: monospace; z-index: 30;
+}
+
+/* Accent dots */
+.dot {
+  position: absolute; border-radius: 50%; z-index: 15;
+  animation: pulseDot 3s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { transform: scale(1); opacity: 0.7; }
+  50%     { transform: scale(1.4); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="bg-glow"></div>
+  <div class="grid-bg"></div>
+
+  <!-- Accent dots -->
+  <div class="dot" style="width:5px;height:5px;background:#EF4444;box-shadow:0 0 10px #EF4444;top:115px;left:298px;animation-delay:0s;"></div>
+  <div class="dot" style="width:4px;height:4px;background:#10B981;box-shadow:0 0 9px #10B981;top:600px;left:285px;animation-delay:1.6s;"></div>
+
+  <!-- ── Left Text Panel ── -->
+  <div class="left-panel">
+    <div class="section-tag">Webinar · 云探厂直播</div>
+
+    <div class="main-title">
+      跨越时区的<br>
+      <span class="title-em">实时采购</span><br>
+      会议
+    </div>
+
+    <div class="subtitle">
+      工厂直播展示产品与产线，<br>
+      买家实时询盘、预约验厂，<br>
+      零时差完成采购决策。
+    </div>
+  </div>
+
+  <!-- ── Devices ── -->
+  <div class="devices-wrap">
+
+    <!-- MacBook Pro -->
+    <div class="macbook-wrap">
+      <div class="mac-3d">
+        <div class="mac-screen-outer">
+          <div class="mac-camera-row">
+            <div class="mac-camera"></div>
+          </div>
+          <div class="mac-chrome-bar">
+            <div class="tls">
+              <div class="tl tl-r"></div>
+              <div class="tl tl-y"></div>
+              <div class="tl tl-g"></div>
+            </div>
+            <div class="mac-addr">
+              <span style="color:#28C840;font-size:8px;">🔒</span>
+              <span>app.<b>realsourcing.com</b>/webinars/shenzhen-factory-live</span>
+            </div>
+          </div>
+          <div class="mac-screen">
+            <img src="assets/webinar_desktop.png" alt="Webinar Desktop">
+            <div class="gloss"></div>
+            <div class="fade-btm"></div>
+          </div>
+        </div>
+        <div class="mac-hinge"></div>
+        <div class="mac-keyboard"></div>
+        <div class="mac-foot"></div>
+        <div class="mac-shadow"></div>
+      </div>
+    </div>
+
+    <!-- iPhone 15 Pro -->
+    <div class="iphone-wrap">
+      <div class="iphone-body">
+        <!-- Side buttons -->
+        <div class="btn-mute"></div>
+        <div class="btn-volume-up"></div>
+        <div class="btn-volume-down"></div>
+        <div class="btn-power"></div>
+        <!-- Titanium frame + glass inner -->
+        <div class="iphone-frame">
+          <div class="iphone-inner">
+            <div class="dynamic-island">
+              <div class="di-inner">
+                <div class="di-face-id"></div>
+                <div class="di-camera-dot"></div>
+              </div>
+            </div>
+            <div class="iphone-screen">
+              <img src="assets/webinar_mobile.png" alt="Webinar Mobile">
+              <div class="gloss"></div>
+              <div class="fade-btm"></div>
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">11 / 16</div>
+</div>
+</body>
+</html>

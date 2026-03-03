@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Slide 13 - Growth Track</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1280px; height: 720px; overflow: hidden; background: #050510; font-family: 'Inter', sans-serif; }
+.slide { width: 1280px; height: 720px; position: relative; overflow: hidden; }
+
+.bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 20%, rgba(79,110,247,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 80%, rgba(16,185,129,0.06) 0%, transparent 50%),
+    #050510;
+}
+.bg-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(79,110,247,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,110,247,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── HEADER ── */
+.header { position: relative; z-index: 10; padding: 20px 48px 0; display: flex; align-items: baseline; gap: 16px; }
+.track-badge { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #4F6EF7; background: rgba(79,110,247,0.1); border: 1px solid rgba(79,110,247,0.25); padding: 4px 12px; border-radius: 20px; }
+.header-title { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, #A5B4FC 60%, #34D399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 400; margin-left: auto; }
+
+/* ── PIPELINE ── */
+.pipeline { position: relative; z-index: 10; margin: 14px 48px 0; display: flex; align-items: flex-start; }
+.supplier-node { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; width: 72px; margin-top: 6px; }
+.supplier-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a2a6c, #4F6EF7); border: 2px solid rgba(79,110,247,0.5); display: flex; align-items: center; justify-content: center; font-size: 18px; animation: supplierPulse 2.5s ease-in-out infinite; }
+@keyframes supplierPulse { 0%,100% { box-shadow: 0 0 20px rgba(79,110,247,0.3); } 50% { box-shadow: 0 0 35px rgba(79,110,247,0.6); } }
+.supplier-label { font-size: 9px; font-weight: 600; color: rgba(79,110,247,0.8); text-align: center; }
+.supplier-connector { width: 24px; height: 2px; background: linear-gradient(90deg, rgba(79,110,247,0.6), rgba(79,110,247,0.3)); margin-top: 28px; flex-shrink: 0; }
+.steps { display: flex; align-items: flex-start; flex: 1; gap: 0; }
+.step { display: flex; flex-direction: column; align-items: center; position: relative; flex: 1; }
+.step-connector { position: absolute; top: 22px; left: 50%; right: -50%; height: 2px; background: linear-gradient(90deg, rgba(79,110,247,0.4), rgba(79,110,247,0.15)); z-index: 0; }
+.step:last-child .step-connector { display: none; }
+.step-dot { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #0d1433, #1a2a6c); border: 2px solid rgba(79,110,247,0.4); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #4F6EF7; position: relative; z-index: 2; flex-shrink: 0; box-shadow: 0 0 12px rgba(79,110,247,0.2); }
+.step-thumb { width: 188px; height: 110px; border-radius: 8px; overflow: hidden; margin-top: 7px; border: 1px solid rgba(79,110,247,0.25); box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(79,110,247,0.1); position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.step-thumb:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(79,110,247,0.25); }
+.step-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+.step-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,16,0.7) 0%, transparent 50%); }
+.step-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); text-align: center; margin-top: 5px; letter-spacing: 0.3px; max-width: 188px; }
+.step-num { font-size: 9px; color: rgba(79,110,247,0.6); font-weight: 600; margin-top: 1px; }
+.step-trophy .step-dot { width: 48px; height: 48px; background: linear-gradient(135deg, #2a1a00, #5a3a00); border-color: rgba(218,168,48,0.6); font-size: 20px; animation: trophyGlow 2s ease-in-out infinite; }
+@keyframes trophyGlow { 0%,100% { box-shadow: 0 0 20px rgba(218,168,48,0.3); } 50% { box-shadow: 0 0 40px rgba(218,168,48,0.7), 0 0 60px rgba(218,168,48,0.3); } }
+.step-trophy .step-label { color: #DBA830; }
+
+/* ── RACE SECTION ── */
+.race-section { position: relative; z-index: 10; margin: 12px 48px 0; }
+.race-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.race-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+.race-subtitle { font-size: 10px; color: rgba(255,255,255,0.2); }
+
+/* ── TRACK WRAP ── */
+/* left: 44px for flag labels, right: 72px for trophy zone */
+.race-track-wrap {
+  position: relative;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 10px 72px 10px 44px;
+  overflow: visible;
+}
+
+/* ── MILESTONE ICONS ON TRACK ── */
+/* These sit inside .race-track-wrap, positioned over lanes */
+/* left% = milestone% of the inner track width (after 44px left pad, before 72px right pad) */
+.milestone-pin {
+  position: absolute;
+  /* vertically centered in the lanes area */
+  top: 50%; transform: translate(-50%, -50%);
+  z-index: 30;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  pointer-events: none;
+}
+.milestone-pin .pin-icon {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.3s, filter 0.3s;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.2));
+}
+.milestone-pin .pin-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.5px;
+  white-space: nowrap; text-align: center;
+  opacity: 0.6;
+}
+.milestone-pin .pin-dist {
+  font-size: 7px; font-weight: 600; opacity: 0.4; letter-spacing: 0.5px;
+}
+
+/* Milestone vertical guide line through all lanes */
+.milestone-vline {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 4px,
+    transparent 4px, transparent 8px
+  );
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* m1=20%, m2=50%, m3=70% of inner track */
+/* We use left: calc(44px + X% * (100% - 44px - 72px)) but since we're inside the padded wrap,
+   we use left: calc(44px + X * (100% - 116px)) */
+.m1-x { left: calc(44px + 0.20 * (100% - 116px)); }
+.m2-x { left: calc(44px + 0.50 * (100% - 116px)); }
+.m3-x { left: calc(44px + 0.70 * (100% - 116px)); }
+
+.m1-color { color: #60A5FA; }
+.m1-color .pin-label { color: #60A5FA; }
+.m1-color .pin-dist  { color: #60A5FA; }
+
+.m2-color { color: #FBBF24; }
+.m2-color .pin-label { color: #FBBF24; }
+.m2-color .pin-dist  { color: #FBBF24; }
+
+.m3-color { color: #34D399; }
+.m3-color .pin-label { color: #34D399; }
+.m3-color .pin-dist  { color: #34D399; }
+
+/* ── LIGHT BURST on milestone trigger ── */
+.burst {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+}
+.burst.active {
+  animation: burstAnim 0.7s ease-out both;
+}
+@keyframes burstAnim {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  60%  { transform: translate(-50%, -50%) scale(2.5); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+.burst-m1 { background: radial-gradient(circle, rgba(96,165,250,0.9) 0%, rgba(96,165,250,0) 70%); }
+.burst-m2 { background: radial-gradient(circle, rgba(251,191,36,0.9) 0%, rgba(251,191,36,0) 70%); }
+.burst-m3 { background: radial-gradient(circle, rgba(52,211,153,0.9) 0%, rgba(52,211,153,0) 70%); }
+
+/* Pin bounce on trigger */
+.pin-bounce {
+  animation: pinBounce 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes pinBounce {
+  0%,100% { transform: scale(1); }
+  30%     { transform: scale(1.6) rotate(-10deg); }
+  60%     { transform: scale(0.9) rotate(5deg); }
+}
+
+/* ── FINISH ZONE ── */
+.finish-zone {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 72px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; z-index: 15;
+}
+.finish-line-v {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: repeating-linear-gradient(180deg, rgba(218,168,48,0.7) 0px, rgba(218,168,48,0.7) 5px, transparent 5px, transparent 10px);
+}
+.finish-trophy-big {
+  font-size: 28px;
+  animation: trophyBounce 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(218,168,48,0.9));
+  z-index: 2;
+}
+@keyframes trophyBounce { 0%,100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.1) translateY(-4px); } }
+.finish-label-v { font-size: 8px; font-weight: 800; letter-spacing: 2px; color: rgba(218,168,48,0.7); z-index: 2; }
+
+/* ── LANES ── */
+.lane { display: flex; align-items: center; height: 34px; margin-bottom: 4px; position: relative; }
+.lane:last-child { margin-bottom: 0; }
+.lane-flag { position: absolute; left: -36px; font-size: 14px; line-height: 1; }
+.lane-track {
+  flex: 1; height: 26px; border-radius: 13px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.055);
+  position: relative; overflow: hidden;
+}
+.lane-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 13px; opacity: 0.25; }
+.runner-trail { position: absolute; top: 50%; transform: translateY(-50%); left: 0; height: 3px; border-radius: 2px; opacity: 0.55; }
+.runner {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; z-index: 4;
+}
+
+/* ── RUNNER ANIMATIONS (non-uniform speeds) ── */
+/* Runner 1: blazing fast, crosses finish (97% = right edge minus runner width) */
+@keyframes run1 {
+  0%   { left: 0%; }
+  12%  { left: 20%; }
+  35%  { left: 44%; }
+  65%  { left: 70%; }
+  85%  { left: 90%; }
+  100% { left: 97%; }
+}
+/* Runner 2: steady fast, ~76% */
+@keyframes run2 {
+  0%   { left: 0%; }
+  20%  { left: 10%; }
+  50%  { left: 38%; }
+  80%  { left: 62%; }
+  100% { left: 76%; }
+}
+/* Runner 3: moderate, ~57% */
+@keyframes run3 {
+  0%   { left: 0%; }
+  25%  { left: 12%; }
+  60%  { left: 40%; }
+  100% { left: 57%; }
+}
+/* Runner 4: slow start, picks up, ~40% */
+@keyframes run4 {
+  0%   { left: 0%; }
+  40%  { left: 7%; }
+  70%  { left: 26%; }
+  100% { left: 40%; }
+}
+/* Runner 5: slowest, ~21% */
+@keyframes run5 {
+  0%   { left: 0%; }
+  50%  { left: 9%; }
+  100% { left: 21%; }
+}
+
+/* Trail fills */
+@keyframes fill1 { 0%{width:0%} 12%{width:20%} 35%{width:44%} 65%{width:70%} 85%{width:90%} 100%{width:100%} }
+@keyframes fill2 { 0%{width:0%} 20%{width:10%} 50%{width:38%} 80%{width:62%} 100%{width:76%} }
+@keyframes fill3 { 0%{width:0%} 25%{width:12%} 60%{width:40%} 100%{width:57%} }
+@keyframes fill4 { 0%{width:0%} 40%{width:7%} 70%{width:26%} 100%{width:40%} }
+@keyframes fill5 { 0%{width:0%} 50%{width:9%} 100%{width:21%} }
+
+.ANIM_DUR { --d: 5s; }
+
+.runner-1 { animation: run1 5s ease-in-out 3.0s both; background: linear-gradient(135deg, #1a2a6c, #4F6EF7); border: 2px solid #4F6EF7; box-shadow: 0 0 10px rgba(79,110,247,0.5); }
+.runner-2 { animation: run2 5s ease-in-out 3.2s both; background: linear-gradient(135deg, #1a3a2a, #10B981); border: 2px solid #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+.runner-3 { animation: run3 5s ease-in-out 3.4s both; background: linear-gradient(135deg, #2a1a4a, #8B5CF6); border: 2px solid #8B5CF6; box-shadow: 0 0 8px rgba(139,92,246,0.4); }
+.runner-4 { animation: run4 5s ease-in-out 3.6s both; background: linear-gradient(135deg, #3a2a1a, #F59E0B); border: 2px solid #F59E0B; box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+.runner-5 { animation: run5 5s ease-in-out 3.8s both; background: linear-gradient(135deg, #2a1a1a, #EF4444); border: 2px solid #EF4444; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+.trail-1 { animation: fill1 5s ease-in-out 3.0s both; background: linear-gradient(90deg, rgba(79,110,247,0.55), rgba(79,110,247,0.1)); }
+.trail-2 { animation: fill2 5s ease-in-out 3.2s both; background: linear-gradient(90deg, rgba(16,185,129,0.55), rgba(16,185,129,0.1)); }
+.trail-3 { animation: fill3 5s ease-in-out 3.4s both; background: linear-gradient(90deg, rgba(139,92,246,0.55), rgba(139,92,246,0.1)); }
+.trail-4 { animation: fill4 5s ease-in-out 3.6s both; background: linear-gradient(90deg, rgba(245,158,11,0.55), rgba(245,158,11,0.1)); }
+.trail-5 { animation: fill5 5s ease-in-out 3.8s both; background: linear-gradient(90deg, rgba(239,68,68,0.55), rgba(239,68,68,0.1)); }
+
+.fill-bg-1 { animation: fill1 5s ease-in-out 3.0s both; background: linear-gradient(90deg, rgba(79,110,247,0.18), rgba(79,110,247,0.03)); }
+.fill-bg-2 { animation: fill2 5s ease-in-out 3.2s both; background: linear-gradient(90deg, rgba(16,185,129,0.18), rgba(16,185,129,0.03)); }
+.fill-bg-3 { animation: fill3 5s ease-in-out 3.4s both; background: linear-gradient(90deg, rgba(139,92,246,0.18), rgba(139,92,246,0.03)); }
+.fill-bg-4 { animation: fill4 5s ease-in-out 3.6s both; background: linear-gradient(90deg, rgba(245,158,11,0.18), rgba(245,158,11,0.03)); }
+.fill-bg-5 { animation: fill5 5s ease-in-out 3.8s both; background: linear-gradient(90deg, rgba(239,68,68,0.18), rgba(239,68,68,0.03)); }
+
+/* Winner crown */
+.crown-1 { position: absolute; top: -14px; right: 0; font-size: 12px; opacity: 0; animation: crownPop 0.4s ease 8.2s both; z-index: 10; }
+@keyframes crownPop { from { opacity: 0; transform: scale(0.3) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+/* ── WINNER FLASH ── */
+@keyframes winnerFlash {
+  0%,100% { box-shadow: 0 0 10px rgba(79,110,247,0.5); }
+  50%      { box-shadow: 0 0 30px rgba(218,168,48,0.9), 0 0 50px rgba(218,168,48,0.5); }
+}
+
+/* ── TROPHY WIN EFFECT ── */
+.trophy-win-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Gold ring shockwave */
+.trophy-shockwave {
+  position: absolute;
+  right: 36px; top: 50%;
+  transform: translate(50%, -50%) scale(0);
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(218,168,48,0.9);
+  opacity: 0;
+}
+.trophy-shockwave.fire {
+  animation: shockwave 0.8s ease-out both;
+}
+.trophy-shockwave.fire2 {
+  animation: shockwave 0.8s ease-out 0.2s both;
+}
+.trophy-shockwave.fire3 {
+  animation: shockwave 0.8s ease-out 0.4s both;
+}
+@keyframes shockwave {
+  0%   { transform: translate(50%, -50%) scale(0.2); opacity: 1; }
+  100% { transform: translate(50%, -50%) scale(4);   opacity: 0; }
+}
+
+/* Trophy zoom glow */
+.finish-trophy-big.win {
+  animation: trophyWin 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both, trophyBounce 1.5s ease-in-out 0.6s infinite !important;
+  filter: drop-shadow(0 0 30px rgba(218,168,48,1)) drop-shadow(0 0 60px rgba(255,200,50,0.8)) !important;
+}
+@keyframes trophyWin {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(2.2) rotate(-8deg); }
+  65%  { transform: scale(1.6) rotate(5deg); }
+  100% { transform: scale(1.3); }
+}
+
+/* Confetti particles */
+.confetti-particle {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+}
+.confetti-particle.fall {
+  animation: confettiFall var(--dur, 1.2s) ease-in var(--delay, 0s) both;
+}
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  80%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(var(--tx, 20px), var(--ty, 120px)) rotate(var(--rot, 360deg)) scale(0.5); }
+}
+
+/* Winner banner */
+.winner-banner {
+  position: absolute;
+  right: 8px; top: 6px;
+  background: linear-gradient(135deg, #DBA830, #F59E0B);
+  color: #0a0600;
+  font-size: 9px; font-weight: 900;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transform: scale(0.5) translateY(-8px);
+  z-index: 20;
+}
+.winner-banner.show {
+  animation: bannerPop 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes bannerPop {
+  from { opacity: 0; transform: scale(0.5) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── BOTTOM ── */
+.bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 60; background: linear-gradient(90deg, #4F6EF7 0%, #8B5CF6 50%, #10B981 100%); }
+.slide-num { position: absolute; bottom: 8px; right: 36px; font-size: 10px; color: rgba(255,255,255,0.15); font-family: monospace; z-index: 60; }
+
+.pipeline { animation: fadeUp 0.7s ease both; }
+.race-section { animation: fadeUp 0.7s ease 0.2s both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="bg"></div>
+  <div class="bg-grid"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="track-badge">Track 01</span>
+    <span class="header-title">成长通道 · Growth Track</span>
+    <span class="header-sub">Dropshipper / 分销商创业加速赛道</span>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipeline">
+    <div class="supplier-node">
+      <div class="supplier-avatar">🏭</div>
+      <div class="supplier-label">供应商<br>支持</div>
+    </div>
+    <div class="supplier-connector"></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-connector"></div>
+        <div class="step-dot">1</div>
+        <div class="step-thumb"><img src="assets/s13_step1_goal.png" alt="AI Coach Goal"><div class="step-thumb-overlay"></div></div>
+        <div class="step-label">AI Coach 初始化</div>
+        <div class="step-num">设定目标</div>
+      </div>
+      <div class="step">
+        <div class="step-connector"></div>
+        <div class="step-dot">2</div>
+        <div class="step-thumb"><img src="assets/s13_step2_niche.png" alt="Niche Selection"><div class="step-thumb-overlay"></div></div>
+        <div class="step-label">利基市场选择</div>
+        <div class="step-num">Niche 定位</div>
+      </div>
+      <div class="step">
+        <div class="step-connector"></div>
+        <div class="step-dot">3</div>
+        <div class="step-thumb"><img src="assets/s13_step3_radar.png" alt="Opportunity Radar"><div class="step-thumb-overlay"></div></div>
+        <div class="step-label">机会雷达选品</div>
+        <div class="step-num">数据化选品</div>
+      </div>
+      <div class="step">
+        <div class="step-connector"></div>
+        <div class="step-dot">4</div>
+        <div class="step-thumb"><img src="assets/s13_step4_profit.png" alt="Profit Forecast"><div class="step-thumb-overlay"></div></div>
+        <div class="step-label">营销利润预测</div>
+        <div class="step-num">收益分析</div>
+      </div>
+      <div class="step step-trophy">
+        <div class="step-dot">🏆</div>
+        <div class="step-label" style="margin-top:12px;">业绩奖励</div>
+        <div class="step-num" style="color:rgba(218,168,48,0.5);">先到先得</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RACE SECTION -->
+  <div class="race-section">
+    <div class="race-header">
+      <span class="race-title">竞速赛道</span>
+      <span class="race-subtitle">· 多位采购商同时在供应商支持下冲刺，率先完成供应商设置即可解锁里程碑奖励</span>
+    </div>
+
+    <div class="race-track-wrap" id="trackWrap">
+
+      <!-- Milestone vertical guide lines -->
+      <div class="milestone-vline m1-x" id="vline1"></div>
+      <div class="milestone-vline m2-x" id="vline2"></div>
+      <div class="milestone-vline m3-x" id="vline3"></div>
+
+      <!-- Milestone pins (centered vertically in wrap) -->
+      <div class="milestone-pin m1-x m1-color" id="pin1">
+        <span class="pin-dist">20M</span>
+        <span class="pin-icon" id="pinIcon1">📦</span>
+        <span class="pin-label">Free Sample</span>
+        <!-- burst effect -->
+        <div class="burst burst-m1" id="burst1"></div>
+      </div>
+      <div class="milestone-pin m2-x m2-color" id="pin2">
+        <span class="pin-dist">50M</span>
+        <span class="pin-icon" id="pinIcon2">🪙</span>
+        <span class="pin-label">Coin Reward</span>
+        <div class="burst burst-m2" id="burst2"></div>
+      </div>
+      <div class="milestone-pin m3-x m3-color" id="pin3">
+        <span class="pin-dist">70M</span>
+        <span class="pin-icon" id="pinIcon3">📋</span>
+        <span class="pin-label">Exclusive Contract</span>
+        <div class="burst burst-m3" id="burst3"></div>
+      </div>
+
+      <!-- Finish zone -->
+      <div class="finish-zone" id="finishZone">
+        <div class="finish-line-v"></div>
+        <div class="finish-trophy-big" id="finishTrophy">🏆</div>
+        <div class="finish-label-v">FINISH</div>
+        <!-- Win effects (hidden until triggered) -->
+        <div class="trophy-win-overlay" id="winOverlay">
+          <div class="trophy-shockwave" id="sw1"></div>
+          <div class="trophy-shockwave" id="sw2"></div>
+          <div class="trophy-shockwave" id="sw3"></div>
+        </div>
+        <div class="winner-banner" id="winnerBanner">🥇 WINNER!</div>
+      </div>
+
+      <!-- Lane 1 — 🇺🇸 Fast, crosses finish -->
+      <div class="lane">
+        <span class="lane-flag">🇺🇸</span>
+        <div class="lane-track" id="track1">
+          <div class="lane-fill fill-bg-1"></div>
+          <div class="runner-trail trail-1"></div>
+          <div class="runner runner-1" id="runner1">🏃</div>
+          <span class="crown-1">👑</span>
+        </div>
+      </div>
+      <!-- Lane 2 -->
+      <div class="lane">
+        <span class="lane-flag">🇬🇧</span>
+        <div class="lane-track" id="track2">
+          <div class="lane-fill fill-bg-2"></div>
+          <div class="runner-trail trail-2"></div>
+          <div class="runner runner-2" id="runner2">🧑</div>
+        </div>
+      </div>
+      <!-- Lane 3 -->
+      <div class="lane">
+        <span class="lane-flag">🇩🇪</span>
+        <div class="lane-track" id="track3">
+          <div class="lane-fill fill-bg-3"></div>
+          <div class="runner-trail trail-3"></div>
+          <div class="runner runner-3" id="runner3">👩</div>
+        </div>
+      </div>
+      <!-- Lane 4 -->
+      <div class="lane">
+        <span class="lane-flag">🇦🇺</span>
+        <div class="lane-track" id="track4">
+          <div class="lane-fill fill-bg-4"></div>
+          <div class="runner-trail trail-4"></div>
+          <div class="runner runner-4" id="runner4">🧔</div>
+        </div>
+      </div>
+      <!-- Lane 5 -->
+      <div class="lane">
+        <span class="lane-flag">🇨🇦</span>
+        <div class="lane-track" id="track5">
+          <div class="lane-fill fill-bg-5"></div>
+          <div class="runner-trail trail-5"></div>
+          <div class="runner runner-5" id="runner5">👱</div>
+        </div>
+      </div>
+
+    </div><!-- end race-track-wrap -->
+  </div><!-- end race-section -->
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">13 / 16</div>
+</div>
+
+<script>
+// ── Milestone trigger detection ──
+// Milestones at 20%, 50%, 70% of track width
+// We poll runner positions and trigger burst when a runner crosses a milestone
+
+const MILESTONES = [
+  { pct: 0.20, pinId: 'pin1', burstId: 'burst1', iconId: 'pinIcon1', triggered: [false,false,false,false,false] },
+  { pct: 0.50, pinId: 'pin2', burstId: 'burst2', iconId: 'pinIcon2', triggered: [false,false,false,false,false] },
+  { pct: 0.70, pinId: 'pin3', burstId: 'burst3', iconId: 'pinIcon3', triggered: [false,false,false,false,false] },
+];
+
+const runners = [
+  document.getElementById('runner1'),
+  document.getElementById('runner2'),
+  document.getElementById('runner3'),
+  document.getElementById('runner4'),
+  document.getElementById('runner5'),
+];
+
+const tracks = [
+  document.getElementById('track1'),
+  document.getElementById('track2'),
+  document.getElementById('track3'),
+  document.getElementById('track4'),
+  document.getElementById('track5'),
+];
+
+function triggerBurst(milestone, runnerIdx) {
+  if (milestone.triggered[runnerIdx]) return;
+  milestone.triggered[runnerIdx] = true;
+
+  // Burst animation
+  const burst = document.getElementById(milestone.burstId);
+  burst.classList.remove('active');
+  void burst.offsetWidth; // reflow
+  burst.classList.add('active');
+
+  // Pin bounce
+  const pin = document.getElementById(milestone.pinId);
+  pin.classList.remove('pin-bounce');
+  void pin.offsetWidth;
+  pin.classList.add('pin-bounce');
+
+  // Icon scale up briefly
+  const icon = document.getElementById(milestone.iconId);
+  icon.style.transform = 'scale(1.8)';
+  icon.style.filter = 'drop-shadow(0 0 12px rgba(255,255,255,0.9))';
+  setTimeout(() => {
+    icon.style.transform = '';
+    icon.style.filter = '';
+  }, 500);
+}
+
+function checkMilestones() {
+  runners.forEach((runner, ri) => {
+    const track = tracks[ri];
+    if (!track) return;
+    const trackW = track.offsetWidth;
+    const runnerLeft = parseFloat(getComputedStyle(runner).left) || 0;
+    const runnerPct = runnerLeft / trackW;
+
+    MILESTONES.forEach(m => {
+      if (runnerPct >= m.pct - 0.01) {
+        triggerBurst(m, ri);
+      }
+    });
+  });
+}
+
+// ── Trophy Win Effect ──
+let winnerTriggered = false;
+
+function triggerWinEffect() {
+  if (winnerTriggered) return;
+  winnerTriggered = true;
+
+  // 1. Trophy zoom + glow
+  const trophy = document.getElementById('finishTrophy');
+  trophy.classList.add('win');
+
+  // 2. Shockwave rings
+  ['sw1','sw2','sw3'].forEach((id, i) => {
+    const sw = document.getElementById(id);
+    sw.classList.add(['fire','fire2','fire3'][i]);
+  });
+
+  // 3. Winner banner
+  const banner = document.getElementById('winnerBanner');
+  setTimeout(() => banner.classList.add('show'), 400);
+
+  // 4. Confetti particles
+  const overlay = document.getElementById('winOverlay');
+  const colors = ['#DBA830','#F59E0B','#FDE68A','#ffffff','#4F6EF7','#34D399','#F87171'];
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    const color = colors[i % colors.length];
+    const tx = (Math.random() - 0.5) * 120;
+    const ty = 60 + Math.random() * 100;
+    const rot = (Math.random() - 0.5) * 720;
+    const dur = 0.8 + Math.random() * 0.7;
+    const delay = Math.random() * 0.4;
+    p.style.cssText = `
+      background: ${color};
+      left: ${30 + (Math.random() - 0.5) * 30}px;
+      top: ${20 + Math.random() * 20}px;
+      --tx: ${tx}px; --ty: ${ty}px; --rot: ${rot}deg; --dur: ${dur}s; --delay: ${delay}s;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      width: ${5 + Math.random() * 6}px;
+      height: ${5 + Math.random() * 6}px;
+    `;
+    overlay.appendChild(p);
+    // Trigger animation on next frame
+    requestAnimationFrame(() => requestAnimationFrame(() => p.classList.add('fall')));
+  }
+}
+
+// Check if runner 1 has crossed the finish (left >= 94% of track width)
+function checkFinish() {
+  const runner = document.getElementById('runner1');
+  const track  = document.getElementById('track1');
+  if (!runner || !track) return;
+  const trackW = track.offsetWidth;
+  const runnerLeft = parseFloat(getComputedStyle(runner).left) || 0;
+  if (runnerLeft / trackW >= 0.90) {
+    triggerWinEffect();
+  }
+}
+
+// Start polling after animations begin (3s delay + buffer)
+setTimeout(() => {
+  const interval = setInterval(() => {
+    checkMilestones();
+    checkFinish();
+  }, 80);
+  // Stop after animations complete (~9.5s total from page load)
+  setTimeout(() => clearInterval(interval), 10000);
+}, 3200);
+</script>
+</body>
+</html>

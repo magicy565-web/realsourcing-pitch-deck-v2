@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealSourcing - Platform Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { overflow:hidden; background:#050510; font-family:'Inter','Noto Sans SC',sans-serif; }
+
+/* ─── Slide Container ─── */
+.slide { width:1280px; height:720px; position:relative; display:flex; background:#0A0A1A; color:#fff; overflow:hidden; }
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width:168px; min-width:168px; height:100%;
+  background:rgba(15,12,35,0.98);
+  border-right:1px solid rgba(139,92,246,0.15);
+  display:flex; flex-direction:column;
+  padding:0; overflow:hidden; flex-shrink:0;
+}
+.sidebar-logo {
+  padding:14px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.logo-row { display:flex; align-items:center; gap:8px; }
+.logo-icon { width:28px; height:28px; border-radius:8px;
+  background:linear-gradient(135deg,#7C3AED,#4F6EF7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; color:#fff; flex-shrink:0; }
+.logo-text { font-size:13px; font-weight:800; color:#fff; }
+.logo-sub  { font-size:9px; color:rgba(255,255,255,0.3); margin-top:1px; }
+
+.sidebar-search {
+  margin:10px 10px 6px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; padding:6px 10px;
+  display:flex; align-items:center; gap:6px;
+  font-size:11px; color:rgba(255,255,255,0.3);
+}
+.search-icon { font-size:11px; opacity:0.4; }
+
+.sidebar-section { padding:8px 10px 2px; }
+.sidebar-section-label {
+  font-size:9px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:4px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 8px; border-radius:7px; cursor:pointer;
+  font-size:11.5px; color:rgba(255,255,255,0.55);
+  transition:all 0.2s; position:relative; margin-bottom:1px;
+}
+.nav-item:hover { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.8); }
+.nav-item.active {
+  background:linear-gradient(90deg,rgba(124,58,237,0.35),rgba(79,110,247,0.15));
+  color:#fff; border-left:2px solid #7C3AED;
+}
+.nav-icon { font-size:13px; width:16px; text-align:center; flex-shrink:0; }
+.nav-badge {
+  margin-left:auto; font-size:8px; font-weight:700; padding:2px 5px;
+  border-radius:4px; letter-spacing:0.5px;
+}
+.badge-new  { background:rgba(16,185,129,0.25); color:#10B981; }
+.badge-ai   { background:rgba(79,110,247,0.25); color:#818CF8; }
+.badge-hot  { background:rgba(239,68,68,0.25); color:#F87171; }
+
+.sidebar-bottom {
+  margin-top:auto;
+  border-top:1px solid rgba(255,255,255,0.05);
+  padding:10px;
+}
+.upgrade-card {
+  background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,110,247,0.2));
+  border:1px solid rgba(124,58,237,0.3); border-radius:10px;
+  padding:10px; margin-bottom:8px;
+}
+.upgrade-title { font-size:11px; font-weight:700; color:#fff; margin-bottom:2px; }
+.upgrade-desc  { font-size:9px; color:rgba(255,255,255,0.45); line-height:1.4; margin-bottom:8px; }
+.upgrade-btn {
+  width:100%; padding:5px; border-radius:6px; border:none; cursor:pointer;
+  background:linear-gradient(90deg,#7C3AED,#4F6EF7);
+  color:#fff; font-size:10px; font-weight:700; letter-spacing:0.5px;
+}
+.user-row {
+  display:flex; align-items:center; gap:8px; padding:4px 2px;
+}
+.user-avatar {
+  width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,#7C3AED,#4F6EF7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; color:#fff; flex-shrink:0;
+}
+.user-name  { font-size:11px; font-weight:600; color:#fff; }
+.user-email { font-size:9px; color:rgba(255,255,255,0.3); }
+
+/* ─── Main Content ─── */
+.main-content {
+  flex:1; height:100%; display:flex; flex-direction:column;
+  overflow:hidden; padding:18px 20px 14px;
+  background:radial-gradient(ellipse 80% 60% at 60% 20%, rgba(79,110,247,0.06) 0%, transparent 70%);
+}
+
+/* Greeting */
+.greeting { margin-bottom:14px; }
+.greeting-title { font-size:22px; font-weight:800; color:#fff; letter-spacing:-0.5px; }
+.greeting-sub   { font-size:11px; color:rgba(255,255,255,0.4); margin-top:3px; }
+.live-dot { display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:#EF4444; margin-right:4px; animation:blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Stats Row */
+.stats-row { display:grid; grid-template-columns:1.8fr 1fr 1fr 1fr; gap:10px; margin-bottom:12px; }
+.stat-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:12px 14px; position:relative; overflow:hidden;
+  transition:border-color 0.2s;
+}
+.stat-card:hover { border-color:rgba(124,58,237,0.3); }
+.stat-card.featured {
+  background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(79,110,247,0.1));
+  border-color:rgba(124,58,237,0.3);
+}
+.stat-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:9px; font-weight:700; padding:2px 6px; border-radius:4px;
+  margin-bottom:8px;
+}
+.badge-live  { background:rgba(239,68,68,0.2); color:#F87171; }
+.badge-soon  { background:rgba(251,191,36,0.2); color:#FBB024; }
+.badge-done  { background:rgba(16,185,129,0.2); color:#10B981; }
+.badge-rec   { background:rgba(139,92,246,0.2); color:#A78BFA; }
+.stat-num   { font-size:28px; font-weight:900; color:#fff; line-height:1; margin-bottom:4px; }
+.stat-label { font-size:10px; color:rgba(255,255,255,0.4); }
+.stat-icon  { position:absolute; top:10px; right:12px; font-size:18px; opacity:0.6; }
+
+/* Middle Row */
+.mid-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; flex:1; min-height:0; }
+
+/* Webinar Panel */
+.panel {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; overflow:hidden;
+}
+.panel-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+}
+.panel-title { font-size:12px; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px; }
+.panel-title-icon { font-size:13px; }
+.panel-link  { font-size:10px; color:#818CF8; cursor:pointer; }
+
+.webinar-item {
+  display:flex; align-items:center; gap:10px; padding:8px 10px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px; margin-bottom:6px;
+}
+.webinar-thumb {
+  width:44px; height:32px; border-radius:5px; overflow:hidden; flex-shrink:0;
+  background:linear-gradient(135deg,#1e1040,#2d1b69);
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.webinar-info { flex:1; min-width:0; }
+.webinar-name { font-size:11px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.webinar-meta { font-size:9px; color:rgba(255,255,255,0.35); margin-top:2px; }
+.webinar-btn {
+  padding:4px 10px; border-radius:5px; border:none; cursor:pointer;
+  font-size:10px; font-weight:700; flex-shrink:0;
+}
+.btn-replay { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.6); }
+.btn-join   { background:linear-gradient(90deg,#7C3AED,#4F6EF7); color:#fff; }
+
+/* Quick Actions Panel */
+.quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; flex:1; }
+.quick-item {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+  border-radius:9px; padding:10px 11px; cursor:pointer; transition:all 0.2s;
+  position:relative; overflow:hidden;
+}
+.quick-item:hover { border-color:rgba(124,58,237,0.3); background:rgba(124,58,237,0.08); }
+.quick-item-icon { font-size:16px; margin-bottom:5px; }
+.quick-item-title { font-size:11px; font-weight:700; color:#fff; margin-bottom:2px; }
+.quick-item-sub   { font-size:9px; color:rgba(255,255,255,0.35); line-height:1.3; }
+.quick-ai-badge {
+  position:absolute; top:6px; right:6px;
+  font-size:8px; font-weight:700; padding:1px 5px; border-radius:3px;
+  background:rgba(79,110,247,0.25); color:#818CF8;
+}
+
+/* Bottom Row */
+.bottom-row { display:grid; grid-template-columns:1.4fr 1fr 0.85fr; gap:10px; }
+
+/* Factory Discovery */
+.factory-card {
+  background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(79,110,247,0.15));
+  border:1px solid rgba(124,58,237,0.3); border-radius:12px; padding:14px 16px;
+  position:relative; overflow:hidden;
+}
+.factory-card::before {
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:120px; height:120px; border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,0.3),transparent 70%);
+}
+.factory-tag   { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  color:#A78BFA; margin-bottom:8px; }
+.factory-num   { font-size:26px; font-weight:900; color:#fff; margin-bottom:4px; }
+.factory-desc  { font-size:10px; color:rgba(255,255,255,0.5); margin-bottom:12px; }
+.factory-link  { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600;
+  color:#A78BFA; cursor:pointer; }
+
+/* Recent Meetings */
+.meeting-item {
+  display:flex; align-items:center; gap:8px; padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.meeting-item:last-child { border-bottom:none; }
+.meeting-avatar {
+  width:28px; height:28px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,#7C3AED,#4F6EF7);
+  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;
+}
+.meeting-info { flex:1; min-width:0; }
+.meeting-name { font-size:10.5px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.meeting-company { font-size:9px; color:rgba(255,255,255,0.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.meeting-status {
+  font-size:8.5px; font-weight:700; padding:2px 7px; border-radius:4px; flex-shrink:0;
+  background:rgba(16,185,129,0.15); color:#10B981;
+}
+
+/* Pro Card */
+.pro-card {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:14px; display:flex; flex-direction:column; align-items:flex-start;
+}
+.pro-icon  { font-size:22px; margin-bottom:8px; }
+.pro-title { font-size:13px; font-weight:800; color:#fff; margin-bottom:4px; }
+.pro-desc  { font-size:10px; color:rgba(255,255,255,0.4); line-height:1.5; margin-bottom:12px; flex:1; }
+.pro-btn {
+  width:100%; padding:7px; border-radius:7px; border:none; cursor:pointer;
+  background:linear-gradient(90deg,#7C3AED,#4F6EF7);
+  color:#fff; font-size:11px; font-weight:700;
+}
+
+/* AI Chat Hint */
+.ai-hint {
+  display:flex; align-items:center; gap:6px; padding:6px 10px;
+  background:rgba(79,110,247,0.08); border:1px solid rgba(79,110,247,0.15);
+  border-radius:7px; margin-top:6px; font-size:10px; color:rgba(255,255,255,0.4);
+}
+.ai-hint-icon { font-size:12px; }
+
+/* Top-right action icons */
+.topbar-actions {
+  position:absolute; top:14px; right:20px;
+  display:flex; align-items:center; gap:8px; z-index:10;
+}
+.topbar-btn {
+  width:28px; height:28px; border-radius:50%;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
+  display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer;
+}
+
+/* Bottom bar */
+.slide-bottom-bar {
+  position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,#7C3AED,#4F6EF7,#10B981);
+}
+.slide-num {
+  position:absolute; bottom:6px; right:20px;
+  font-size:10px; color:rgba(255,255,255,0.15);
+  font-family:'JetBrains Mono',monospace; z-index:20;
+}
+
+/* Animations */
+.fade-in { opacity:0; animation:fadeIn 0.6s ease forwards; }
+@keyframes fadeIn { to { opacity:1; } }
+.slide-in-left { opacity:0; transform:translateX(-20px); animation:slideLeft 0.6s ease forwards; }
+@keyframes slideLeft { to { opacity:1; transform:translateX(0); } }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- ─── Sidebar ─── -->
+  <div class="sidebar slide-in-left" style="animation-delay:0.1s">
+    <div class="sidebar-logo">
+      <div class="logo-row">
+        <div class="logo-icon">R</div>
+        <div>
+          <div class="logo-text">RealSourcing</div>
+          <div class="logo-sub">Active Profile</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:8px 10px 4px">
+      <div class="sidebar-search">
+        <span class="search-icon">🔍</span>
+        <span>Search...</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Main</div>
+      <div class="nav-item active">
+        <span class="nav-icon">📊</span> Dashboard
+        <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3);">›</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📡</span> Webinars
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🏭</span> Factories
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📋</span> Inquiries
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🎥</span> Meetings
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📦</span> Sample Orders
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">AI Tools</div>
+      <div class="nav-item">
+        <span class="nav-icon">🤖</span> AI Assistant
+        <span class="nav-badge badge-new">NEW</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🔍</span> Sourcing Intel
+        <span class="nav-badge badge-ai">AI</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📈</span> Profit Analyzer
+        <span class="nav-badge badge-new">NEW</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📡</span> Opp. Radar
+        <span class="nav-badge badge-hot">HOT</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Analytics</div>
+      <div class="nav-item">
+        <span class="nav-icon">📊</span> Reports
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🔔</span> Notifications
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Account</div>
+      <div class="nav-item">
+        <span class="nav-icon">💎</span> Subscription
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">⚙️</span> Settings
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="upgrade-card">
+        <div class="upgrade-title">Starter Plan</div>
+        <div class="upgrade-desc">Upgrade for unlimited inquiries &amp; AI features.</div>
+        <button class="upgrade-btn">Upgrade Now</button>
+      </div>
+      <div class="user-row">
+        <div class="user-avatar">Y</div>
+        <div>
+          <div class="user-name">Yang Magic</div>
+          <div class="user-email">magicy565@gmail.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Main Content ─── -->
+  <div class="main-content fade-in" style="animation-delay:0.2s">
+
+    <!-- Topbar actions -->
+    <div class="topbar-actions">
+      <div class="topbar-btn">🔔</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#7C3AED,#4F6EF7);border:none;font-size:12px;font-weight:700;">Y</div>
+    </div>
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <div class="greeting-title">晚上好，Yang Magic 👋</div>
+      <div class="greeting-sub"><span class="live-dot"></span>现在有 1 场 Webinar 正在直播</div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card featured">
+        <div class="stat-badge badge-live">🔴 LIVE</div>
+        <div class="stat-num">1</div>
+        <div class="stat-label">场直播中</div>
+        <div class="stat-icon">📡</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-badge badge-soon">⏰ 即将开始</div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">场即将开始</div>
+        <div class="stat-icon">🗓</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-badge badge-done">✓ 已完成</div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">场已完待会</div>
+        <div class="stat-icon">🎥</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-badge badge-rec">▶ 2 待处理</div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">条询价记录</div>
+        <div class="stat-icon">📋</div>
+      </div>
+    </div>
+
+    <!-- Mid Row -->
+    <div class="mid-row">
+      <!-- Webinar Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><span class="panel-title-icon">📡</span> 推荐 Webinar</div>
+          <div class="panel-link">查看全部 ›</div>
+        </div>
+        <div class="webinar-item">
+          <div class="webinar-thumb">🎧</div>
+          <div class="webinar-info">
+            <div class="webinar-name">专业音频设备采购指南</div>
+            <div class="webinar-meta">⭐ 已观看</div>
+          </div>
+          <button class="webinar-btn btn-replay">回放</button>
+        </div>
+        <div class="webinar-item">
+          <div class="webinar-thumb">⌚</div>
+          <div class="webinar-info">
+            <div class="webinar-name">智能穿戴设备 2025 新品展示</div>
+            <div class="webinar-meta">⭐ 已观看</div>
+          </div>
+          <button class="webinar-btn btn-replay">回放</button>
+        </div>
+        <div class="webinar-item" style="border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.08)">
+          <div class="webinar-thumb" style="background:linear-gradient(135deg,#7C3AED,#4F6EF7)">🎵</div>
+          <div class="webinar-info">
+            <div class="webinar-name">2025 TikTok 爆款蓝牙耳机新品发布会</div>
+            <div class="webinar-meta"><span class="live-dot"></span>直播中</div>
+          </div>
+          <button class="webinar-btn btn-join">立即参与</button>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><span class="panel-title-icon">⚡</span> 快捷操作</div>
+        </div>
+        <div class="quick-grid">
+          <div class="quick-item">
+            <div class="quick-item-icon">🎥</div>
+            <div class="quick-item-title">预约视频会议</div>
+            <div class="quick-item-sub">与工厂直接沟通</div>
+          </div>
+          <div class="quick-item">
+            <div class="quick-item-icon">📦</div>
+            <div class="quick-item-title">申请样品</div>
+            <div class="quick-item-sub">快速下单测试</div>
+          </div>
+          <div class="quick-item">
+            <div class="quick-item-icon">🤖</div>
+            <div class="quick-item-title">AI 采购助理</div>
+            <div class="quick-item-sub">智能匹配工厂</div>
+            <div class="quick-ai-badge">AI</div>
+          </div>
+          <div class="quick-item">
+            <div class="quick-item-icon">💬</div>
+            <div class="quick-item-title">发起询价</div>
+            <div class="quick-item-sub">批量获取报价</div>
+          </div>
+        </div>
+        <div class="ai-hint">
+          <span class="ai-hint-icon">✨</span>
+          AI 助理可以帮你找到采购方向...
+          <span style="margin-left:auto;font-size:11px;color:#818CF8;cursor:pointer;">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+      <!-- Factory Discovery -->
+      <div class="factory-card">
+        <div class="factory-tag">精选工厂</div>
+        <div class="factory-num">发现 2,500+ 认证工厂</div>
+        <div class="factory-desc">覆盖电子、服装、家具等 50+ 品类</div>
+        <div class="factory-link">浏览工厂 ›</div>
+      </div>
+
+      <!-- Recent Meetings -->
+      <div class="panel" style="padding:12px 14px">
+        <div class="panel-header">
+          <div class="panel-title"><span class="panel-title-icon">🎥</span> 最近会议</div>
+          <div class="panel-link">全部 ›</div>
+        </div>
+        <div class="meeting-item">
+          <div class="meeting-avatar" style="background:linear-gradient(135deg,#1e40af,#3b82f6)">广</div>
+          <div class="meeting-info">
+            <div class="meeting-name">12132</div>
+            <div class="meeting-company">广州极联智能科技股份有限公司</div>
+          </div>
+          <div class="meeting-status">COMPLETED</div>
+        </div>
+        <div class="meeting-item">
+          <div class="meeting-avatar" style="background:linear-gradient(135deg,#065f46,#059669)">万</div>
+          <div class="meeting-info">
+            <div class="meeting-name">Wanhua Chemical · PH12 &amp; PPSU...</div>
+            <div class="meeting-company">上海万豪实业有限公司</div>
+          </div>
+          <div class="meeting-status">COMPLETED</div>
+        </div>
+      </div>
+
+      <!-- Pro Upgrade -->
+      <div class="pro-card">
+        <div class="pro-icon">🚀</div>
+        <div class="pro-title">升级 Pro 计划</div>
+        <div class="pro-desc">解锁无限询价，优先匹配专属客户经理</div>
+        <button class="pro-btn">立即升级</button>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <div class="slide-bottom-bar"></div>
+  <div class="slide-num">09 / 16</div>
+</div>
+</body>
+</html>

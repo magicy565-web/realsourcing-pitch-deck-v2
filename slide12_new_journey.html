@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>RealSourcing - Slide 12 - New Sourcing Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 1280px; height: 720px;
+  overflow: hidden;
+  background: #050510;
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+.slide {
+  width: 1280px; height: 720px;
+  position: relative; overflow: hidden;
+  display: flex;
+}
+
+/* ── LEFT PANEL — Old Mode (desaturated, dark, oppressive) ── */
+.panel-old {
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(160deg, #0E0E0E 0%, #141414 40%, #0A0A0A 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 28px 36px 20px 44px;
+  animation: fadeInLeft 0.8s ease forwards;
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Subtle noise texture overlay */
+.panel-old::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.008) 2px,
+    rgba(255,255,255,0.008) 4px
+  );
+  pointer-events: none;
+}
+
+/* Faded yellow tint (Alibaba/Made-in-China color memory) */
+.panel-old::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 30% 40%, rgba(180,120,0,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── RIGHT PANEL — New Mode (vibrant, glowing, futuristic) ── */
+.panel-new {
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(145deg, #060618 0%, #0A0A22 40%, #080820 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 28px 44px 20px 36px;
+  animation: fadeInRight 0.8s ease forwards 0.15s;
+  opacity: 0;
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.panel-new::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 70% at 65% 45%, rgba(79,110,247,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(16,185,129,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 20% 15%, rgba(124,58,237,0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+/* Animated grid */
+.panel-new::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(79,110,247,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,110,247,0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+}
+
+/* ── VS DIVIDER ── */
+.vs-divider {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  display: flex; flex-direction: column; align-items: center;
+  animation: vsIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards 0.6s;
+  opacity: 0;
+}
+@keyframes vsIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.vs-line {
+  width: 2px;
+  height: 260px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.12) 70%, transparent 100%);
+}
+.vs-badge {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 6px rgba(255,255,255,0.03);
+  margin: 0;
+}
+
+/* ── PANEL HEADERS ── */
+.panel-header {
+  margin-bottom: 14px;
+  position: relative; z-index: 2;
+}
+.mode-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.mode-label-old { color: rgba(180,120,0,0.6); }
+.mode-label-new { color: #4F6EF7; }
+.mode-label-new::before {
+  content: ''; width: 18px; height: 2px;
+  background: linear-gradient(90deg, #4F6EF7, #8B5CF6); flex-shrink: 0;
+}
+
+.platform-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.platform-chips {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.chip {
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 600;
+}
+.chip-old {
+  background: rgba(180,120,0,0.12);
+  border: 1px solid rgba(180,120,0,0.25);
+  color: rgba(180,120,0,0.7);
+}
+.chip-new {
+  background: rgba(79,110,247,0.12);
+  border: 1px solid rgba(79,110,247,0.3);
+  color: #7B9EFF;
+}
+.chip-new-green {
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #34D399;
+}
+.chip-new-purple {
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: #A78BFA;
+}
+
+.panel-title-old {
+  font-size: 22px; font-weight: 900; line-height: 1.2;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: -0.5px;
+}
+.panel-title-new {
+  font-size: 22px; font-weight: 900; line-height: 1.2;
+  background: linear-gradient(135deg, #fff 0%, #A5B4FC 50%, #34D399 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+/* ── PAIN POINTS / ADVANTAGES LIST ── */
+.items-list {
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; z-index: 2;
+  flex: 1;
+}
+
+.item-old {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  opacity: 0;
+  animation: itemSlideIn 0.5s ease forwards;
+}
+.item-new {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  background: rgba(79,110,247,0.06);
+  border: 1px solid rgba(79,110,247,0.15);
+  border-radius: 10px;
+  opacity: 0;
+  animation: itemSlideIn 0.5s ease forwards;
+  transition: border-color 0.3s;
+}
+.item-new:hover {
+  border-color: rgba(79,110,247,0.4);
+  background: rgba(79,110,247,0.1);
+}
+@keyframes itemSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.item-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0; margin-top: 1px;
+}
+.icon-old { background: rgba(180,120,0,0.1); }
+.icon-new { background: rgba(79,110,247,0.15); }
+
+.item-content { flex: 1; }
+.item-title-old {
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4);
+  margin-bottom: 3px;
+}
+.item-title-new {
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.9);
+  margin-bottom: 3px;
+}
+.item-desc-old {
+  font-size: 10.5px; color: rgba(255,255,255,0.22); line-height: 1.5;
+}
+.item-desc-new {
+  font-size: 10.5px; color: rgba(255,255,255,0.5); line-height: 1.5;
+}
+
+/* Strike-through effect on old items */
+.item-title-old { text-decoration: line-through; text-decoration-color: rgba(180,120,0,0.4); }
+
+/* ── TAG GRID (2×2) ── */
+.tag-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+  position: relative; z-index: 2;
+}
+.tag-card {
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  height: 108px;
+}
+.tag-card-old {
+  background: linear-gradient(135deg, #1a0e00 0%, #0e0800 100%);
+  border: 1px solid rgba(200,134,10,0.35);
+  box-shadow: 0 0 18px rgba(200,134,10,0.12), inset 0 1px 0 rgba(200,134,10,0.1);
+}
+.tag-card-new {
+  background: linear-gradient(135deg, #060d28 0%, #030818 100%);
+  border: 1px solid rgba(79,110,247,0.4);
+  box-shadow: 0 0 18px rgba(79,110,247,0.15), inset 0 1px 0 rgba(79,110,247,0.12);
+}
+.tag-bg-img {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  opacity: 0.75;
+}
+.tag-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px 12px;
+}
+.tag-card-old .tag-overlay {
+  background: linear-gradient(to top, rgba(12,6,0,0.92) 0%, rgba(12,6,0,0.55) 45%, transparent 100%);
+}
+.tag-card-new .tag-overlay {
+  background: linear-gradient(to top, rgba(3,6,24,0.95) 0%, rgba(3,6,24,0.55) 45%, transparent 100%);
+}
+.tag-word {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  margin-bottom: 3px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+}
+.tag-card-old .tag-word {
+  color: #DBA830;
+}
+.tag-card-new .tag-word {
+  background: linear-gradient(135deg, #7B9EFF 0%, #34D399 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.tag-sub {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+}
+.tag-card-old .tag-sub { color: rgba(255,220,140,0.55); }
+.tag-card-new .tag-sub { color: rgba(180,210,255,0.6); }
+
+/* ── TOP TITLE BAR (removed) ── */
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 60;
+  background: linear-gradient(90deg, rgba(180,120,0,0.4) 0%, rgba(255,255,255,0.1) 50%, #4F6EF7 100%);
+}
+.slide-num {
+  position: absolute; bottom: 8px; right: 36px;
+  font-size: 10px; color: rgba(255,255,255,0.15);
+  font-family: monospace; z-index: 60;
+}
+
+/* Animation delays for list items */
+.item-old:nth-child(1) { animation-delay: 0.7s; }
+.item-old:nth-child(2) { animation-delay: 0.85s; }
+.item-old:nth-child(3) { animation-delay: 1.0s; }
+.item-old:nth-child(4) { animation-delay: 1.15s; }
+.item-old:nth-child(5) { animation-delay: 1.3s; }
+
+.item-new:nth-child(1) { animation-delay: 0.9s; }
+.item-new:nth-child(2) { animation-delay: 1.05s; }
+.item-new:nth-child(3) { animation-delay: 1.2s; }
+.item-new:nth-child(4) { animation-delay: 1.35s; }
+.item-new:nth-child(5) { animation-delay: 1.5s; }
+
+/* ── SCREENSHOT BOX ── */
+.screenshot-box {
+  flex: 1;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.screenshot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.screenshot-box-old {
+  border: 1px solid rgba(180,120,0,0.2);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+}
+.screenshot-box-old .screenshot-img {
+  filter: saturate(0.65) brightness(0.8);
+}
+.screenshot-fade-old {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, #0E0E0E 0%, transparent 100%);
+  pointer-events: none;
+}
+.screenshot-box-new {
+  border: 1px solid rgba(79,110,247,0.25);
+  box-shadow: 0 4px 30px rgba(79,110,247,0.1);
+}
+.screenshot-fade-new {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, #060618 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Glowing orb on right panel */
+.glow-orb {
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,110,247,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 1;
+  animation: orbPulse 4s ease-in-out infinite;
+}
+@keyframes orbPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+  50%     { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- ══ LEFT: OLD MODE ══ -->
+  <div class="panel-old">
+    <div class="panel-header">
+      <div class="mode-label mode-label-old">旧模式 · Traditional</div>
+      <div class="panel-title-old">传统黄页目录采购</div>
+    </div>
+
+    <div class="screenshot-box screenshot-box-old">
+      <img src="assets/slide12_old_model.png" alt="Old B2B Directory" class="screenshot-img">
+      <div class="screenshot-fade-old"></div>
+    </div>
+
+    <div class="tag-grid">
+      <div class="tag-card tag-card-old">
+        <img class="tag-bg-img" src="assets/tag_cheap.png" alt="Cheap">
+        <div class="tag-overlay">
+          <div class="tag-word">Cheap</div>
+          <div class="tag-sub">低价竞争，品质难保</div>
+        </div>
+      </div>
+      <div class="tag-card tag-card-old">
+        <img class="tag-bg-img" src="assets/tag_poor_service.png" alt="Poor Service">
+        <div class="tag-overlay">
+          <div class="tag-word">Poor Service</div>
+          <div class="tag-sub">响应慢，沟通障碍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT: NEW MODE ══ -->
+  <div class="panel-new">
+    <div class="glow-orb"></div>
+
+    <div class="panel-header">
+      <div class="mode-label mode-label-new">新模式 · AI-Powered</div>
+      <div class="panel-title-new">AI 驱动直连采购</div>
+    </div>
+
+    <div class="screenshot-box screenshot-box-new">
+      <img src="assets/slide12_new_model.png" alt="New AI Platform" class="screenshot-img">
+      <div class="screenshot-fade-new"></div>
+    </div>
+
+    <div class="tag-grid">
+      <div class="tag-card tag-card-new">
+        <img class="tag-bg-img" src="assets/tag_leading.png" alt="Leading">
+        <div class="tag-overlay">
+          <div class="tag-word">Leading</div>
+          <div class="tag-sub">AI 驱动，行业领先</div>
+        </div>
+      </div>
+      <div class="tag-card tag-card-new">
+        <img class="tag-bg-img" src="assets/tag_trustworthy.png" alt="Trustworthy">
+        <div class="tag-overlay">
+          <div class="tag-word">Trustworthy</div>
+          <div class="tag-sub">认证工厂，透明可信</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VS Divider -->
+  <div class="vs-divider">
+    <div class="vs-line"></div>
+    <div class="vs-badge">VS</div>
+    <div class="vs-line"></div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">12 / 16</div>
+</div>
+</body>
+</html>
