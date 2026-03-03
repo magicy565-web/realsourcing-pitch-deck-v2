@@ -117,9 +117,10 @@
     var maxY=Math.max(relAY+RA, relBY+RB, relCY+RC);
     var gearW=maxX-minX, gearH=maxY-minY;
     // 可用区域：canvas W×H，留出标签空间
-    var usableW=W-280, usableH=H-80;
-    var offsetX=(W-usableW)/2 + usableW/2 - (minX+gearW/2);
-    var offsetY=80 + usableH/2 - (minY+gearH/2) + 10;
+    // 可用区域：左右各留140px给标签，上方留80px给header，下方留40px给timeline
+    var usableW=W-280, usableH=H-120;
+    var offsetX=140 + usableW/2 - (minX+gearW/2);
+    var offsetY=80 + usableH/2 - (minY+gearH/2) + 20;
     var AX=relAX+offsetX, AY=relAY+offsetY;
     var BX=relBX+offsetX, BY=relBY+offsetY;
     var CX=relCX+offsetX, CY=relCY+offsetY;
