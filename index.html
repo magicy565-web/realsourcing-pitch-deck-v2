@@ -46,25 +46,27 @@
         #bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
             background: rgba(5,5,16,0.95); border-top: 1px solid rgba(255,255,255,0.06);
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            padding: 0 20px; z-index: 1000; backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            padding: 0 16px; z-index: 1000; backdrop-filter: blur(12px);
             opacity: 0; transition: opacity 0.3s;
+            overflow-x: auto;
         }
         #bottom-nav:hover, #bottom-nav.visible { opacity: 1; }
         .nav-dot {
-            width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
+            width: 26px; height: 26px; border-radius: 6px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.3);
+            font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.3);
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
             transition: all 0.2s; font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
         }
         .nav-dot:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
         .nav-dot.active { background: rgba(79,110,247,0.2); border-color: rgba(79,110,247,0.5); color: #8BA4FF; }
         .nav-section-label {
-            font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
-            text-transform: uppercase; padding: 0 8px; white-space: nowrap;
+            font-size: 8px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
+            text-transform: uppercase; padding: 0 6px; white-space: nowrap; flex-shrink: 0;
         }
-        .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.06); margin: 0 4px; }
+        .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.06); margin: 0 3px; flex-shrink: 0; }
 
         /* ── Progress Bar ── */
         #progress-bar {
@@ -101,7 +103,7 @@
         <div class="tb-brand-dot"></div>
         RealSourcing &middot; Pitch Deck 2026
     </div>
-    <div class="tb-slide-info" id="slide-info">Slide 1 / 16</div>
+    <div class="tb-slide-info" id="slide-info">Slide 1 / 27</div>
     <div class="tb-controls">
         <button class="tb-btn" id="btn-prev" onclick="navigate(-1)">&#8592; Prev</button>
         <button class="tb-btn" id="btn-next" onclick="navigate(1)">Next &#8594;</button>
@@ -121,28 +123,42 @@
 <div id="bottom-nav">
     <span class="nav-section-label">开篇</span>
     <div class="nav-dot active" onclick="goTo(0)" title="封面">01</div>
-    <div class="nav-dot" onclick="goTo(1)" title="全球贸易3.0">02</div>
-    <div class="nav-dot" onclick="goTo(2)" title="AI守门员">03</div>
+    <div class="nav-dot" onclick="goTo(1)" title="范式转移">02</div>
+    <div class="nav-dot" onclick="goTo(2)" title="全球贸易3.0">03</div>
+    <div class="nav-dot" onclick="goTo(3)" title="AI守门员">04</div>
+    <div class="nav-dot" onclick="goTo(4)" title="AI采购革命">05</div>
+    <div class="nav-dot" onclick="goTo(5)" title="人才趋势">06</div>
     <div class="nav-divider"></div>
     <span class="nav-section-label">产品</span>
-    <div class="nav-dot" onclick="goTo(3)" title="老板数字分身">04</div>
-    <div class="nav-dot" onclick="goTo(4)" title="Commander OS">05</div>
-    <div class="nav-dot" onclick="goTo(5)" title="解决方案">06</div>
-    <div class="nav-dot" onclick="goTo(6)" title="Commander Agent 多智能体部署">07</div>
+    <div class="nav-dot" onclick="goTo(6)" title="老板数字分身">07</div>
+    <div class="nav-dot" onclick="goTo(7)" title="Commander OS">08</div>
+    <div class="nav-dot" onclick="goTo(8)" title="解决方案">09</div>
+    <div class="nav-dot" onclick="goTo(9)" title="多智能体部署">10</div>
     <div class="nav-divider"></div>
     <span class="nav-section-label">平台</span>
-    <div class="nav-dot" onclick="goTo(7)" title="平台全景">08</div>
-    <div class="nav-dot" onclick="goTo(9)" title="AMR模型">10</div>
+    <div class="nav-dot" onclick="goTo(10)" title="平台全景">11</div>
+    <div class="nav-dot" onclick="goTo(11)" title="智能采购仪表盘">12</div>
+    <div class="nav-dot" onclick="goTo(12)" title="工厂档案">13</div>
+    <div class="nav-dot" onclick="goTo(13)" title="实时采购Webinar">14</div>
+    <div class="nav-dot" onclick="goTo(14)" title="新采购旅程">15</div>
+    <div class="nav-dot" onclick="goTo(15)" title="成长通道">16</div>
+    <div class="nav-dot" onclick="goTo(16)" title="高效率通道">17</div>
+    <div class="nav-dot" onclick="goTo(17)" title="AMR模型">18</div>
     <div class="nav-divider"></div>
     <span class="nav-section-label">商业</span>
-    <div class="nav-dot" onclick="goTo(10)" title="商业模式">11</div>
-    <div class="nav-dot" onclick="goTo(11)" title="牵引力">12</div>
-    <div class="nav-dot" onclick="goTo(12)" title="为什么是现在">13</div>
-    <div class="nav-dot" onclick="goTo(13)" title="竞争格局">14</div>
+    <div class="nav-dot" onclick="goTo(18)" title="商业模式">19</div>
+    <div class="nav-dot" onclick="goTo(19)" title="牵引力">20</div>
+    <div class="nav-dot" onclick="goTo(20)" title="为什么是现在">21</div>
+    <div class="nav-dot" onclick="goTo(21)" title="竞争格局">22</div>
+    <div class="nav-dot" onclick="goTo(22)" title="市场规模">23</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">技术</span>
+    <div class="nav-dot" onclick="goTo(23)" title="技术架构">24</div>
+    <div class="nav-dot" onclick="goTo(24)" title="AI实施">25</div>
     <div class="nav-divider"></div>
     <span class="nav-section-label">融资</span>
-    <div class="nav-dot" onclick="goTo(14)" title="团队">15</div>
-    <div class="nav-dot" onclick="goTo(15)" title="融资需求">16</div>
+    <div class="nav-dot" onclick="goTo(25)" title="团队">26</div>
+    <div class="nav-dot" onclick="goTo(26)" title="融资需求">27</div>
 </div>
 
 <!-- Keyboard Hint -->
@@ -153,19 +169,37 @@
 
 <script>
     const slides = [
+        // ── 开篇 ──
         { file: 'cover.html',                  title: '封面：智能采购操作系统' },
-        { file: 'paradigm_shift.html',          title: '范式转移：全球贸易3.0大洗牌' },
-        { file: 'ai_gatekeeper.html',           title: 'AI已成为采购守门员' },
+        { file: 'paradigm_shift.html',          title: '范式转移：全球贸易大洗牌' },
+        { file: 'trade30.html',                 title: '全球贸易 3.0' },
+        { file: 'ai_gatekeeper.html',           title: 'AI 已成为采购守门员' },
+        { file: 'problem.html',                 title: 'AI 采购革命' },
+        { file: 'talent_trends.html',           title: '外贸人才趋势：AI 正在重塑行业' },
+        // ── 产品 ──
         { file: 'digital_twin_strategy.html',   title: '老板的数字分身' },
-        { file: 'commander_os_product.html',    title: 'Commander OS' },
-        { file: 'solution_overview.html',       title: '解决方案' },
+        { file: 'commander_os_product.html',    title: 'Commander OS：开箱即用的外贸指挥部' },
+        { file: 'solution_overview.html',       title: '解决方案 - Commander OS' },
         { file: 'factory_value.html',           title: 'Commander Agent 多智能体部署' },
-        { file: 'platform_overview.html',       title: '平台全景' },
+        // ── 平台 ──
+        { file: 'platform_overview.html',       title: '平台全景：双核驱动' },
+        { file: 'slide09_dashboard.html',       title: '智能采购仪表盘' },
+        { file: 'slide10_factory_profile.html', title: '工厂 AI 档案' },
+        { file: 'slide11_webinar.html',         title: '实时采购 Webinar' },
+        { file: 'slide12_new_journey.html',     title: '新采购旅程' },
+        { file: 'slide13_growth_track.html',    title: '成长通道 · Growth Track' },
+        { file: 'slide14_power_track.html',     title: '高效率通道 · Power Track' },
         { file: 'amr.html',                     title: 'AMR：重新定义好工厂' },
-        { file: 'business_model.html',          title: '商业模式：价值飞轮' },
+        // ── 商业 ──
+        { file: 'business_model.html',          title: '商业模式：三条收入线' },
         { file: 'traction.html',                title: '牵引力：早期验证' },
         { file: 'why_now.html',                 title: '为什么是现在' },
         { file: 'competition.html',             title: '竞争格局' },
+        { file: 'market.html',                  title: '全球跨境采购市场' },
+        // ── 技术 ──
+        { file: 'tech_architecture.html',       title: '技术架构' },
+        { file: 'ai_implementation.html',       title: 'AI 实施路线' },
+        // ── 融资 ──
         { file: 'team.html',                    title: '核心团队' },
         { file: 'ask_closing.html',             title: '融资需求' },
     ];
@@ -206,7 +240,6 @@
         overlay.classList.add('active');
         setTimeout(() => {
             current = index;
-            // Add cache-busting timestamp
             const timestamp = new Date().getTime();
             frame.src = slides[index].file + '?t=' + timestamp;
             updateNav();
