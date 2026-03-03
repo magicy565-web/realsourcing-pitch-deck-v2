@@ -3,106 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RealSourcing - Traction</title>
+    <title>早期用户体验 · RealSourcing</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
-        .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { width:1280px; height:720px; overflow:hidden; background:#020208;
+            font-family:'Inter','Noto Sans SC',sans-serif; }
 
-        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.08; }
-        .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
-            background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(16,185,129,0.08) 0%, transparent 70%),
-                        linear-gradient(180deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0.7) 50%, rgba(5,5,16,0.95) 100%); }
-        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
-            background-image: linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
-            background-size:60px 60px; }
+        .slide-container { position:relative; width:1280px; height:720px; overflow:hidden; }
+        .video-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.18; z-index:0; }
+        .bg-overlay { position:absolute; inset:0; z-index:1;
+            background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,110,247,0.12) 0%, transparent 70%),
+                       radial-gradient(ellipse 60% 50% at 100% 100%, rgba(16,185,129,0.08) 0%, transparent 60%),
+                       linear-gradient(180deg, rgba(2,2,8,0.6) 0%, rgba(2,2,8,0.85) 100%); }
+        .grid-lines { position:absolute; inset:0; z-index:2; opacity:0.04;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px);
+            background-size:80px 80px; }
 
-        .header { position:absolute; top:32px; left:0; right:0; text-align:center; z-index:10;
-            opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
-        .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
-            color:#10B981; margin-bottom:8px; }
-        .main-title { font-size:34px; font-weight:900; letter-spacing:-1px; }
-        .title-em { background:linear-gradient(135deg,#10B981,#4F6EF7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .subtitle-tag { font-size:13px; color:rgba(255,255,255,0.4); margin-top:6px; }
+        /* Header */
+        .header { position:absolute; top:28px; left:60px; right:60px; z-index:10;
+            opacity:0; animation:fadeInDown 0.7s ease-out forwards 0.1s; }
+        .section-tag { display:inline-flex; align-items:center; gap:8px;
+            background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25);
+            border-radius:100px; padding:4px 14px; font-size:11px; font-weight:700;
+            color:#10B981; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+        .section-tag::before { content:''; width:6px; height:6px; border-radius:50%;
+            background:#10B981; box-shadow:0 0 6px #10B981; animation:pulse 2s infinite; }
+        .main-title { font-size:28px; font-weight:800; color:#fff; line-height:1.2; margin-bottom:5px; }
+        .title-em { background:linear-gradient(90deg,#10B981,#4F6EF7);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .subtitle-tag { font-size:12px; color:rgba(255,255,255,0.4); }
 
-        /* Main: 4 big stat cards + timeline */
-        .stats-row { position:absolute; top:110px; left:0; right:0; z-index:10;
-            display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; padding:0 60px; }
-        .stat-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
-            border-radius:16px; padding:20px; text-align:center; position:relative; overflow:hidden;
-            opacity:0; }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-        .sc-1 { animation:fadeInUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
-        .sc-1::before { background:linear-gradient(90deg,#10B981,transparent); }
-        .sc-2 { animation:fadeInUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
-        .sc-2::before { background:linear-gradient(90deg,#4F6EF7,transparent); }
-        .sc-3 { animation:fadeInUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.9s; }
-        .sc-3::before { background:linear-gradient(90deg,#8B5CF6,transparent); }
-        .sc-4 { animation:fadeInUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 1.1s; }
-        .sc-4::before { background:linear-gradient(90deg,#F97316,transparent); }
-        .stat-num { font-size:36px; font-weight:900; line-height:1; margin-bottom:6px; }
-        .num-green { color:#10B981; }
-        .num-blue { color:#4F6EF7; }
-        .num-purple { color:#8B5CF6; }
-        .num-orange { color:#F97316; }
-        .stat-label { font-size:12px; font-weight:700; color:#fff; margin-bottom:4px; }
-        .stat-sub { font-size:10px; color:rgba(255,255,255,0.35); }
-        .stat-badge { display:inline-block; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.2);
-            border-radius:100px; padding:3px 10px; font-size:10px; font-weight:700; color:#10B981; margin-top:6px; }
-        .stat-badge-blue { background:rgba(79,110,247,0.12); border-color:rgba(79,110,247,0.2); color:#8BA4FF; }
-        .stat-badge-purple { background:rgba(139,92,246,0.12); border-color:rgba(139,92,246,0.2); color:#C4B5FD; }
-        .stat-badge-orange { background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.2); color:#FCA5A5; }
+        /* Cards Grid */
+        .cards-grid { position:absolute; top:118px; left:48px; right:48px; bottom:52px;
+            display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+            gap:14px; z-index:10; }
 
-        /* Timeline */
-        .timeline { position:absolute; top:310px; left:0; right:0; bottom:70px; z-index:10; padding:0 60px;
-            opacity:0; animation:fadeIn 0.8s ease-out forwards 1.3s; }
-        .timeline-title { font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:2px;
-            text-transform:uppercase; margin-bottom:20px; }
-        .timeline-track { position:relative; display:flex; align-items:flex-start; gap:0; }
-        .timeline-line { position:absolute; top:16px; left:0; right:0; height:2px;
-            background:linear-gradient(90deg,#10B981,#4F6EF7,#8B5CF6,#F97316); z-index:1; }
-        .timeline-items { display:flex; justify-content:space-between; width:100%; position:relative; z-index:2; }
-        .tl-item { display:flex; flex-direction:column; align-items:center; gap:8px; flex:1; }
-        .tl-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center;
-            justify-content:center; font-size:14px; border:2px solid; }
-        .dot-green { background:rgba(16,185,129,0.2); border-color:#10B981; }
-        .dot-blue { background:rgba(79,110,247,0.2); border-color:#4F6EF7; }
-        .dot-purple { background:rgba(139,92,246,0.2); border-color:#8B5CF6; }
-        .dot-orange { background:rgba(249,115,22,0.2); border-color:#F97316; }
-        .tl-date { font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:1px; }
-        .tl-event { font-size:12px; font-weight:700; color:#fff; text-align:center; }
-        .tl-detail { font-size:10px; color:rgba(255,255,255,0.35); text-align:center; }
+        .user-card { position:relative; border-radius:16px; padding:18px 20px 16px;
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+            backdrop-filter:blur(12px); overflow:hidden;
+            display:flex; flex-direction:column; gap:9px;
+            opacity:0; animation:fadeInUp 0.7s ease-out forwards; }
+        .user-card::after { content:''; position:absolute; inset:0; border-radius:16px; pointer-events:none; }
 
-        /* Testimonial */
-        .testimonial { position:absolute; bottom:70px; left:60px; right:60px; z-index:10;
-            background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15);
-            border-radius:16px; padding:16px 24px; display:flex; align-items:center; gap:16px;
-            opacity:0; animation:fadeInUp 0.8s ease-out forwards 1.8s; }
-        .quote-icon { font-size:24px; color:rgba(16,185,129,0.4); flex-shrink:0; }
-        .quote-text { font-size:13px; color:rgba(255,255,255,0.7); font-style:italic; flex:1; }
-        .quote-source { font-size:11px; color:#10B981; font-weight:700; white-space:nowrap; }
+        .card-1 { animation-delay:0.3s; border-color:rgba(79,110,247,0.2); }
+        .card-1::after { background:radial-gradient(ellipse 70% 50% at 0% 0%, rgba(79,110,247,0.07) 0%, transparent 70%); }
+        .card-1 .accent-bar { background:linear-gradient(90deg,#4F6EF7,#8B5CF6); }
+        .card-1 .stat-pill { background:rgba(79,110,247,0.12); border-color:rgba(79,110,247,0.3); color:#8BA4FF; }
+        .card-1 .avatar { border-color:#4F6EF7; box-shadow:0 0 10px rgba(79,110,247,0.35); }
 
-        /* Bottom bar */
-        .bottom-bar-data { position:absolute; bottom:0; left:0; right:0; height:70px; z-index:10;
-            display:flex; align-items:center; justify-content:center; gap:0;
-            border-top:1px solid rgba(255,255,255,0.05);
-            opacity:0; animation:fadeInUp 0.8s ease-out forwards 2s; }
-        .bd-item { display:flex; align-items:center; gap:8px; padding:0 32px;
-            border-right:1px solid rgba(255,255,255,0.06); }
-        .bd-item:last-child { border-right:none; }
-        .bd-icon { font-size:16px; }
-        .bd-text { font-size:12px; color:rgba(255,255,255,0.45); }
+        .card-2 { animation-delay:0.45s; border-color:rgba(16,185,129,0.2); }
+        .card-2::after { background:radial-gradient(ellipse 70% 50% at 100% 0%, rgba(16,185,129,0.07) 0%, transparent 70%); }
+        .card-2 .accent-bar { background:linear-gradient(90deg,#10B981,#34D399); }
+        .card-2 .stat-pill { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.3); color:#34D399; }
+        .card-2 .avatar { border-color:#10B981; box-shadow:0 0 10px rgba(16,185,129,0.35); }
 
-        .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
-            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
+        .card-3 { animation-delay:0.6s; border-color:rgba(249,115,22,0.2); }
+        .card-3::after { background:radial-gradient(ellipse 70% 50% at 0% 100%, rgba(249,115,22,0.07) 0%, transparent 70%); }
+        .card-3 .accent-bar { background:linear-gradient(90deg,#F97316,#FBBF24); }
+        .card-3 .stat-pill { background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.3); color:#FDBA74; }
+        .card-3 .avatar { border-color:#F97316; box-shadow:0 0 10px rgba(249,115,22,0.35); }
+
+        .card-4 { animation-delay:0.75s; border-color:rgba(139,92,246,0.2); }
+        .card-4::after { background:radial-gradient(ellipse 70% 50% at 100% 100%, rgba(139,92,246,0.07) 0%, transparent 70%); }
+        .card-4 .accent-bar { background:linear-gradient(90deg,#8B5CF6,#EC4899); }
+        .card-4 .stat-pill { background:rgba(139,92,246,0.12); border-color:rgba(139,92,246,0.3); color:#C4B5FD; }
+        .card-4 .avatar { border-color:#8B5CF6; box-shadow:0 0 10px rgba(139,92,246,0.35); }
+
+        .accent-bar { height:3px; border-radius:2px; width:36px; flex-shrink:0; }
+
+        .card-top { display:flex; align-items:center; gap:12px; }
+        .avatar { width:44px; height:44px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            font-size:20px; background:rgba(255,255,255,0.06); border:2px solid; }
+        .user-meta { flex:1; min-width:0; }
+        .user-name { font-size:13.5px; font-weight:800; color:#fff; margin-bottom:2px;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .user-tag { font-size:10.5px; color:rgba(255,255,255,0.38); }
+        .stat-pill { display:inline-flex; align-items:center; gap:4px; flex-shrink:0;
+            border:1px solid; border-radius:100px; padding:3px 9px;
+            font-size:11px; font-weight:700; white-space:nowrap; }
+
+        .card-story { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.65; flex:1; }
+        .story-highlight { color:#fff; font-weight:600; }
+
+        .card-quote { font-size:11px; color:rgba(255,255,255,0.32); font-style:italic;
+            border-left:2px solid rgba(255,255,255,0.08); padding-left:9px; }
+
+        /* Bottom */
         .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:20;
-            background:linear-gradient(90deg,#10B981,#4F6EF7,#8B5CF6,#F97316); }
+            background:linear-gradient(90deg,#4F6EF7,#10B981,#8B5CF6,#F97316); }
+        .slide-num { position:absolute; bottom:7px; right:40px; font-size:11px;
+            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
 
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
     </style>
 </head>
 <body>
@@ -113,104 +111,86 @@
     <div class="bg-overlay"></div>
     <div class="grid-lines"></div>
 
-    <!-- Header -->
     <div class="header">
-        <div class="section-tag">Traction &middot; 牵引力</div>
-        <div class="main-title">数字说话：<span class="title-em">早期验证已完成</span></div>
-        <div class="subtitle-tag">MVP 上线 6 个月 &middot; 零广告费 &middot; 纯口碑增长 &middot; 关键指标全面向好</div>
+        <div class="section-tag">Early Users &middot; 早期用户体验</div>
+        <div class="main-title">真实用户，<span class="title-em">真实改变</span></div>
+        <div class="subtitle-tag">来自全球不同背景的买家，通过 RealSourcing 开启了全新的商业可能</div>
     </div>
 
-    <!-- Stats Row -->
-    <div class="stats-row">
-        <div class="stat-card sc-1">
-            <div class="stat-num num-green">47</div>
-            <div class="stat-label">认证工厂</div>
-            <div class="stat-sub">深度合作 &middot; 独家协议</div>
-            <div class="stat-badge">&#8593; +180% MoM</div>
-        </div>
-        <div class="stat-card sc-2">
-            <div class="stat-num num-blue">$120K</div>
-            <div class="stat-label">累计 GMV</div>
-            <div class="stat-sub">6 个月内实现</div>
-            <div class="stat-badge stat-badge-blue">&#8593; +65% MoM</div>
-        </div>
-        <div class="stat-card sc-3">
-            <div class="stat-num num-purple">23 min</div>
-            <div class="stat-label">平均报价时间</div>
-            <div class="stat-sub">行业平均 3-7 天</div>
-            <div class="stat-badge stat-badge-purple">&#8595; -99.7%</div>
-        </div>
-        <div class="stat-card sc-4">
-            <div class="stat-num num-orange">91%</div>
-            <div class="stat-label">买家复购率</div>
-            <div class="stat-sub">首单后 60 天内</div>
-            <div class="stat-badge stat-badge-orange">&#8593; 行业 2.3x</div>
-        </div>
-    </div>
+    <div class="cards-grid">
 
-    <!-- Timeline -->
-    <div class="timeline">
-        <div class="timeline-title">&#128197; 里程碑时间线</div>
-        <div class="timeline-track">
-            <div class="timeline-line"></div>
-            <div class="timeline-items">
-                <div class="tl-item">
-                    <div class="tl-dot dot-green">&#127775;</div>
-                    <div class="tl-date">2025 Q2</div>
-                    <div class="tl-event">MVP 上线</div>
-                    <div class="tl-detail">首批 5 家工厂<br>首笔订单成交</div>
+        <!-- Card 1: 美国大学生 -->
+        <div class="user-card card-1">
+            <div class="accent-bar"></div>
+            <div class="card-top">
+                <div class="avatar">&#127891;</div>
+                <div class="user-meta">
+                    <div class="user-name">Jake &middot; 22岁 &middot; 美国大学生</div>
+                    <div class="user-tag">电子商务创业者 &middot; 北卡罗来纳州</div>
                 </div>
-                <div class="tl-item">
-                    <div class="tl-dot dot-blue">&#128200;</div>
-                    <div class="tl-date">2025 Q3</div>
-                    <div class="tl-event">产品迭代</div>
-                    <div class="tl-detail">OpenClaw v1.0<br>AMR 模型上线</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-dot dot-purple">&#127942;</div>
-                    <div class="tl-date">2025 Q4</div>
-                    <div class="tl-event">规模突破</div>
-                    <div class="tl-detail">47 家工厂<br>$120K GMV</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-dot dot-orange">&#128640;</div>
-                    <div class="tl-date">2026 Q1</div>
-                    <div class="tl-event">融资加速</div>
-                    <div class="tl-detail">Seed Round<br>目标 ¥200 万</div>
-                </div>
+                <div class="stat-pill">&#8593; $1,000 / 月</div>
             </div>
+            <div class="card-story">
+                在校期间创立自己的电商品牌，苦于找不到稳定供应商。通过 RealSourcing，<span class="story-highlight">20 分钟内收到 6 家工厂报价</span>，成功建立第一条产品线。如今每月获得 <span class="story-highlight">$1,000+ 的额外收入</span>，用学业之余的时间经营着一个真正运转的跨境品牌。
+            </div>
+            <div class="card-quote">"以前觉得从中国采购很复杂，现在感觉就像在用 Amazon 购物一样简单。"</div>
         </div>
+
+        <!-- Card 2: 意大利夫妻 -->
+        <div class="user-card card-2">
+            <div class="accent-bar"></div>
+            <div class="card-top">
+                <div class="avatar">&#128141;</div>
+                <div class="user-meta">
+                    <div class="user-name">Marco &amp; Sofia &middot; 45岁 &middot; 意大利夫妻</div>
+                    <div class="user-tag">饰品转售商 &middot; 米兰</div>
+                </div>
+                <div class="stat-pill">&#8593; 利润 +15%</div>
+            </div>
+            <div class="card-story">
+                长期依赖速卖通采购饰品，利润被平台佣金层层压缩。切换至 RealSourcing 后，<span class="story-highlight">直连工厂让每笔订单利润比速卖通高出 15%</span>，半年内累计利润提升<span class="story-highlight">数万美元</span>，并与 3 家工厂建立了长期独家合作关系。
+            </div>
+            <div class="card-quote">"我们终于知道货是从哪里来的，价格也比以前透明太多了。"</div>
+        </div>
+
+        <!-- Card 3: 哈萨克斯坦汽配商 -->
+        <div class="user-card card-3">
+            <div class="accent-bar"></div>
+            <div class="card-top">
+                <div class="avatar">&#128295;</div>
+                <div class="user-meta">
+                    <div class="user-name">Arman &middot; 38岁 &middot; 哈萨克斯坦</div>
+                    <div class="user-tag">汽车配件零售商 &middot; 阿拉木图</div>
+                </div>
+                <div class="stat-pill">&#8593; 收入 +40%</div>
+            </div>
+            <div class="card-story">
+                经营本地汽配零售多年，人工处理报价耗时费力，错失大量商机。接入 RealSourcing 后，<span class="story-highlight">AI 自动受理客户询盘并实时对接工厂报价</span>，相当于"多开了一家永不打烊的分店"，门店收入<span class="story-highlight">提升 40%</span>，无需增加任何人手。
+            </div>
+            <div class="card-quote">"AI 帮我接单，我只需要确认发货，生意就这样跑起来了。"</div>
+        </div>
+
+        <!-- Card 4: 埃及毛毯经销商 -->
+        <div class="user-card card-4">
+            <div class="accent-bar"></div>
+            <div class="card-top">
+                <div class="avatar">&#127994;</div>
+                <div class="user-meta">
+                    <div class="user-name">Youssef &middot; 40岁 &middot; 埃及经销商</div>
+                    <div class="user-tag">毛毯经销商 &#8594; 跨境品牌主 &middot; 开罗</div>
+                </div>
+                <div class="stat-pill">&#8593; 打入德国市场</div>
+            </div>
+            <div class="card-story">
+                原本专注于本地毛毯批发，增长遭遇天花板。通过 RealSourcing 开拓新品类，<span class="story-highlight">成功打通德国电子商务渠道</span>，以中国直运模式绕开本地库存压力，从传统经销商<span class="story-highlight">成功转型为线上跨境品牌</span>，开辟全新国际收入来源。
+            </div>
+            <div class="card-quote">"没想到我们的产品能卖到德国，而且利润比本地还高。"</div>
+        </div>
+
     </div>
 
-    <!-- Testimonial -->
-    <div class="testimonial">
-        <span class="quote-icon">&#10077;</span>
-        <span class="quote-text">用 RealSourcing 之前，我们找一个工厂要 3 周，现在 20 分钟就收到报价，而且工厂质量比以前找的好太多了。</span>
-        <span class="quote-source">— Sarah K. &middot; 美国买家 &middot; $28K 订单</span>
-    </div>
-
-    <!-- Bottom Data Bar -->
-    <div class="bottom-bar-data">
-        <div class="bd-item">
-            <span class="bd-icon">&#128274;</span>
-            <span class="bd-text">零客诉 &middot; 100% 履约</span>
-        </div>
-        <div class="bd-item">
-            <span class="bd-icon">&#127760;</span>
-            <span class="bd-text">覆盖 12 个国家买家</span>
-        </div>
-        <div class="bd-item">
-            <span class="bd-icon">&#129302;</span>
-            <span class="bd-text">AI 自动处理 87% 询盘</span>
-        </div>
-        <div class="bd-item">
-            <span class="bd-icon">&#128197;</span>
-            <span class="bd-text">NPS 净推荐值 72</span>
-        </div>
-    </div>
-
+    <div class="slide-num">16 / 25</div>
     <div class="bottom-bar"></div>
-    <div class="slide-num">12 / 16</div>
 </div>
 </body>
 </html>
