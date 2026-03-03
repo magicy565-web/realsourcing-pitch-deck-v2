@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Slide 14 - Power Track</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1280px; height: 720px; overflow: hidden; background: #050510; font-family: 'Inter', sans-serif; }
+.slide { width: 1280px; height: 720px; position: relative; overflow: hidden; }
+
+/* ── BACKGROUND ── */
+.bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(99,102,241,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 40% at 8%  50%, rgba(79,110,247,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 40% at 92% 50%, rgba(16,185,129,0.05) 0%, transparent 55%),
+    #050510;
+}
+.bg-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(99,102,241,0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(99,102,241,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── CANVAS for particle flow ── */
+#flowCanvas {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative; z-index: 20;
+  padding: 18px 48px 0;
+  display: flex; align-items: baseline; gap: 14px;
+}
+.track-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #10B981; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25);
+  padding: 4px 12px; border-radius: 20px;
+}
+.header-title {
+  font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 0%, #A5B4FC 50%, #34D399 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-left: auto; }
+
+/* ── MAIN 3-COL LAYOUT ── */
+.main {
+  position: relative; z-index: 20;
+  display: grid;
+  grid-template-columns: 200px 1fr 580px;
+  gap: 0;
+  padding: 10px 0 0 16px;
+  height: calc(720px - 56px);
+  align-items: center;
+}
+
+/* ── LEFT: INPUT CARDS ── */
+.input-col { display: flex; flex-direction: column; gap: 8px; }
+.col-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.22); margin-bottom: 2px;
+}
+.input-card {
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+  animation: fadeInLeft 0.5s ease both;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.input-card:nth-child(2) { animation-delay: 0.08s; }
+.input-card:nth-child(3) { animation-delay: 0.16s; }
+.input-card:nth-child(4) { animation-delay: 0.24s; }
+@keyframes fadeInLeft { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+.input-card:hover { transform: translateX(3px); border-color: rgba(99,102,241,0.35); box-shadow: 0 0 16px rgba(99,102,241,0.12); }
+.input-card img { width: 100%; height: 110px; object-fit: cover; object-position: top left; display: block; }
+.input-card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; background: rgba(0,0,0,0.35);
+}
+.input-card-name { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); }
+.input-card-tag { font-size: 8px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+.tag-excel  { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(52,211,153,0.18); }
+.tag-pdf    { background: rgba(139,92,246,0.12); color: #A78BFA; border: 1px solid rgba(167,139,250,0.18); }
+.tag-tiktok { background: rgba(236,72,153,0.12); color: #F472B6; border: 1px solid rgba(244,114,182,0.18); }
+
+/* Anchor dots for particle flow — invisible, just for JS position reference */
+.anchor { position: absolute; right: 0; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: rgba(99,102,241,0.5); transform: translate(50%, -50%); z-index: 25; }
+
+/* ── CENTER: AI HEART ── */
+.ai-center {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; height: 100%;
+}
+.pulse-rings {
+  position: relative; width: 200px; height: 200px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ring {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(99,102,241,0.22);
+  animation: ringPulse 2.8s ease-in-out infinite;
+}
+.ring-1 { width: 200px; height: 200px; }
+.ring-2 { width: 162px; height: 162px; animation-delay: 0.5s; border-color: rgba(99,102,241,0.32); }
+.ring-3 { width: 124px; height: 124px; animation-delay: 1s;   border-color: rgba(99,102,241,0.48); }
+.ring-4 { width: 88px;  height: 88px;  animation-delay: 1.5s; border-color: rgba(99,102,241,0.65); }
+@keyframes ringPulse {
+  0%,100% { transform: scale(1); opacity: 0.45; }
+  50%      { transform: scale(1.06); opacity: 1; }
+}
+.ai-core {
+  position: relative; z-index: 10;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #6366F1, #4338CA 60%, #1e1b4b);
+  border: 2px solid rgba(99,102,241,0.65);
+  display: flex; align-items: center; justify-content: center;
+  animation: heartbeat 1.8s ease-in-out infinite;
+  box-shadow: 0 0 28px rgba(99,102,241,0.55), 0 0 55px rgba(99,102,241,0.22), inset 0 0 18px rgba(255,255,255,0.05);
+}
+@keyframes heartbeat {
+  0%,100% { transform: scale(1);    box-shadow: 0 0 28px rgba(99,102,241,0.55), 0 0 55px rgba(99,102,241,0.22); }
+  14%     { transform: scale(1.13); box-shadow: 0 0 50px rgba(99,102,241,0.85), 0 0 90px rgba(99,102,241,0.4); }
+  28%     { transform: scale(1.05); }
+  42%     { transform: scale(1.11); box-shadow: 0 0 44px rgba(99,102,241,0.75), 0 0 80px rgba(99,102,241,0.35); }
+  70%     { transform: scale(1); }
+}
+.ai-core-logo { font-size: 26px; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+
+/* Float tags */
+.float-tag {
+  position: absolute; font-size: 8px; font-weight: 700; letter-spacing: 0.4px;
+  padding: 3px 8px; border-radius: 10px; white-space: nowrap;
+  background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+  color: rgba(165,180,252,0.75);
+}
+.ft1 { top: 10px; left: 50%; transform: translateX(-50%); animation: ft1anim 3.5s ease-in-out infinite; }
+.ft2 { top: 50%; left: 0px; transform: translateY(-50%); animation: ft2anim 3.5s ease-in-out 1.2s infinite; }
+.ft3 { top: 50%; right: 0px; transform: translateY(-50%); animation: ft3anim 3.5s ease-in-out 2.4s infinite; }
+@keyframes ft1anim { 0%,100%{opacity:0.5;top:10px} 50%{opacity:1;top:6px} }
+@keyframes ft2anim { 0%,100%{opacity:0.5} 50%{opacity:1} }
+@keyframes ft3anim { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+/* ECG */
+.ecg-wrap { width: 200px; margin-top: 10px; height: 32px; overflow: hidden; }
+.ecg-svg { width: 100%; height: 32px; }
+.ecg-path {
+  fill: none; stroke: rgba(99,102,241,0.65); stroke-width: 1.5;
+  stroke-dasharray: 380; stroke-dashoffset: 380;
+  animation: ecgDraw 2.2s ease-in-out 0.3s infinite;
+}
+@keyframes ecgDraw {
+  0%   { stroke-dashoffset: 380; opacity: 0; }
+  8%   { opacity: 1; }
+  60%  { stroke-dashoffset: 0; opacity: 1; }
+  90%  { stroke-dashoffset: 0; opacity: 0.2; }
+  100% { stroke-dashoffset: 380; opacity: 0; }
+}
+.ai-label { margin-top: 8px; text-align: center; }
+.ai-label-main {
+  font-size: 13px; font-weight: 800; letter-spacing: 1px;
+  background: linear-gradient(135deg, #A5B4FC, #6366F1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.ai-label-sub { font-size: 9px; color: rgba(255,255,255,0.28); margin-top: 2px; }
+
+/* ── RIGHT: OUTPUT COLUMN ── */
+.output-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 100%;
+  /* No extra padding; stack uses margin-top for vertical alignment */
+  padding-top: 0;
+}
+
+/* 
+  Stack container — holds two overlapping cards in a "fan" layout.
+  
+  Design: Both cards are fully visible, arranged in a slight fan/spread:
+  - Card 1 (Landing Page): left side, slightly rotated left (-3deg), z-index:1
+  - Card 2 (Store Ready): right side, slightly rotated right (+2deg), z-index:2, appears after 5s
+  
+  The two cards share a common bottom edge, fanning out at the top.
+  Total footprint: ~500px wide (cards overlap in center by ~60px)
+*/
+.output-stack {
+  position: relative;
+  width: 500px;
+  min-height: 420px;
+  /* Center the stack within the column */
+  margin-left: -60px;
+}
+
+/* Back card: Landing Page — left side, slightly tilted */
+.output-wrap {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 270px;
+  height: auto;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(52,211,153,0.25);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 20px rgba(52,211,153,0.08);
+  animation: fadeInRight 0.6s ease 0.3s both;
+  z-index: 1;
+  transform-origin: bottom center;
+  transform: rotate(-3deg);
+}
+@keyframes fadeInRight { from { opacity: 0; transform: rotate(-3deg) translateX(18px); } to { opacity: 1; transform: rotate(-3deg) translateX(0); } }
+.output-wrap img {
+  width: 100%; height: auto;
+  object-fit: contain;
+  display: block;
+}
+.output-wrap::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 12px;
+  border: 1px solid rgba(52,211,153,0.35);
+  animation: outputGlow 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes outputGlow {
+  0%,100% { box-shadow: 0 0 10px rgba(52,211,153,0.12) inset; }
+  50%      { box-shadow: 0 0 24px rgba(52,211,153,0.32) inset; }
+}
+
+/* Front card: Store Ready — right side, slightly tilted, appears after 5s */
+.store-wrap {
+  position: absolute;
+  left: 190px;
+  top: 10px;
+  width: 310px;
+  height: auto;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(79,110,247,0.4);
+  box-shadow: 0 16px 50px rgba(0,0,0,0.7), 0 0 28px rgba(79,110,247,0.18);
+  opacity: 0;
+  z-index: 2;
+  transform-origin: bottom center;
+  transform: rotate(2deg) translateY(8px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.store-wrap img {
+  width: 100%; height: auto;
+  object-fit: contain;
+  display: block;
+}
+.store-wrap::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 12px;
+  border: 1px solid rgba(79,110,247,0.4);
+  animation: storeGlow 2.5s ease-in-out 0.5s infinite;
+  pointer-events: none;
+}
+@keyframes storeGlow {
+  0%,100% { box-shadow: 0 0 10px rgba(79,110,247,0.1) inset; }
+  50%      { box-shadow: 0 0 24px rgba(79,110,247,0.3) inset; }
+}
+
+/* Output anchor dot for particle flow */
+.output-anchor {
+  position: absolute; left: 0; top: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(52,211,153,0.5);
+  transform: translate(-50%, -50%); z-index: 25;
+}
+
+/* ── BOTTOM ── */
+.bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 60; background: linear-gradient(90deg, #4F6EF7 0%, #6366F1 50%, #10B981 100%); }
+.slide-num { position: absolute; bottom: 8px; right: 36px; font-size: 10px; color: rgba(255,255,255,0.15); font-family: monospace; z-index: 60; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="bg"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Particle flow canvas -->
+  <canvas id="flowCanvas" width="1280" height="720"></canvas>
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="track-badge">Track 02</span>
+    <span class="header-title">高效率通道 · Power Track</span>
+    <span class="header-sub">多品类店长 / 多元电商运营商 · 任意格式输入，AI 统一解析匹配</span>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT: INPUTS -->
+    <div class="input-col" id="inputCol">
+      <div class="col-label">采购需求输入</div>
+
+      <div class="input-card" id="card1">
+        <img src="assets/s14_input_excel.png" alt="Excel">
+        <div class="input-card-footer">
+          <span class="input-card-name">采购清单 + 报价表</span>
+          <span class="input-card-tag tag-excel">XLSX + ZIP</span>
+        </div>
+        <div class="anchor" id="anchor1"></div>
+      </div>
+
+      <div class="input-card" id="card2">
+        <img src="assets/s14_input_pdf.png" alt="PDF">
+        <div class="input-card-footer">
+          <span class="input-card-name">电商创业计划书</span>
+          <span class="input-card-tag tag-pdf">PDF + ZIP</span>
+        </div>
+        <div class="anchor" id="anchor2"></div>
+      </div>
+
+      <div class="input-card" id="card3">
+        <img src="assets/s14_input_tiktok.png" alt="TikTok" style="object-position: top center;">
+        <div class="input-card-footer">
+          <span class="input-card-name">TikTok 爆款视频</span>
+          <span class="input-card-tag tag-tiktok">SHORT VIDEO</span>
+        </div>
+        <div class="anchor" id="anchor3"></div>
+      </div>
+    </div>
+
+    <!-- CENTER: AI HEART -->
+    <div class="ai-center" id="aiCenter">
+      <div class="pulse-rings">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="ring ring-4"></div>
+        <div class="float-tag ft1">NLP 语义解析</div>
+        <div class="float-tag ft2">多模态理解</div>
+        <div class="float-tag ft3">供应商匹配</div>
+        <div class="ai-core" id="aiCore">
+          <span class="ai-core-logo">⚡</span>
+        </div>
+      </div>
+      <div class="ecg-wrap">
+        <svg class="ecg-svg" viewBox="0 0 200 32" preserveAspectRatio="none">
+          <path class="ecg-path" d="M0,16 L28,16 L36,16 L40,3 L44,29 L48,9 L52,16 L72,16 L80,16 L84,3 L88,29 L92,9 L96,16 L120,16 L124,3 L128,29 L132,9 L136,16 L170,16 L200,16"/>
+        </svg>
+      </div>
+      <div class="ai-label">
+        <div class="ai-label-main">RealSourcing AI</div>
+        <div class="ai-label-sub">无论何种输入格式，均可解析并匹配供应商</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: OUTPUT CARDS -->
+    <div class="output-col" id="outputCol">
+      <div class="col-label" style="align-self:flex-start; margin-left: 20px; margin-bottom: 8px;">AI 生成采购资源包</div>
+      <div class="output-stack" id="outputStack">
+        <!-- Back: Sourcing Kit Landing Page -->
+        <div class="output-wrap" id="outputWrap">
+          <img src="assets/s14_output_landing.png" alt="Sourcing Kit Landing Page">
+          <div class="output-anchor" id="outputAnchor"></div>
+        </div>
+        <!-- Front: Store Ready (appears after 5s) -->
+        <div class="store-wrap" id="storeWrap">
+          <img src="assets/s14_output_store.png" alt="Store Ready">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">14 / 16</div>
+</div>
+
+<script>
+// ── Dynamic stack height adjustment ──
+// After images load, set the stack height so it contains both cards properly
+function adjustStackHeight() {
+  const outputWrap = document.getElementById('outputWrap');
+  const storeWrap = document.getElementById('storeWrap');
+  const stack = document.getElementById('outputStack');
+  if (!outputWrap || !storeWrap || !stack) return;
+
+  const card1H = outputWrap.offsetHeight;
+  const card2H = storeWrap.offsetHeight;
+  // Stack height = max(card1H, card2H + 40) since card2 is offset by top:40px
+  const stackH = Math.max(card1H, card2H + 40);
+  stack.style.height = stackH + 'px';
+}
+
+window.addEventListener('load', adjustStackHeight);
+
+// ── Particle Flow Animation ──
+const canvas = document.getElementById('flowCanvas');
+const ctx = canvas.getContext('2d');
+
+function getCenter(el) {
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
+function getRight(el) {
+  const r = el.getBoundingClientRect();
+  return { x: r.right, y: r.top + r.height / 2 };
+}
+function getLeft(el) {
+  const r = el.getBoundingClientRect();
+  return { x: r.left, y: r.top + r.height / 2 };
+}
+
+class Particle {
+  constructor(from, to, color, size, speed, delay) {
+    this.from = from;
+    this.to = to;
+    this.color = color;
+    this.size = size;
+    this.speed = speed;
+    this.delay = delay;
+    this.t = -delay;
+    this.alive = true;
+  }
+  update(dt) {
+    this.t += dt * this.speed;
+    if (this.t > 1.2) this.alive = false;
+  }
+  draw(ctx) {
+    const t = Math.max(0, Math.min(1, this.t));
+    if (t <= 0) return;
+    const mx = (this.from.x + this.to.x) / 2;
+    const my = (this.from.y + this.to.y) / 2 - 30;
+    const bx = (1-t)*(1-t)*this.from.x + 2*(1-t)*t*mx + t*t*this.to.x;
+    const by = (1-t)*(1-t)*this.from.y + 2*(1-t)*t*my + t*t*this.to.y;
+    const alpha = t < 0.1 ? t/0.1 : t > 0.85 ? (1-t)/0.15 : 1;
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.beginPath();
+    ctx.arc(bx, by, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = this.size * 4;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function drawPath(from, to, color, alpha) {
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2 - 30;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.quadraticCurveTo(mx, my, to.x, to.y);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 8]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawFlowSegment(from, to, progress, color) {
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2 - 30;
+  const steps = 40;
+  const segLen = 0.18;
+  const start = Math.max(0, progress - segLen);
+  const end = Math.min(1, progress);
+  if (start >= end) return;
+  ctx.save();
+  ctx.beginPath();
+  let first = true;
+  for (let i = 0; i <= steps; i++) {
+    const t = start + (end - start) * (i / steps);
+    const bx = (1-t)*(1-t)*from.x + 2*(1-t)*t*mx + t*t*to.x;
+    const by = (1-t)*(1-t)*from.y + 2*(1-t)*t*my + t*t*to.y;
+    if (first) { ctx.moveTo(bx, by); first = false; }
+    else ctx.lineTo(bx, by);
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 8;
+  ctx.globalAlpha = 0.8;
+  ctx.stroke();
+  ctx.restore();
+}
+
+let particles = [];
+let flowProgress = [0, 0, 0];
+let outProgress = 0;
+let lastTime = null;
+
+let sources = [];
+let corePos = { x: 640, y: 360 };
+let outputPos = { x: 990, y: 360 };
+
+function initPositions() {
+  const a1 = document.getElementById('anchor1');
+  const a2 = document.getElementById('anchor2');
+  const a3 = document.getElementById('anchor3');
+  const core = document.getElementById('aiCore');
+  const out  = document.getElementById('outputAnchor');
+  sources = [getRight(a1), getRight(a2), getRight(a3)];
+  corePos = getCenter(core);
+  outputPos = getLeft(out);
+}
+
+let spawnTimer = 0;
+const SPAWN_INTERVAL = 0.18;
+const INPUT_COLORS = ['#6366F1', '#8B5CF6', '#EC4899'];
+const OUT_COLOR = '#10B981';
+
+function spawnParticles() {
+  sources.forEach((src, i) => {
+    particles.push(new Particle(
+      src, corePos,
+      INPUT_COLORS[i],
+      2.5,
+      0.55 + Math.random() * 0.1,
+      Math.random() * 0.1
+    ));
+  });
+}
+
+function spawnOutParticle() {
+  particles.push(new Particle(
+    corePos, outputPos,
+    OUT_COLOR,
+    2.5,
+    0.5 + Math.random() * 0.1,
+    Math.random() * 0.1
+  ));
+}
+
+let outSpawnTimer = 0;
+
+function animate(ts) {
+  if (!lastTime) lastTime = ts;
+  const dt = Math.min((ts - lastTime) / 1000, 0.05);
+  lastTime = ts;
+
+  ctx.clearRect(0, 0, 1280, 720);
+
+  initPositions();
+
+  sources.forEach((src, i) => {
+    drawPath(src, corePos, INPUT_COLORS[i], 0.12);
+  });
+  drawPath(corePos, outputPos, OUT_COLOR, 0.12);
+
+  flowProgress = flowProgress.map((p, i) => {
+    const speed = 0.45 + i * 0.05;
+    return (p + dt * speed) % 1.2;
+  });
+  outProgress = (outProgress + dt * 0.5) % 1.2;
+
+  sources.forEach((src, i) => {
+    drawFlowSegment(src, corePos, Math.min(flowProgress[i], 1), INPUT_COLORS[i]);
+  });
+  drawFlowSegment(corePos, outputPos, Math.min(outProgress, 1), OUT_COLOR);
+
+  spawnTimer += dt;
+  if (spawnTimer >= SPAWN_INTERVAL) {
+    spawnTimer = 0;
+    spawnParticles();
+  }
+  outSpawnTimer += dt;
+  if (outSpawnTimer >= SPAWN_INTERVAL * 0.8) {
+    outSpawnTimer = 0;
+    spawnOutParticle();
+  }
+
+  particles = particles.filter(p => p.alive);
+  particles.forEach(p => { p.update(dt); p.draw(ctx); });
+
+  requestAnimationFrame(animate);
+}
+
+setTimeout(() => {
+  initPositions();
+  requestAnimationFrame(animate);
+}, 300);
+
+// Store card fades in after 5 seconds
+setTimeout(() => {
+  const storeWrap = document.getElementById('storeWrap');
+  if (storeWrap) {
+    storeWrap.style.opacity = '1';
+    storeWrap.style.transform = 'rotate(2deg) translateY(0)';
+    storeWrap.style.boxShadow = '0 16px 50px rgba(0,0,0,0.7), 0 0 40px rgba(79,110,247,0.45)';
+    setTimeout(() => {
+      storeWrap.style.boxShadow = '0 16px 50px rgba(0,0,0,0.7), 0 0 28px rgba(79,110,247,0.18)';
+    }, 1000);
+  }
+}, 5000);
+</script>
+</body>
+</html>
