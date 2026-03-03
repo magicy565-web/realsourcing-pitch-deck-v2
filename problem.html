@@ -1,791 +1,114 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI采购革命</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        .slide-container {
-            width: 1280px;
-            min-height: 720px;
-            font-family: 'Inter', sans-serif;
-            background: #0A1628;
-            color: #F8FAFC;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        /* ── Scene wrapper ── */
-        .scene {
-            position: absolute;
-            top: 0; left: 0;
-            width: 1280px;
-            height: 720px;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            transform: translateX(60px);
-            transition: opacity 0.55s cubic-bezier(.4,0,.2,1), transform 0.55s cubic-bezier(.4,0,.2,1);
-            pointer-events: none;
-        }
-        .scene.active {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: all;
-        }
-        .scene.exit {
-            opacity: 0;
-            transform: translateX(-60px);
-        }
-
-        /* ── Shared header strip ── */
-        .scene-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 22px 52px 0 52px;
-            flex-shrink: 0;
-        }
-        .scene-label {
-            font-size: 10px;
-            color: #3b82f6;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .scene-counter {
-            font-size: 10px;
-            color: #1e3a5f;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ── Dot nav ── */
-        .dot-nav {
-            position: absolute;
-            bottom: 22px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
-        .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #1e3a5f;
-            transition: background 0.3s, transform 0.3s;
-            cursor: pointer;
-        }
-        .dot.active {
-            background: #3b82f6;
-            transform: scale(1.4);
-        }
-
-        /* ── Arrow nav ── */
-        .arrow-nav {
-            position: absolute;
-            bottom: 14px;
-            right: 52px;
-            display: flex;
-            gap: 8px;
-            z-index: 100;
-        }
-        .arrow-btn {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1px solid #1e3a5f;
-            background: rgba(30,58,95,0.3);
-            color: #475569;
-            font-size: 14px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: border-color 0.2s, color 0.2s;
-        }
-        .arrow-btn:hover { border-color: #3b82f6; color: #3b82f6; }
-
-        /* ══════════════════════════════════════ */
-        /* SCENE 1 — Buyer Archetypes            */
-        /* ══════════════════════════════════════ */
-        .s1-body {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            position: relative;
-        }
-        .s1-half {
-            flex: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 28px;
-        }
-        .s1-divider {
-            width: 1px;
-            height: 380px;
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.08) 70%, transparent);
-            flex-shrink: 0;
-            position: relative;
-        }
-        .s1-divider-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #0A1628;
-            border: 1px solid #1e3a5f;
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 11px;
-            color: #475569;
-            white-space: nowrap;
-            font-weight: 600;
-        }
-        .triangle-hero {
-            width: 0; height: 0;
-            border-left: 90px solid transparent;
-            border-right: 90px solid transparent;
-            border-bottom: 156px solid #3b82f6;
-            filter: drop-shadow(0 0 32px rgba(59,130,246,0.5)) drop-shadow(0 0 80px rgba(59,130,246,0.2));
-        }
-        .hexagon-hero {
-            width: 160px; height: 92px;
-            background: #f97316;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            filter: drop-shadow(0 0 32px rgba(249,115,22,0.5)) drop-shadow(0 0 80px rgba(249,115,22,0.2));
-        }
-        .s1-title {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-        .s1-sub {
-            font-size: 13px;
-            font-weight: 400;
-            margin-top: -18px;
-        }
-        .s1-tag {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 5px 18px;
-            border-radius: 20px;
-            letter-spacing: 0.04em;
-        }
-
-        /* ══════════════════════════════════════ */
-        /* SCENE 2 — AI Bridge                   */
-        /* ══════════════════════════════════════ */
-        .s2-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0 52px;
-            gap: 32px;
-        }
-        .s2-flow {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            gap: 0;
-        }
-        .s2-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            flex-shrink: 0;
-        }
-        .s2-node-icon {
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-        }
-        .s2-connector {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .s2-line-solid {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981, #3b82f6);
-            border-radius: 2px;
-        }
-        .s2-line-dashed {
-            width: 100%;
-            height: 3px;
-            background: repeating-linear-gradient(90deg, #ef4444 0px, #ef4444 10px, transparent 10px, transparent 20px);
-            border-radius: 2px;
-            position: relative;
-        }
-        .s2-break {
-            width: 32px; height: 32px;
-            background: #0A1628;
-            border: 2px solid #ef4444;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 15px; color: #ef4444; font-weight: 900;
-            flex-shrink: 0;
-        }
-        .s2-stats {
-            display: flex;
-            gap: 32px;
-            width: 100%;
-        }
-        .s2-stat {
-            flex: 1;
-            background: rgba(255,255,255,0.025);
-            border-radius: 12px;
-            padding: 18px 24px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .s2-stat-num {
-            font-size: 48px;
-            font-weight: 900;
-            line-height: 1;
-            letter-spacing: -2px;
-        }
-
-        /* ══════════════════════════════════════ */
-        /* SCENE 3 — Data                        */
-        /* ══════════════════════════════════════ */
-        .s3-body {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 52px;
-            gap: 40px;
-        }
-        .s3-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            height: 100%;
-            position: relative;
-        }
-        .s3-num {
-            font-size: 120px;
-            font-weight: 900;
-            line-height: 1;
-            letter-spacing: -6px;
-        }
-        .s3-pct {
-            font-size: 60px;
-            font-weight: 700;
-            letter-spacing: -2px;
-        }
-        .s3-desc {
-            font-size: 18px;
-            font-weight: 600;
-            text-align: center;
-            line-height: 1.5;
-            color: #cbd5e1;
-            max-width: 320px;
-        }
-        .s3-sub {
-            font-size: 12px;
-            color: #334155;
-            text-align: center;
-        }
-        .s3-divider {
-            width: 1px;
-            height: 400px;
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.06) 70%, transparent);
-            flex-shrink: 0;
-        }
-
-        /* ══════════════════════════════════════ */
-        /* SCENE 4 — AI Gatekeeper               */
-        /* ══════════════════════════════════════ */
-        .s4-body {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 40px;
-            gap: 0;
-        }
-        .s4-left {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-        }
-        .s4-gate {
-            width: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            gap: 0;
-            position: relative;
-        }
-        .s4-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-        }
-        .factory-sm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .factory-sm-chimney {
-            width: 5px; height: 8px;
-            border-radius: 1px;
-            align-self: flex-end;
-            margin-right: 5px;
-        }
-        .factory-sm-roof {
-            width: 0; height: 0;
-        }
-        .factory-sm-body {
-            border-radius: 2px;
-        }
-        .gate-pillar {
-            width: 18px;
-            height: 260px;
-            border-radius: 9px;
-        }
-        .gate-top {
-            width: 160px;
-            height: 18px;
-            border-radius: 9px;
-            margin-bottom: -2px;
-        }
-        .gate-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 64px; height: 64px;
-            border-radius: 50%;
-            background: rgba(59,130,246,0.15);
-            border: 2px solid rgba(59,130,246,0.5);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 0 8px rgba(59,130,246,0.06), 0 0 40px 10px rgba(59,130,246,0.2);
-        }
-    </style>
+<meta charset="UTF-8">
+<title>问题定义 · RealSourcing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1280px; height:720px; overflow:hidden; background:#050510; font-family:'Inter','Noto Sans SC',sans-serif; color:#fff; }
+.slide { position:relative; width:1280px; height:720px; overflow:hidden; }
+.bg-grid { position:absolute; inset:0; z-index:0;
+  background-image: linear-gradient(rgba(79,110,247,0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(79,110,247,0.04) 1px, transparent 1px);
+  background-size:80px 80px; }
+.bg-orb { position:absolute; border-radius:50%; filter:blur(80px); z-index:0; }
+.orb1 { width:500px; height:500px; background:rgba(239,68,68,0.07); top:-120px; right:-100px; }
+.orb2 { width:350px; height:350px; background:rgba(79,110,247,0.06); bottom:-80px; left:-60px; }
+.eyebrow { position:absolute; top:44px; left:64px; z-index:10;
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); }
+.eyebrow::before { content:""; display:block; width:24px; height:1px; background:rgba(255,255,255,0.2); }
+.headline { position:absolute; top:68px; left:64px; z-index:10;
+  opacity:0; animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.2s; }
+.headline h1 { font-size:40px; font-weight:900; line-height:1.1; letter-spacing:-1px; }
+.headline .sub { margin-top:10px; font-size:13.5px; color:rgba(255,255,255,0.38); font-weight:400; }
+.pain-grid { position:absolute; left:64px; right:64px; top:182px; bottom:72px;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; z-index:10; }
+.pain-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px; padding:28px 26px 22px;
+  display:flex; flex-direction:column;
+  opacity:0; transform:translateY(24px); }
+.pain-card.c1 { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.4s; }
+.pain-card.c2 { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.6s; }
+.pain-card.c3 { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.8s; }
+.pain-icon { width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:18px; }
+.pain-card.c1 .pain-icon { background:rgba(239,68,68,0.12); }
+.pain-card.c2 .pain-icon { background:rgba(249,115,22,0.12); }
+.pain-card.c3 .pain-icon { background:rgba(234,179,8,0.12); }
+.pain-num { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+.pain-card.c1 .pain-num { color:rgba(239,68,68,0.7); }
+.pain-card.c2 .pain-num { color:rgba(249,115,22,0.7); }
+.pain-card.c3 .pain-num { color:rgba(234,179,8,0.7); }
+.pain-title { font-size:20px; font-weight:800; color:#fff; line-height:1.2; margin-bottom:12px; }
+.pain-desc { font-size:12.5px; color:rgba(255,255,255,0.45); line-height:1.8; flex:1; }
+.pain-desc em { font-style:normal; color:rgba(255,255,255,0.75); font-weight:600; }
+.pain-stat { margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:baseline; gap:8px; }
+.pain-stat .big { font-size:28px; font-weight:900; letter-spacing:-0.5px; }
+.pain-card.c1 .pain-stat .big { color:#EF4444; }
+.pain-card.c2 .pain-stat .big { color:#F97316; }
+.pain-card.c3 .pain-stat .big { color:#EAB308; }
+.pain-stat .unit { font-size:11px; color:rgba(255,255,255,0.32); font-weight:500; line-height:1.4; }
+.bottom-statement { position:absolute; bottom:22px; left:0; right:0; z-index:10; text-align:center;
+  opacity:0; animation: fadeUp 0.8s ease-out forwards 1.2s; }
+.bottom-statement p { font-size:12.5px; color:rgba(255,255,255,0.25); letter-spacing:0.3px; }
+.bottom-statement strong { color:rgba(255,255,255,0.55); font-weight:700; }
+.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2px; z-index:30;
+  background:linear-gradient(90deg,#4F6EF7,#06B6D4,#10B981,#F97316); }
+.slide-num { position:absolute; bottom:6px; right:38px; font-size:10px;
+  color:rgba(255,255,255,0.1); font-family:'JetBrains Mono',monospace; z-index:30; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+</style>
 </head>
 <body>
-<div class="slide-container" id="carousel" onclick="nextScene()">
-
-    <!-- ════════════════════════════════════ -->
-    <!-- SCENE 1 — 买家在分化                -->
-    <!-- ════════════════════════════════════ -->
-    <div class="scene active" id="scene-0">
-        <div class="scene-header">
-            <span class="scene-label">Problem · 01 — 买家结构</span>
-            <span class="scene-counter">1 / 4</span>
-        </div>
-        <div class="s1-body">
-            <!-- Left: 大客户 -->
-            <div class="s1-half">
-                <div class="triangle-hero"></div>
-                <div style="text-align:center;">
-                    <div class="s1-title" style="color:#93c5fd;">大客户</div>
-                    <div class="s1-sub" style="color:#334155; margin-top:8px;">沃尔玛 · Costco · 大型零售商</div>
-                </div>
-                <div class="s1-tag" style="background:rgba(59,130,246,0.1); color:#60a5fa; border:1px solid rgba(59,130,246,0.25);">
-                    追求稳定 · 非必要不换供应商
-                </div>
-                <div style="font-size:12px; color:#1e3a5f; text-align:center; line-height:1.6; max-width:260px;">
-                    已用 AI 管理非长尾供应商<br>
-                    <span style="color:#334155;">无 AI 能力 = 无法进入采购名单</span>
-                </div>
-            </div>
-
-            <!-- Divider -->
-            <div class="s1-divider">
-                <div class="s1-divider-label">你追求什么？</div>
-            </div>
-
-            <!-- Right: 中小客户 -->
-            <div class="s1-half">
-                <div class="hexagon-hero"></div>
-                <div style="text-align:center;">
-                    <div class="s1-title" style="color:#fdba74;">中小客户</div>
-                    <div class="s1-sub" style="color:#334155; margin-top:8px;">独立品牌 · 电商卖家 · 新兴买家</div>
-                </div>
-                <div class="s1-tag" style="background:rgba(249,115,22,0.1); color:#fb923c; border:1px solid rgba(249,115,22,0.25);">
-                    追求利润 · 用 AI 降低采购成本
-                </div>
-                <div style="font-size:12px; color:#1e3a5f; text-align:center; line-height:1.6; max-width:260px;">
-                    从 ChatGPT 开始采购旅程<br>
-                    <span style="color:#334155;">AI 找不到你 = 你不存在</span>
-                </div>
-            </div>
-        </div>
+<div class="slide">
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="eyebrow">The Problem &middot; 问题所在</div>
+  <div class="headline">
+    <h1><span style="color:rgba(255,255,255,0.85)">全球买家每天都在</span><span style="color:#EF4444">盲目采购</span></h1>
+    <p class="sub">跨境贸易的三道墙，让每一笔订单都充满风险</p>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card c1">
+      <div class="pain-icon">&#127807;</div>
+      <div class="pain-num">Pain 01</div>
+      <div class="pain-title">工厂是黑盒</div>
+      <div class="pain-desc">买家无法验证工厂<em>真实产能</em>与<em>质量水平</em>。目录平台上的数据由工厂自填，没有第三方验证，没有历史交付记录，每次合作都是一次<em>赌注</em>。</div>
+      <div class="pain-stat">
+        <span class="big">72%</span>
+        <span class="unit">的买家曾因供应商<br>信息失真遭受损失</span>
+      </div>
     </div>
-
-    <!-- ════════════════════════════════════ -->
-    <!-- SCENE 2 — AI成为新采购入口          -->
-    <!-- ════════════════════════════════════ -->
-    <div class="scene" id="scene-1">
-        <div class="scene-header">
-            <span class="scene-label">Problem · 02 — AI 采购入口</span>
-            <span class="scene-counter">2 / 4</span>
-        </div>
-        <div class="s2-body">
-
-            <!-- Flow diagram -->
-            <div class="s2-flow">
-
-                <!-- Node: Buyers -->
-                <div class="s2-node" style="width:180px;">
-                    <div class="s2-node-icon" style="background:rgba(59,130,246,0.08); border:2px solid rgba(59,130,246,0.25);">
-                        <span style="font-size:40px;">🌍</span>
-                    </div>
-                    <div style="text-align:center;">
-                        <div style="font-size:14px; font-weight:700; color:#93c5fd;">海外买家</div>
-                        <div style="font-size:11px; color:#334155; margin-top:4px;">大客户 + 中小客户</div>
-                    </div>
-                    <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:3px 14px; font-size:10px; color:#10b981; font-weight:700;">
-                        ✓ 已接入 AI
-                    </div>
-                </div>
-
-                <!-- Connector 1: solid -->
-                <div class="s2-connector">
-                    <div class="s2-line-solid"></div>
-                    <div style="font-size:10px; color:#10b981; font-weight:600; white-space:nowrap;">采购旅程从 AI 开始</div>
-                </div>
-
-                <!-- Node: ChatGPT -->
-                <div class="s2-node" style="width:160px;">
-                    <div style="width:110px; height:110px; border-radius:50%; background:rgba(59,130,246,0.08); border:2px solid rgba(59,130,246,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 10px rgba(59,130,246,0.06), 0 0 60px 15px rgba(59,130,246,0.2);">
-                        <img src="/home/ubuntu/realsourcing_pitch_cn/chatgpt_logo.png" style="width:64px; height:64px; object-fit:contain; filter:brightness(0) invert(1);" />
-                    </div>
-                    <div style="text-align:center;">
-                        <div style="font-size:15px; font-weight:800; color:#fff;">ChatGPT</div>
-                        <div style="font-size:10px; color:#475569; margin-top:3px;">AI 采购决策层</div>
-                    </div>
-                </div>
-
-                <!-- Connector 2: dashed broken -->
-                <div class="s2-connector">
-                    <div style="width:100%; display:flex; align-items:center; gap:0;">
-                        <div style="flex:1; height:3px; background:repeating-linear-gradient(90deg,#ef4444 0,#ef4444 10px,transparent 10px,transparent 20px);"></div>
-                        <div class="s2-break">✗</div>
-                        <div style="flex:1; height:3px; background:repeating-linear-gradient(90deg,#ef4444 0,#ef4444 10px,transparent 10px,transparent 20px);"></div>
-                    </div>
-                    <div style="font-size:10px; color:#f87171; font-weight:600; white-space:nowrap; margin-top:8px;">工厂尚未接入</div>
-                </div>
-
-                <!-- Node: Factories -->
-                <div class="s2-node" style="width:180px;">
-                    <div class="s2-node-icon" style="background:rgba(239,68,68,0.06); border:2px solid rgba(239,68,68,0.2);">
-                        <span style="font-size:40px;">🏭</span>
-                    </div>
-                    <div style="text-align:center;">
-                        <div style="font-size:14px; font-weight:700; color:#fca5a5;">中国工厂</div>
-                        <div style="font-size:11px; color:#334155; margin-top:4px;">大多数尚未 AI 化</div>
-                    </div>
-                    <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:20px; padding:3px 14px; font-size:10px; color:#f87171; font-weight:700;">
-                        ✗ 报价无法送达买家
-                    </div>
-                </div>
-
-            </div><!-- end flow -->
-
-            <!-- Stats row -->
-            <div class="s2-stats">
-                <div class="s2-stat">
-                    <div class="s2-stat-num" style="color:#60a5fa;">90<span style="font-size:28px; font-weight:700;">%</span></div>
-                    <div style="font-size:12px; font-weight:600; color:#cbd5e1; margin-top:6px; line-height:1.4;">B2B 买家在采购中使用 ChatGPT</div>
-                    <div style="font-size:9px; color:#1e3a5f; margin-top:6px; font-family:'JetBrains Mono',monospace;">Superprompt B2B Research, 2025</div>
-                </div>
-                <div class="s2-stat">
-                    <div class="s2-stat-num" style="color:#34d399;">50<span style="font-size:28px; font-weight:700;">%</span></div>
-                    <div style="font-size:12px; font-weight:600; color:#cbd5e1; margin-top:6px; line-height:1.4;">买家从 AI 而非 Google 开始供应商搜索</div>
-                    <div style="font-size:9px; color:#1e3a5f; margin-top:6px; font-family:'JetBrains Mono',monospace;">Superprompt B2B Research, 2025</div>
-                </div>
-                <div class="s2-stat">
-                    <div class="s2-stat-num" style="color:#fb923c;">45<span style="font-size:28px; font-weight:700;">%</span></div>
-                    <div style="font-size:12px; font-weight:600; color:#cbd5e1; margin-top:6px; line-height:1.4;">买家将 AI 列为寻找供应商的主要方式</div>
-                    <div style="font-size:9px; color:#1e3a5f; margin-top:6px; font-family:'JetBrains Mono',monospace;">Magenta Associates, Nov 2025</div>
-                </div>
-            </div>
-
-        </div>
+    <div class="pain-card c2">
+      <div class="pain-icon">&#9203;</div>
+      <div class="pain-num">Pain 02</div>
+      <div class="pain-title">询价是噩梦</div>
+      <div class="pain-desc">一次采购需要联系<em>10&ndash;30家</em>供应商，等待报价平均<em>3&ndash;7天</em>，还要手动整理、比价、跟进。时间成本让中小买家根本无力规模化采购。</div>
+      <div class="pain-stat">
+        <span class="big">5.4天</span>
+        <span class="unit">平均等待首次<br>有效报价的时间</span>
+      </div>
     </div>
-
-    <!-- ════════════════════════════════════ -->
-    <!-- SCENE 3 — 数据                      -->
-    <!-- ════════════════════════════════════ -->
-    <div class="scene" id="scene-2">
-        <div class="scene-header">
-            <span class="scene-label">Problem · 03 — 采购行为数据</span>
-            <span class="scene-counter">3 / 4</span>
-        </div>
-        <div class="s3-body">
-
-            <!-- Stat 1 -->
-            <div class="s3-card">
-                <div style="display:flex; align-items:flex-end; gap:4px;">
-                    <div class="s3-num" style="color:#3b82f6;">45</div>
-                    <div class="s3-pct" style="color:#3b82f6; padding-bottom:14px;">%</div>
-                </div>
-                <div class="s3-desc">买家将 AI 列为<br>寻找新供应商的<strong style="color:#93c5fd;">主要方式</strong></div>
-                <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
-                    <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#334155;">
-                        <div style="width:32px; height:3px; background:#3b82f6; border-radius:2px; flex-shrink:0;"></div>
-                        AI 渠道 45%
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#1e3a5f;">
-                        <div style="width:29px; height:3px; background:#334155; border-radius:2px; flex-shrink:0;"></div>
-                        LinkedIn 41%
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#1e3a5f;">
-                        <div style="width:24px; height:3px; background:#1e3a5f; border-radius:2px; flex-shrink:0;"></div>
-                        行业媒体 34%
-                    </div>
-                </div>
-                <div class="s3-sub">Magenta Associates, Nov 2025</div>
-            </div>
-
-            <div class="s3-divider"></div>
-
-            <!-- Stat 2 -->
-            <div class="s3-card">
-                <div style="display:flex; align-items:flex-end; gap:4px;">
-                    <div class="s3-num" style="color:#f97316;">94</div>
-                    <div class="s3-pct" style="color:#f97316; padding-bottom:14px;">%</div>
-                </div>
-                <div class="s3-desc">采购高管每周至少<br>使用一次<strong style="color:#fdba74;">生成式 AI</strong></div>
-                <div style="margin-top:8px; background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.2); border-radius:10px; padding:12px 16px;">
-                    <div style="font-size:12px; color:#fb923c; font-weight:600; margin-bottom:4px;">较 2023 年增长 +44pp</div>
-                    <div style="font-size:11px; color:#334155; line-height:1.5;">AI 已从"实验工具"<br>变为采购标配</div>
-                </div>
-                <div class="s3-sub">AI at Wharton · State of AI in Procurement, 2026</div>
-            </div>
-
-        </div>
+    <div class="pain-card c3">
+      <div class="pain-icon">&#128201;</div>
+      <div class="pain-num">Pain 03</div>
+      <div class="pain-title">成长有天花板</div>
+      <div class="pain-desc">中小买家没有<em>议价能力</em>，拿不到工厂直供价，无法享受大买家的<em>专属服务</em>与<em>柔性定制</em>。规模越小，成本越高，竞争越难。</div>
+      <div class="pain-stat">
+        <span class="big">38%</span>
+        <span class="unit">的利润差距来自<br>采购价格不透明</span>
+      </div>
     </div>
-
-    <!-- ════════════════════════════════════ -->
-    <!-- SCENE 4 — AI守门员·结论             -->
-    <!-- ════════════════════════════════════ -->
-    <div class="scene" id="scene-3">
-        <div class="scene-header">
-            <span class="scene-label">Problem · 04 — AI 守门员</span>
-            <span class="scene-counter">4 / 4</span>
-        </div>
-        <div class="s4-body">
-
-            <!-- Left: Factories queuing -->
-            <div class="s4-left">
-                <div style="font-size:11px; color:#475569; font-weight:600; letter-spacing:0.06em; margin-bottom:8px;">排队中的工厂</div>
-                <!-- Row of factories -->
-                <div style="display:flex; gap:18px; align-items:flex-end; justify-content:center;">
-                    <!-- Green factories (AI-capable) -->
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-                        <div style="font-size:9px; color:#10b981; font-weight:600;">AI 工厂</div>
-                        <div style="display:flex; gap:10px;">
-                            <div class="factory-sm" style="filter:drop-shadow(0 0 10px rgba(16,185,129,0.9));">
-                                <div class="factory-sm-chimney" style="background:#10b981;"></div>
-                                <div class="factory-sm-roof" style="border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:11px solid #10b981;"></div>
-                                <div class="factory-sm-body" style="width:30px; height:22px; background:#10b981;"></div>
-                            </div>
-                            <div class="factory-sm" style="filter:drop-shadow(0 0 10px rgba(52,211,153,0.9));">
-                                <div class="factory-sm-chimney" style="background:#34d399;"></div>
-                                <div class="factory-sm-roof" style="border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:11px solid #34d399;"></div>
-                                <div class="factory-sm-body" style="width:30px; height:22px; background:#34d399;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Grey factories (no AI) -->
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0.35;">
-                        <div style="font-size:9px; color:#475569; font-weight:600;">普通工厂</div>
-                        <div style="display:flex; gap:8px;">
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                            <div class="factory-sm">
-                                <div class="factory-sm-chimney" style="background:#475569;"></div>
-                                <div class="factory-sm-roof" style="border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:9px solid #475569;"></div>
-                                <div class="factory-sm-body" style="width:24px; height:18px; background:#475569;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow pointing right -->
-                <div style="display:flex; align-items:center; gap:8px; margin-top:16px;">
-                    <div style="flex:1; height:2px; background:linear-gradient(90deg,transparent,#3b82f6);"></div>
-                    <div style="color:#3b82f6; font-size:20px;">▶</div>
-                </div>
-
-                <!-- Rejected label -->
-                <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:10px 20px; text-align:center; margin-top:8px;">
-                    <div style="font-size:11px; color:#f87171; font-weight:700;">6 家普通工厂被过滤</div>
-                    <div style="font-size:10px; color:#334155; margin-top:3px;">报价永远无法送达买家</div>
-                </div>
-            </div>
-
-            <!-- Center: AI Gate -->
-            <div class="s4-gate">
-                <!-- Top bar -->
-                <div class="gate-top" style="background:linear-gradient(90deg,#1d4ed8,#3b82f6,#1d4ed8); box-shadow:0 0 30px rgba(59,130,246,0.6);"></div>
-                <!-- Two pillars + logo -->
-                <div style="display:flex; gap:80px; position:relative;">
-                    <div class="gate-pillar" style="background:linear-gradient(to bottom,#3b82f6,#1d4ed8); box-shadow:0 0 20px rgba(59,130,246,0.5);"></div>
-                    <div class="gate-pillar" style="background:linear-gradient(to bottom,#3b82f6,#1d4ed8); box-shadow:0 0 20px rgba(59,130,246,0.5);"></div>
-                    <!-- ChatGPT logo in gate center -->
-                    <div class="gate-logo">
-                        <img src="/home/ubuntu/realsourcing_pitch_cn/chatgpt_logo.png" style="width:36px; height:36px; object-fit:contain; filter:brightness(0) invert(1);" />
-                    </div>
-                </div>
-                <div style="margin-top:16px; text-align:center;">
-                    <div style="font-size:11px; font-weight:700; color:#60a5fa; letter-spacing:0.06em;">AI 守门员</div>
-                    <div style="font-size:9px; color:#1e3a5f; margin-top:4px;">2026 年采购准入门槛</div>
-                </div>
-            </div>
-
-            <!-- Right: Buyer receives -->
-            <div class="s4-right">
-                <!-- Arrow from gate -->
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-                    <div style="color:#10b981; font-size:20px;">▶</div>
-                    <div style="flex:1; height:2px; background:linear-gradient(90deg,#10b981,transparent);"></div>
-                </div>
-
-                <!-- Buyer icon -->
-                <div style="width:90px; height:90px; border-radius:50%; background:rgba(16,185,129,0.08); border:2px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(16,185,129,0.2); font-size:42px;">
-                    🛒
-                </div>
-                <div style="text-align:center; margin-top:12px;">
-                    <div style="font-size:14px; font-weight:700; color:#6ee7b7;">海外采购商</div>
-                    <div style="font-size:11px; color:#334155; margin-top:4px;">只看到 AI 推荐的工厂</div>
-                </div>
-
-                <!-- Only sees green factories -->
-                <div style="display:flex; gap:10px; margin-top:16px;">
-                    <div class="factory-sm" style="filter:drop-shadow(0 0 10px rgba(16,185,129,0.9));">
-                        <div class="factory-sm-chimney" style="background:#10b981;"></div>
-                        <div class="factory-sm-roof" style="border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:11px solid #10b981;"></div>
-                        <div class="factory-sm-body" style="width:30px; height:22px; background:#10b981;"></div>
-                    </div>
-                    <div class="factory-sm" style="filter:drop-shadow(0 0 10px rgba(52,211,153,0.9));">
-                        <div class="factory-sm-chimney" style="background:#34d399;"></div>
-                        <div class="factory-sm-roof" style="border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:11px solid #34d399;"></div>
-                        <div class="factory-sm-body" style="width:30px; height:22px; background:#34d399;"></div>
-                    </div>
-                </div>
-                <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:10px; padding:10px 20px; text-align:center; margin-top:8px;">
-                    <div style="font-size:11px; color:#10b981; font-weight:700;">2 家 AI 工厂脱颖而出</div>
-                    <div style="font-size:10px; color:#334155; margin-top:3px;">获得报价机会</div>
-                </div>
-
-                <!-- Bottom warning -->
-                <div style="margin-top:20px; border-top:1px solid rgba(249,115,22,0.2); padding-top:14px; text-align:center; max-width:280px;">
-                    <div style="font-size:13px; font-weight:800; color:#f97316; line-height:1.5;">
-                        2026 年的采购门槛
-                    </div>
-                    <div style="font-size:12px; color:#cbd5e1; margin-top:4px; line-height:1.5;">
-                        不是价格，不是质量<br>
-                        <strong style="color:#fff;">而是——你能被 AI 找到吗？</strong>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ── Dot Navigation ── -->
-    <div class="dot-nav" id="dotNav">
-        <div class="dot active" onclick="goToScene(0, event)"></div>
-        <div class="dot" onclick="goToScene(1, event)"></div>
-        <div class="dot" onclick="goToScene(2, event)"></div>
-        <div class="dot" onclick="goToScene(3, event)"></div>
-    </div>
-
-    <!-- ── Arrow Navigation ── -->
-    <div class="arrow-nav">
-        <div class="arrow-btn" onclick="prevScene(event)">◀</div>
-        <div class="arrow-btn" onclick="nextScene()">▶</div>
-    </div>
-
+  </div>
+  <div class="bottom-statement">
+    <p>这不是平台功能不够好的问题 &mdash; 这是<strong>整个采购范式需要被重构</strong>的问题</p>
+  </div>
+  <div class="slide-num">02 / 22</div>
+  <div class="bottom-bar"></div>
 </div>
-
-<script>
-    let current = 0;
-    const total = 4;
-
-    function goToScene(index, e) {
-        if (e) e.stopPropagation();
-        if (index === current) return;
-        const scenes = document.querySelectorAll('.scene');
-        const dots = document.querySelectorAll('.dot');
-        scenes[current].classList.remove('active');
-        scenes[current].classList.add('exit');
-        setTimeout(() => { scenes[current].classList.remove('exit'); }, 600);
-        current = index;
-        scenes[current].classList.add('active');
-        dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    }
-
-    function nextScene() {
-        if (current < total - 1) goToScene(current + 1, null);
-    }
-
-    function prevScene(e) {
-        if (e) e.stopPropagation();
-        if (current > 0) goToScene(current - 1, null);
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === ' ') nextScene();
-        if (e.key === 'ArrowLeft') prevScene(null);
-    });
-</script>
 </body>
 </html>
