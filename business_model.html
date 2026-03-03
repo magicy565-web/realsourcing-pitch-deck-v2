@@ -29,6 +29,21 @@
         .glabel-title { font-size:14px; font-weight:800; color:#fff; white-space:nowrap; }
         .glabel-sub { font-size:10.5px; color:rgba(255,255,255,0.4); white-space:nowrap; }
         .glabel-badge { border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700; border:1px solid; white-space:nowrap; margin-top:2px; }
+        .glabel-divider { width:100%; height:1px; background:rgba(255,255,255,0.08); margin:5px 0; }
+        .glabel-fin { display:flex; flex-direction:column; gap:3px; width:100%; }
+        .glabel-fin-row { display:flex; align-items:baseline; gap:5px; white-space:nowrap; }
+        .glabel-fin-num { font-size:18px; font-weight:900; line-height:1; }
+        .glabel-fin-unit { font-size:10px; color:rgba(255,255,255,0.4); }
+        .glabel-fin-detail { font-size:10px; color:rgba(255,255,255,0.35); line-height:1.5; }
+        /* 飞轮逻辑链 overlay */
+        #flywheel-chain { position:absolute; inset:0; pointer-events:none; z-index:14; }
+        .chain-node { position:absolute; transform:translate(-50%,-50%); opacity:0; transition:opacity 1.2s; }
+        .chain-node.show { opacity:1; }
+        .chain-pill { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+            border-radius:100px; padding:4px 12px; font-size:10.5px; font-weight:600;
+            color:rgba(255,255,255,0.6); white-space:nowrap; backdrop-filter:blur(4px); }
+        .chain-pill.highlight { background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.3); color:#FDBA74; }
+        .chain-arrow { font-size:10px; color:rgba(255,255,255,0.25); margin:0 2px; }
         .timeline { position:absolute; bottom:14px; left:80px; right:80px; z-index:20; opacity:0; animation:fadeInUp 0.7s ease-out forwards 1s; }
         .timeline-track { height:3px; background:rgba(255,255,255,0.08); border-radius:2px; }
         .timeline-fill { height:100%; border-radius:2px; width:0%; background:linear-gradient(90deg,#F97316,#FBBF24,#10B981); transition:width 0.1s linear; }
@@ -62,25 +77,61 @@
     <div class="gear-stage">
         <canvas id="gear-canvas"></canvas>
         <div class="gear-labels" id="gear-labels">
+            <!-- Label A: 工厂订阅 -->
             <div class="gear-label" id="label-a">
                 <div class="glabel-icon">&#127981;</div>
                 <div class="glabel-title">工厂订阅</div>
                 <div class="glabel-sub">Factory SaaS</div>
                 <div class="glabel-badge" style="background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3);color:#FDBA74;">月费 + 成交佣金</div>
+                <div class="glabel-divider"></div>
+                <div class="glabel-fin">
+                    <div class="glabel-fin-row">
+                        <span class="glabel-fin-num" style="color:#FDBA74;">¥19,800</span>
+                        <span class="glabel-fin-unit">/ 工厂 / 年</span>
+                    </div>
+                    <div class="glabel-fin-detail">目标 1,000 家工厂<br>潜在 ARR &asymp; <strong style="color:#FDBA74;">¥1,980万</strong></div>
+                </div>
             </div>
+            <!-- Label B: 采购佣金 -->
             <div class="gear-label" id="label-b">
                 <div class="glabel-icon">&#128200;</div>
                 <div class="glabel-title">采购佣金</div>
                 <div class="glabel-sub">Buyer Commission</div>
                 <div class="glabel-badge" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:#6EE7B7;">GMV &times; 2&ndash;5%</div>
+                <div class="glabel-divider"></div>
+                <div class="glabel-fin">
+                    <div class="glabel-fin-row">
+                        <span class="glabel-fin-num" style="color:#34D399;">3%</span>
+                        <span class="glabel-fin-unit">平均抽成比例</span>
+                    </div>
+                    <div class="glabel-fin-detail">目标 GMV $10M<br>潜在收入 &asymp; <strong style="color:#34D399;">$300K</strong></div>
+                </div>
             </div>
+            <!-- Label C: 增值服务 -->
             <div class="gear-label" id="label-c">
                 <div class="glabel-icon">&#9889;</div>
                 <div class="glabel-title">增值服务</div>
                 <div class="glabel-sub">Value-added Services</div>
                 <div class="glabel-badge" style="background:rgba(79,110,247,0.12);border-color:rgba(79,110,247,0.3);color:#A5B8FF;">质检 &middot; 物流 &middot; 金融</div>
+                <div class="glabel-divider"></div>
+                <div class="glabel-fin">
+                    <div class="glabel-fin-row">
+                        <span class="glabel-fin-num" style="color:#A5B8FF;">$50</span>
+                        <span class="glabel-fin-unit">客单价</span>
+                    </div>
+                    <div class="glabel-fin-detail">渗透率 20% 时<br>潜在收入 &asymp; <strong style="color:#A5B8FF;">$100K+</strong></div>
+                </div>
             </div>
         </div>
+    </div>
+    <!-- 飞轮逻辑链 overlay -->
+    <div id="flywheel-chain">
+        <!-- 节点由 JS 动态定位 -->
+        <div class="chain-node" id="cn-0"><span class="chain-pill highlight">工厂越多</span></div>
+        <div class="chain-node" id="cn-1"><span class="chain-pill">报价越快</span></div>
+        <div class="chain-node" id="cn-2"><span class="chain-pill highlight">买家越多</span></div>
+        <div class="chain-node" id="cn-3"><span class="chain-pill">数据越准</span></div>
+        <div class="chain-node" id="cn-4"><span class="chain-pill highlight">工厂越依赖</span></div>
     </div>
     <div class="timeline">
         <div class="timeline-track"><div class="timeline-fill" id="timeline-fill"></div></div>
@@ -194,9 +245,24 @@
         var lA=document.getElementById('label-a');
         var lB=document.getElementById('label-b');
         var lC=document.getElementById('label-c');
-        lA.style.cssText='left:'+(AX-RA-168)+'px;top:'+(AY-50)+'px;align-items:flex-end;';
-        lB.style.cssText='left:'+(BX+RB+12)+'px;top:'+(BY-50)+'px;align-items:flex-start;';
-        lC.style.cssText='left:'+(CX-85)+'px;top:'+(CY-RC-98)+'px;align-items:center;width:170px;';
+        lA.style.cssText='left:'+(AX-RA-168)+'px;top:'+(AY-60)+'px;align-items:flex-end;';
+        lB.style.cssText='left:'+(BX+RB+12)+'px;top:'+(BY-60)+'px;align-items:flex-start;';
+        lC.style.cssText='left:'+(CX-85)+'px;top:'+(CY-RC-130)+'px;align-items:center;width:170px;';
+        // 飞轮逻辑链节点定位：在三个齿轮中心连线上均匀分布
+        // 内圈圆心坐标：AX,AY / BX,BY / CX,CY
+        // 节点布局：左下齿轮上方 / AB中点上方 / 右下齿轮上方 / BC中点 / 顶部齿轮左方
+        var chainPos=[
+            {x:AX, y:AY-RA-22},          // cn-0: 工厂越多 - 左下齿轮正上方
+            {x:(AX+BX)/2, y:AY-28},      // cn-1: 报价越快 - AB中点上方
+            {x:BX, y:BY-RB-22},          // cn-2: 买家越多 - 右下齿轮正上方
+            {x:(BX+CX)/2+18, y:(BY+CY)/2-10}, // cn-3: 数据越准 - BC中点偶方
+            {x:CX-RC-55, y:CY+10}        // cn-4: 工厂越依赖 - 顶部齿轮左方
+        ];
+        for(var i=0;i<5;i++){
+            var el=document.getElementById('cn-'+i);
+            el.style.left=chainPos[i].x+'px';
+            el.style.top=(chainPos[i].y+88)+'px'; // +88 for gear-stage offset
+        }
     }
     var stEl=document.getElementById('flywheel-status');
     var tlF=document.getElementById('timeline-fill');
@@ -239,6 +305,11 @@
             document.getElementById('label-a').classList.add('show');
             document.getElementById('label-b').classList.add('show');
             document.getElementById('label-c').classList.add('show');
+        }
+        // 飞轮逻辑链节点渐进展示（随飞轮加速逐一出现）
+        var chainDelay=[1500,2800,4500,6500,9000];
+        for(var ci=0;ci<5;ci++){
+            if(el>chainDelay[ci]) document.getElementById('cn-'+ci).classList.add('show');
         }
         updUI(t);
         requestAnimationFrame(t<1?frame:loop);
