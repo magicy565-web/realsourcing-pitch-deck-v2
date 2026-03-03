@@ -72,10 +72,11 @@
         .big-num { font-size:28px; font-weight:900; line-height:1; }
         .big-unit { font-size:12px; font-weight:600; color:rgba(255,255,255,0.5); }
 
-        /* Tags row */
-        .tags { display:flex; flex-wrap:wrap; gap:5px; }
-        .tag { border-radius:6px; padding:3px 8px; font-size:10px; font-weight:700;
-            border:1px solid; white-space:nowrap; }
+        /* Tags row — 评语气泡 */
+        .tags { display:flex; flex-direction:column; gap:6px; }
+        .tag { border-radius:8px; padding:6px 11px; font-size:12.5px; font-weight:600;
+            border:1px solid; line-height:1.45; }
+        .tag-em { font-weight:800; font-size:13px; }
 
         /* Quote */
         .card-quote { font-size:10.5px; color:rgba(255,255,255,0.28); font-style:italic;
@@ -158,11 +159,9 @@
                     <div class="big-unit">/ 月 额外收入</div>
                 </div>
                 <div class="tags">
-                    <span class="tag">零经验起步</span>
-                    <span class="tag">20min 收到报价</span>
-                    <span class="tag">在校期间创业</span>
+                    <span class="tag tag-em">"以前觉得从中国采购很复杂，<br>现在感觉就像在用 Amazon 购物一样简单。"</span>
+                    <span class="tag">"20 分钟就收到报价，我当时以为是假的。"</span>
                 </div>
-                <div class="card-quote">"感觉就像在用 Amazon 购物一样简单。"</div>
             </div>
         </div>
 
@@ -182,11 +181,9 @@
                     <div class="big-unit">每单利润 vs 速卖通</div>
                 </div>
                 <div class="tags">
-                    <span class="tag">直连工厂</span>
-                    <span class="tag">半年利润 ↑ 数万$</span>
-                    <span class="tag">3家独家合作</span>
+                    <span class="tag tag-em">"我们终于知道货从哪里来，<br>价格比速卖通透明太多了。"</span>
+                    <span class="tag">"半年省下的钱，够我们开第二家店了。"</span>
                 </div>
-                <div class="card-quote">"价格比以前透明太多了。"</div>
             </div>
         </div>
 
@@ -206,11 +203,9 @@
                     <div class="big-unit">收入增长</div>
                 </div>
                 <div class="tags">
-                    <span class="tag">AI 自动接单</span>
-                    <span class="tag">永不打烊的分店</span>
-                    <span class="tag">零增员</span>
+                    <span class="tag tag-em">"AI 帮我接单，我只需要确认发货，<br>这相当于多开了一家不用关门的分店。"</span>
+                    <span class="tag">"没加一个人，收入涨了 40%。"</span>
                 </div>
-                <div class="card-quote">"AI 帮我接单，我只需要确认发货。"</div>
             </div>
         </div>
 
@@ -230,11 +225,9 @@
                     <div class="big-unit">打入德国电商市场</div>
                 </div>
                 <div class="tags">
-                    <span class="tag">中国直运</span>
-                    <span class="tag">零库存压力</span>
-                    <span class="tag">本地→线上品牌</span>
+                    <span class="tag tag-em">"没想到我们的毛毯能卖到德国，<br>而且利润比本地还高。"</span>
+                    <span class="tag">"从中国直运，我连仓库都不用租了。"</span>
                 </div>
-                <div class="card-quote">"没想到我们的产品能卖到德国。"</div>
             </div>
         </div>
 
