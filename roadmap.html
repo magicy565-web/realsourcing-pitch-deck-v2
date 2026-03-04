@@ -10,18 +10,22 @@
 html, body { width: 1280px; height: 720px; overflow: hidden; background: #050510; font-family: "Inter", "Noto Sans SC", sans-serif; color: #fff; }
 .bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,110,247,0.08) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 0% 100%, rgba(16,185,129,0.05) 0%, transparent 60%), #050510; }
 .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 64px 64px; }
-.slide { position: relative; width: 1280px; height: 720px; display: flex; flex-direction: column; padding: 36px 56px 28px; }
-.header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
-.label { display: inline-flex; align-items: center; gap: 6px; background: rgba(79,110,247,0.12); border: 1px solid rgba(79,110,247,0.25); border-radius: 20px; padding: 4px 12px; font-size: 10px; font-weight: 700; color: #8BA4FF; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.slide { position: relative; width: 1280px; height: 720px; display: flex; flex-direction: column; padding: 28px 48px 20px; }
+
+/* Header */
+.header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-shrink: 0; }
+.label { display: inline-flex; align-items: center; gap: 6px; background: rgba(79,110,247,0.12); border: 1px solid rgba(79,110,247,0.25); border-radius: 20px; padding: 3px 10px; font-size: 9px; font-weight: 700; color: #8BA4FF; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
 .label-dot { width: 5px; height: 5px; border-radius: 50%; background: #4F6EF7; box-shadow: 0 0 6px #4F6EF7; }
-h1 { font-size: 28px; font-weight: 900; line-height: 1.15; }
+h1 { font-size: 26px; font-weight: 900; line-height: 1.15; }
 h1 span { color: #4F6EF7; }
-.subtitle { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; }
-.header-badge { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 8px 16px; text-align: center; }
+.subtitle { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+.header-badge { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
 .hb-num { font-size: 22px; font-weight: 900; color: #10B981; font-family: "JetBrains Mono"; }
 .hb-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; flex: 1; }
-.card { border-radius: 14px; border: 1px solid rgba(255,255,255,0.07); padding: 18px 18px 16px; display: flex; flex-direction: column; position: relative; overflow: hidden; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+
+/* Cards grid */
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; flex: 1; min-height: 0; }
+.card { border-radius: 14px; border: 1px solid rgba(255,255,255,0.07); padding: 14px 14px 12px; display: flex; flex-direction: column; position: relative; overflow: hidden; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; min-height: 0; }
 .card.visible { opacity: 1; transform: translateY(0); }
 .card-1 { background: linear-gradient(135deg, rgba(79,110,247,0.12) 0%, rgba(79,110,247,0.04) 100%); border-color: rgba(79,110,247,0.2); }
 .card-2 { background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(139,92,246,0.04) 100%); border-color: rgba(139,92,246,0.2); }
@@ -30,41 +34,65 @@ h1 span { color: #4F6EF7; }
 .card-1::before { background: linear-gradient(90deg, #4F6EF7, #8BA4FF); }
 .card-2::before { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
 .card-3::before { background: linear-gradient(90deg, #10B981, #34D399); }
-.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+
+/* Card header */
+.card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-shrink: 0; }
+.card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .card-1 .card-icon { background: rgba(79,110,247,0.2); }
 .card-2 .card-icon { background: rgba(139,92,246,0.2); }
 .card-3 .card-icon { background: rgba(16,185,129,0.2); }
-.card-num { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-family: "JetBrains Mono"; margin-bottom: 2px; }
+.card-num { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-family: "JetBrains Mono"; margin-bottom: 2px; }
 .card-1 .card-num { color: #4F6EF7; }
 .card-2 .card-num { color: #8B5CF6; }
 .card-3 .card-num { color: #10B981; }
-.card-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
-.timeline-badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 6px; padding: 3px 10px; font-size: 10px; font-weight: 700; font-family: "JetBrains Mono"; margin-bottom: 10px; width: fit-content; }
+.card-title { font-size: 13px; font-weight: 800; line-height: 1.2; }
+
+/* Timeline badge */
+.timeline-badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 6px; padding: 2px 8px; font-size: 9px; font-weight: 700; font-family: "JetBrains Mono"; margin-bottom: 8px; width: fit-content; flex-shrink: 0; }
 .card-1 .timeline-badge { background: rgba(79,110,247,0.15); color: #8BA4FF; border: 1px solid rgba(79,110,247,0.25); }
 .card-2 .timeline-badge { background: rgba(139,92,246,0.15); color: #C084FC; border: 1px solid rgba(139,92,246,0.25); }
 .card-3 .timeline-badge { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.25); }
-.milestones { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.milestone { display: flex; align-items: flex-start; gap: 8px; font-size: 11.5px; line-height: 1.5; color: rgba(255,255,255,0.72); }
-.milestone-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+/* Milestones */
+.milestones { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+.milestone { display: flex; align-items: flex-start; gap: 7px; font-size: 10.5px; line-height: 1.45; color: rgba(255,255,255,0.7); }
+.milestone-dot { width: 4px; height: 4px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
 .card-1 .milestone-dot { background: #4F6EF7; }
 .card-2 .milestone-dot { background: #8B5CF6; }
 .card-3 .milestone-dot { background: #10B981; }
 .milestone strong { color: #fff; font-weight: 700; }
-.kpi-row { display: flex; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
-.kpi { flex: 1; text-align: center; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 7px 4px; }
-.kpi-val { font-size: 14px; font-weight: 900; font-family: "JetBrains Mono"; line-height: 1; }
-.kpi-label { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 3px; }
+
+/* KPI row */
+.kpi-row { display: flex; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+.kpi { flex: 1; text-align: center; background: rgba(255,255,255,0.04); border-radius: 7px; padding: 5px 2px; }
+.kpi-val { font-size: 12px; font-weight: 900; font-family: "JetBrains Mono"; line-height: 1; }
+.kpi-label { font-size: 8px; color: rgba(255,255,255,0.35); margin-top: 2px; }
 .card-1 .kpi-val { color: #8BA4FF; }
 .card-2 .kpi-val { color: #C084FC; }
 .card-3 .kpi-val { color: #34D399; }
-.bottom-bar { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; opacity: 0; transform: translateY(10px); transition: opacity 0.6s ease 0.9s, transform 0.6s ease 0.9s; }
+
+/* Bottom bar */
+.bottom-bar { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; opacity: 0; transform: translateY(10px); transition: opacity 0.6s ease 0.9s, transform 0.6s ease 0.9s; flex-shrink: 0; }
 .bottom-bar.visible { opacity: 1; transform: translateY(0); }
-.bb-item { display: flex; align-items: center; gap: 8px; }
+.bb-item { display: flex; align-items: center; gap: 7px; }
 .bb-dot { width: 6px; height: 6px; border-radius: 50%; }
-.bb-text { font-size: 11px; color: rgba(255,255,255,0.45); }
+.bb-text { font-size: 10px; color: rgba(255,255,255,0.45); }
 .bb-text strong { color: rgba(255,255,255,0.8); }
-.bb-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.08); }
+.bb-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.08); }
+
+/* Industry carousel */
+.ind-timeline { display: flex; align-items: center; margin-bottom: 6px; flex-shrink: 0; }
+.ind-node { flex: 1; text-align: center; cursor: pointer; }
+.ind-node .ind-dot { width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 700; font-family: "JetBrains Mono", monospace; transition: all 0.4s; background: rgba(79,110,247,0.12); border: 1.5px solid rgba(79,110,247,0.25); color: rgba(255,255,255,0.3); }
+.ind-node .ind-label { font-size: 8px; color: rgba(255,255,255,0.3); transition: color 0.4s; }
+.ind-node.active .ind-dot { background: rgba(79,110,247,0.45); border-color: #4F6EF7; color: #fff; box-shadow: 0 0 10px rgba(79,110,247,0.7); }
+.ind-node.active .ind-label { color: #8BA4FF; font-weight: 700; }
+.ind-connector { flex: 0 0 8px; height: 1px; background: rgba(255,255,255,0.1); }
+.ind-img-wrap { flex: 1; border-radius: 8px; overflow: hidden; position: relative; min-height: 0; }
+.ind-img-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: 0.88; transition: opacity 0.5s ease; display: block; }
+.ind-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px; background: linear-gradient(to top, rgba(5,5,16,0.75) 0%, transparent 60%); pointer-events: none; }
+.ind-overlay-name { font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 0 16px rgba(79,110,247,0.9); }
+.ind-overlay-action { font-size: 9px; color: rgba(255,255,255,0.6); margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -82,7 +110,10 @@ h1 span { color: #4F6EF7; }
       <div class="hb-label">启动年份</div>
     </div>
   </div>
+
   <div class="cards">
+
+    <!-- ===== CARD 1: 产业带循环验证 ===== -->
     <div class="card card-1" id="card1">
       <div class="card-header">
         <div class="card-icon">&#127981;</div>
@@ -92,195 +123,65 @@ h1 span { color: #4F6EF7; }
         </div>
       </div>
       <div class="timeline-badge">&#9201; 启动 &rarr; 6个月</div>
-      <!-- 原三条文字 -->
-      <div class="milestones" style="margin-bottom:10px;">
-        <div class="milestone"><div class="milestone-dot"></div><div>从<strong>家纺产业带</strong>切入，逐步覆盖家具、家电、服装、汽配五大产业带</div></div>
-        <div class="milestone"><div class="milestone-dot"></div><div>每个产业带举办<strong>大型线上 Webinar</strong>，完成海外采购商裂变拓展</div></div>
-        <div class="milestone"><div class="milestone-dot"></div><div>从服务<strong>50个头部工厂</strong>出发，带动产业带内中小工厂规模化接入</div></div>
+
+      <!-- 三条策略文字（紧凑版） -->
+      <div class="milestones" style="margin-bottom:8px;">
+        <div class="milestone"><div class="milestone-dot"></div><div>从<strong>家纺</strong>切入，逐步覆盖家具、家电、服装、汽配五大产业带</div></div>
+        <div class="milestone"><div class="milestone-dot"></div><div>每带举办<strong>大型线上 Webinar</strong>，完成海外采购商裂变拓展</div></div>
+        <div class="milestone"><div class="milestone-dot"></div><div>从<strong>50个头部工厂</strong>出发，带动中小工厂规模化接入</div></div>
       </div>
-      <!-- M1-M6 轮播 -->
-      <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
-        <!-- 时间轴 -->
-        <div style="display:flex;align-items:center;margin-bottom:8px;" id="industryTimeline">
-          <div class="ind-node active" data-idx="0" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M1</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">家纺</div>
-          </div>
-          <div style="flex:0.3;height:1px;background:rgba(255,255,255,0.1);"></div>
-          <div class="ind-node" data-idx="1" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M2</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">家具</div>
-          </div>
-          <div style="flex:0.3;height:1px;background:rgba(255,255,255,0.1);"></div>
-          <div class="ind-node" data-idx="2" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M3</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">家电</div>
-          </div>
-          <div style="flex:0.3;height:1px;background:rgba(255,255,255,0.1);"></div>
-          <div class="ind-node" data-idx="3" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M4</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">服装</div>
-          </div>
-          <div style="flex:0.3;height:1px;background:rgba(255,255,255,0.1);"></div>
-          <div class="ind-node" data-idx="4" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M5</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">汽配</div>
-          </div>
-          <div style="flex:0.3;height:1px;background:rgba(255,255,255,0.1);"></div>
-          <div class="ind-node" data-idx="5" style="flex:1;text-align:center;">
-            <div class="ind-dot" style="width:24px;height:24px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all 0.4s;">M6</div>
-            <div class="ind-label" style="font-size:9px;transition:color 0.4s;">裂变</div>
-          </div>
+
+      <!-- M1-M6 时间轴 -->
+      <div class="ind-timeline">
+        <div class="ind-node active" data-idx="0">
+          <div class="ind-dot">M1</div>
+          <div class="ind-label">家纺</div>
         </div>
-        <!-- 图片占位符区域 -->
-        <div style="flex:1;border-radius:10px;overflow:hidden;position:relative;background:rgba(79,110,247,0.06);border:1px dashed rgba(79,110,247,0.3);">
-          <img id="industryImg" src="assets/industry_placeholder.png" alt="产业带" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.5s ease;" onerror="this.style.display='none'">
-          <div id="industryOverlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,5,16,0.5);">
-            <div id="industryName" style="font-size:15px;font-weight:800;color:#fff;text-shadow:0 0 20px rgba(79,110,247,0.8);">M1 · 家纺产业带</div>
-            <div id="industryAction" style="font-size:10px;color:rgba(255,255,255,0.6);margin-top:4px;">开展线上 Webinar · 首批工厂入驻</div>
-          </div>
+        <div class="ind-connector"></div>
+        <div class="ind-node" data-idx="1">
+          <div class="ind-dot">M2</div>
+          <div class="ind-label">家具</div>
+        </div>
+        <div class="ind-connector"></div>
+        <div class="ind-node" data-idx="2">
+          <div class="ind-dot">M3</div>
+          <div class="ind-label">家电</div>
+        </div>
+        <div class="ind-connector"></div>
+        <div class="ind-node" data-idx="3">
+          <div class="ind-dot">M4</div>
+          <div class="ind-label">服装</div>
+        </div>
+        <div class="ind-connector"></div>
+        <div class="ind-node" data-idx="4">
+          <div class="ind-dot">M5</div>
+          <div class="ind-label">汽配</div>
+        </div>
+        <div class="ind-connector"></div>
+        <div class="ind-node" data-idx="5">
+          <div class="ind-dot">M6</div>
+          <div class="ind-label">裂变</div>
         </div>
       </div>
-      <div style="display:none;">
-        <!-- 已弃用旧 SVG 时间轴 -->
-        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
-          <defs>
-            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#4F6EF7"/>
-              <stop offset="25%" stop-color="#8B5CF6"/>
-              <stop offset="50%" stop-color="#06B6D4"/>
-              <stop offset="75%" stop-color="#F59E0B"/>
-              <stop offset="100%" stop-color="#10B981"/>
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
 
-          <!-- 时间轴底线 -->
-          <line x1="20" y1="72" x2="320" y2="72" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-          <!-- 彩色进度线 -->
-          <line x1="20" y1="72" x2="320" y2="72" stroke="url(#lineGrad)" stroke-width="2.5" filter="url(#glow)"/>
-
-          <!-- M1 家纺 -->
-          <circle cx="20" cy="72" r="7" fill="#4F6EF7" filter="url(#glow)"/>
-          <circle cx="20" cy="72" r="11" fill="none" stroke="#4F6EF7" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
-          <!-- 工厂图标：家纺 -->
-          <g transform="translate(5,22)" opacity="0.9">
-            <rect x="0" y="14" width="28" height="16" rx="1" fill="#4F6EF7" opacity="0.25"/>
-            <rect x="3" y="8" width="22" height="8" rx="1" fill="#4F6EF7" opacity="0.35"/>
-            <rect x="8" y="3" width="4" height="6" fill="#4F6EF7" opacity="0.5"/>
-            <rect x="16" y="3" width="4" height="6" fill="#4F6EF7" opacity="0.5"/>
-            <rect x="5" y="16" width="5" height="5" fill="#4F6EF7" opacity="0.5"/>
-            <rect x="12" y="16" width="5" height="5" fill="#4F6EF7" opacity="0.5"/>
-            <rect x="19" y="16" width="5" height="5" fill="#4F6EF7" opacity="0.5"/>
-          </g>
-          <text x="20" y="93" text-anchor="middle" fill="#8BA4FF" font-size="7" font-weight="700" font-family="Inter,sans-serif">M1</text>
-          <text x="20" y="103" text-anchor="middle" fill="#4F6EF7" font-size="6.5" font-weight="600" font-family="Noto Sans SC,sans-serif">家纺</text>
-
-          <!-- M2 家具 -->
-          <circle cx="80" cy="72" r="7" fill="#8B5CF6" filter="url(#glow)"/>
-          <circle cx="80" cy="72" r="11" fill="none" stroke="#8B5CF6" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
-          <g transform="translate(65,22)" opacity="0.9">
-            <rect x="0" y="10" width="28" height="20" rx="1" fill="#8B5CF6" opacity="0.25"/>
-            <polygon points="14,2 28,10 0,10" fill="#8B5CF6" opacity="0.35"/>
-            <rect x="8" y="18" width="5" height="7" rx="1" fill="#8B5CF6" opacity="0.5"/>
-            <rect x="15" y="18" width="5" height="7" rx="1" fill="#8B5CF6" opacity="0.5"/>
-          </g>
-          <text x="80" y="93" text-anchor="middle" fill="#C084FC" font-size="7" font-weight="700" font-family="Inter,sans-serif">M2</text>
-          <text x="80" y="103" text-anchor="middle" fill="#8B5CF6" font-size="6.5" font-weight="600" font-family="Noto Sans SC,sans-serif">家具</text>
-
-          <!-- M3 家电 -->
-          <circle cx="140" cy="72" r="7" fill="#06B6D4" filter="url(#glow)"/>
-          <circle cx="140" cy="72" r="11" fill="none" stroke="#06B6D4" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
-          <g transform="translate(125,22)" opacity="0.9">
-            <rect x="0" y="6" width="28" height="24" rx="1" fill="#06B6D4" opacity="0.2"/>
-            <rect x="2" y="0" width="24" height="8" rx="1" fill="#06B6D4" opacity="0.35"/>
-            <rect x="3" y="10" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-            <rect x="10" y="10" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-            <rect x="17" y="10" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-            <rect x="3" y="17" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-            <rect x="10" y="17" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-            <rect x="17" y="17" width="5" height="4" fill="#06B6D4" opacity="0.5"/>
-          </g>
-          <text x="140" y="93" text-anchor="middle" fill="#67E8F9" font-size="7" font-weight="700" font-family="Inter,sans-serif">M3</text>
-          <text x="140" y="103" text-anchor="middle" fill="#06B6D4" font-size="6.5" font-weight="600" font-family="Noto Sans SC,sans-serif">家电</text>
-
-          <!-- M4 服装 -->
-          <circle cx="200" cy="72" r="7" fill="#F59E0B" filter="url(#glow)"/>
-          <circle cx="200" cy="72" r="11" fill="none" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
-          <g transform="translate(185,22)" opacity="0.9">
-            <rect x="3" y="0" width="22" height="30" rx="1" fill="#F59E0B" opacity="0.2"/>
-            <rect x="0" y="4" width="28" height="22" rx="1" fill="#F59E0B" opacity="0.25"/>
-            <rect x="5" y="8" width="4" height="8" rx="1" fill="#F59E0B" opacity="0.5"/>
-            <rect x="11" y="8" width="4" height="8" rx="1" fill="#F59E0B" opacity="0.5"/>
-            <rect x="17" y="8" width="4" height="8" rx="1" fill="#F59E0B" opacity="0.5"/>
-            <rect x="5" y="19" width="4" height="6" rx="1" fill="#F59E0B" opacity="0.5"/>
-            <rect x="17" y="19" width="4" height="6" rx="1" fill="#F59E0B" opacity="0.5"/>
-          </g>
-          <text x="200" y="93" text-anchor="middle" fill="#FCD34D" font-size="7" font-weight="700" font-family="Inter,sans-serif">M4</text>
-          <text x="200" y="103" text-anchor="middle" fill="#F59E0B" font-size="6.5" font-weight="600" font-family="Noto Sans SC,sans-serif">服装</text>
-
-          <!-- M5 汽配 -->
-          <circle cx="260" cy="72" r="7" fill="#10B981" filter="url(#glow)"/>
-          <circle cx="260" cy="72" r="11" fill="none" stroke="#10B981" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
-          <g transform="translate(245,22)" opacity="0.9">
-            <rect x="0" y="10" width="28" height="20" rx="1" fill="#10B981" opacity="0.2"/>
-            <rect x="2" y="4" width="24" height="8" rx="1" fill="#10B981" opacity="0.3"/>
-            <rect x="4" y="0" width="6" height="5" fill="#10B981" opacity="0.5"/>
-            <rect x="18" y="0" width="6" height="5" fill="#10B981" opacity="0.5"/>
-            <rect x="3" y="14" width="8" height="6" rx="1" fill="#10B981" opacity="0.5"/>
-            <rect x="17" y="14" width="8" height="6" rx="1" fill="#10B981" opacity="0.5"/>
-          </g>
-          <text x="260" y="93" text-anchor="middle" fill="#34D399" font-size="7" font-weight="700" font-family="Inter,sans-serif">M5</text>
-          <text x="260" y="103" text-anchor="middle" fill="#10B981" font-size="6.5" font-weight="600" font-family="Noto Sans SC,sans-serif">汽配</text>
-
-          <!-- M6 裂变 -->
-          <circle cx="320" cy="72" r="9" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-          <circle cx="320" cy="72" r="5" fill="#fff" opacity="0.9" filter="url(#glow)"/>
-          <text x="320" y="93" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7" font-weight="700" font-family="Inter,sans-serif">M6</text>
-          <text x="320" y="103" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="6" font-family="Noto Sans SC,sans-serif">裂变目标</text>
-
-          <!-- 各节点连接箭头 -->
-          <path d="M31,72 L69,72" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
-          <path d="M91,72 L129,72" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
-          <path d="M151,72 L189,72" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
-          <path d="M211,72 L249,72" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
-          <path d="M271,72 L311,72" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
-
-          <!-- Webinar 标注 -->
-          <rect x="40" y="112" width="52" height="16" rx="4" fill="rgba(79,110,247,0.15)" stroke="rgba(79,110,247,0.3)" stroke-width="0.8"/>
-          <text x="66" y="123" text-anchor="middle" fill="#8BA4FF" font-size="6" font-family="Noto Sans SC,sans-serif">线上Webinar</text>
-          <line x1="66" y1="112" x2="66" y2="83" stroke="rgba(79,110,247,0.3)" stroke-width="0.8" stroke-dasharray="2,2"/>
-
-          <rect x="100" y="112" width="52" height="16" rx="4" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="0.8"/>
-          <text x="126" y="123" text-anchor="middle" fill="#C084FC" font-size="6" font-family="Noto Sans SC,sans-serif">工厂拓展</text>
-          <line x1="126" y1="112" x2="126" y2="83" stroke="rgba(139,92,246,0.3)" stroke-width="0.8" stroke-dasharray="2,2"/>
-
-          <rect x="160" y="112" width="52" height="16" rx="4" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.3)" stroke-width="0.8"/>
-          <text x="186" y="123" text-anchor="middle" fill="#67E8F9" font-size="6" font-family="Noto Sans SC,sans-serif">采购商裂变</text>
-          <line x1="186" y1="112" x2="186" y2="83" stroke="rgba(6,182,212,0.3)" stroke-width="0.8" stroke-dasharray="2,2"/>
-
-          <rect x="220" y="112" width="52" height="16" rx="4" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="0.8"/>
-          <text x="246" y="123" text-anchor="middle" fill="#FCD34D" font-size="6" font-family="Noto Sans SC,sans-serif">头部工厂入驻</text>
-          <line x1="246" y1="112" x2="246" y2="83" stroke="rgba(245,158,11,0.3)" stroke-width="0.8" stroke-dasharray="2,2"/>
-
-          <rect x="280" y="112" width="52" height="16" rx="4" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.3)" stroke-width="0.8"/>
-          <text x="306" y="123" text-anchor="middle" fill="#34D399" font-size="6" font-family="Noto Sans SC,sans-serif">2000+采购商</text>
-          <line x1="306" y1="112" x2="306" y2="83" stroke="rgba(16,185,129,0.3)" stroke-width="0.8" stroke-dasharray="2,2"/>
-
-          <!-- 左侧标题 -->
-          <text x="20" y="140" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="5.5" font-family="Inter,sans-serif">START</text>
-          <text x="320" y="140" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="Inter,sans-serif">GOAL</text>
+      <!-- 图片轮播区 -->
+      <div class="ind-img-wrap" id="industryImgWrap">
+        <img id="industryImg" src="assets/industry_m1_textile.jpg" alt="家纺产业带">
+        <div class="ind-overlay">
+          <div class="ind-overlay-name" id="industryName">M1 · 家纺产业带</div>
+          <div class="ind-overlay-action" id="industryAction">开展线上 Webinar · 首批工厂入驻</div>
         </div>
       </div>
+
+      <!-- KPI -->
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-val">5</div><div class="kpi-label">产业带</div></div>
         <div class="kpi"><div class="kpi-val">2,000+</div><div class="kpi-label">海外采购商</div></div>
         <div class="kpi"><div class="kpi-val">50&#8594;&#8734;</div><div class="kpi-label">工厂规模</div></div>
       </div>
     </div>
+
+    <!-- ===== CARD 2: AI 硬件 ===== -->
     <div class="card card-2" id="card2">
       <div class="card-header">
         <div class="card-icon">&#128241;</div>
@@ -290,24 +191,26 @@ h1 span { color: #4F6EF7; }
         </div>
       </div>
       <div class="timeline-badge">&#9201; 启动 &rarr; 3个月</div>
-      <div class="milestones" style="margin-bottom:10px;">
+      <div class="milestones" style="margin-bottom:8px;">
         <div class="milestone"><div class="milestone-dot"></div><div><strong>Commander 外贸 AI 手机</strong>完整业务闭环，3个月内上线</div></div>
         <div class="milestone"><div class="milestone-dot"></div><div>工厂/企业老板付费定制<strong>专属 AI 能力</strong>，打造数字雨雾员工</div></div>
         <div class="milestone"><div class="milestone-dot"></div><div>硬件即<strong>订阅入口</strong>，绑定工厂 SaaS 长期付费，提升 LTV</div></div>
+      </div>
+      <!-- 图片占位区 -->
+      <div style="flex:1;min-height:0;border-radius:8px;background:rgba(139,92,246,0.07);border:1px dashed rgba(139,92,246,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+        <div style="text-align:center;color:rgba(139,92,246,0.45);">
+          <div style="font-size:32px;margin-bottom:6px;">&#128241;</div>
+          <div style="font-size:9px;letter-spacing:0.5px;">AI 硬件产品图</div>
+        </div>
       </div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-val">3mo</div><div class="kpi-label">闭环周期</div></div>
         <div class="kpi"><div class="kpi-val">付费</div><div class="kpi-label">定制模式</div></div>
         <div class="kpi"><div class="kpi-val">LTV&#8593;</div><div class="kpi-label">硬件绑定</div></div>
       </div>
-      <!-- card2 图片占位符 -->
-      <div style="flex:1;border-radius:10px;background:rgba(139,92,246,0.06);border:1px dashed rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;margin-top:10px;">
-        <div style="text-align:center;color:rgba(139,92,246,0.5);">
-          <div style="font-size:28px;margin-bottom:6px;">&#128241;</div>
-          <div style="font-size:10px;">AI 硬件产品图</div>
-        </div>
-      </div>
     </div>
+
+    <!-- ===== CARD 3: 展会数字化 ===== -->
     <div class="card card-3" id="card3">
       <div class="card-header">
         <div class="card-icon">&#127758;</div>
@@ -317,25 +220,27 @@ h1 span { color: #4F6EF7; }
         </div>
       </div>
       <div class="timeline-badge">&#9201; 2026.8 &middot; 伦敦首秀</div>
-      <div class="milestones">
+      <div class="milestones" style="margin-bottom:8px;">
         <div class="milestone"><div class="milestone-dot"></div><div>为国内外<strong>线下展会</strong>提供数字化支持，完成展会线上招商与意向签订</div></div>
         <div class="milestone"><div class="milestone-dot"></div><div>通过 Realsourcing 完成<strong>前六次展会</strong>数字化验证，建立标准化方案</div></div>
         <div class="milestone"><div class="milestone-dot"></div><div><strong>2026年8月 &middot; 英国伦敦</strong>展厅展会数字化首次海外落地验证</div></div>
+      </div>
+      <!-- 图片占位区 -->
+      <div style="flex:1;min-height:0;border-radius:8px;background:rgba(16,185,129,0.07);border:1px dashed rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+        <div style="text-align:center;color:rgba(16,185,129,0.45);">
+          <div style="font-size:32px;margin-bottom:6px;">&#127758;</div>
+          <div style="font-size:9px;letter-spacing:0.5px;">展会现场图</div>
+        </div>
       </div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-val">6</div><div class="kpi-label">验证场次</div></div>
         <div class="kpi"><div class="kpi-val">&#127468;&#127463;</div><div class="kpi-label">伦敦首秀</div></div>
         <div class="kpi"><div class="kpi-val">2026.8</div><div class="kpi-label">里程碑</div></div>
       </div>
-      <!-- card3 图片占位符 -->
-      <div style="flex:1;border-radius:10px;background:rgba(16,185,129,0.06);border:1px dashed rgba(16,185,129,0.3);display:flex;align-items:center;justify-content:center;margin-top:10px;">
-        <div style="text-align:center;color:rgba(16,185,129,0.5);">
-          <div style="font-size:28px;margin-bottom:6px;">&#127758;</div>
-          <div style="font-size:10px;">展会现场图</div>
-        </div>
-      </div>
     </div>
-  </div>
+
+  </div><!-- /cards -->
+
   <div class="bottom-bar" id="bottomBar">
     <div class="bb-item"><div class="bb-dot" style="background:#4F6EF7;"></div><div class="bb-text"><strong>产业带</strong> &middot; 6个月 &middot; 5大产业带 &middot; 2,000+ 采购商</div></div>
     <div class="bb-divider"></div>
@@ -346,50 +251,54 @@ h1 span { color: #4F6EF7; }
     <div class="bb-item"><div class="bb-dot" style="background:#F59E0B;box-shadow:0 0 6px #F59E0B;"></div><div class="bb-text"><strong>三轨并行</strong>，构建不可复制的落地壁垒</div></div>
   </div>
 </div>
-<style>
-.ind-node .ind-dot { background:rgba(79,110,247,0.15); border:2px solid rgba(79,110,247,0.3); color:rgba(255,255,255,0.35); }
-.ind-node .ind-label { color:rgba(255,255,255,0.3); }
-.ind-node.active .ind-dot { background:rgba(79,110,247,0.4); border-color:#4F6EF7; color:#fff; box-shadow:0 0 10px rgba(79,110,247,0.6); }
-.ind-node.active .ind-label { color:#8BA4FF; font-weight:700; }
-</style>
-<script>
-  setTimeout(function(){ document.getElementById("card1").classList.add("visible"); }, 200);
-  setTimeout(function(){ document.getElementById("card2").classList.add("visible"); }, 450);
-  setTimeout(function(){ document.getElementById("card3").classList.add("visible"); }, 700);
-  setTimeout(function(){ document.getElementById("bottomBar").classList.add("visible"); }, 950);
 
-  // M1-M6 轮播
+<script>
+  // Card entrance animations
+  setTimeout(function(){ document.getElementById("card1").classList.add("visible"); }, 200);
+  setTimeout(function(){ document.getElementById("card2").classList.add("visible"); }, 400);
+  setTimeout(function(){ document.getElementById("card3").classList.add("visible"); }, 600);
+  setTimeout(function(){ document.getElementById("bottomBar").classList.add("visible"); }, 850);
+
+  // M1-M6 carousel data
   var industries = [
     { name:'M1 · 家纺产业带', action:'开展线上 Webinar · 首批工厂入驻', img:'assets/industry_m1_textile.jpg' },
     { name:'M2 · 家具产业带', action:'家具工厂 Webinar · 扩大采购商规模', img:'assets/industry_m2_furniture.jpg' },
-    { name:'M3 · 家电产业带', action:'家电工厂接入 · 采购商裂变拓展', img:'assets/industry_m3_appliance.jpg' },
-    { name:'M4 · 服装产业带', action:'服装工厂入驻 · 头部品牌合作', img:'assets/industry_m4_clothing.jpg' },
-    { name:'M5 · 汽配产业带', action:'汽配工厂连接 · B2B 采购闭环', img:'assets/industry_m5_autoparts.jpg' },
-    { name:'M6 · 裂变目标', action:'2,000+ 海外采购商 · 工厂规模化接入', img:'assets/industry_m6_goal.jpg' }
+    { name:'M3 · 家电产业带', action:'家电工厂接入 · 采购商裂变拓展',   img:'assets/industry_m3_appliance.jpg' },
+    { name:'M4 · 服装产业带', action:'服装工厂入驻 · 头部品牌合作',     img:'assets/industry_m4_clothing.jpg' },
+    { name:'M5 · 汽配产业带', action:'汽配工厂连接 · B2B 采购闭环',    img:'assets/industry_m5_autoparts.jpg' },
+    { name:'M6 · 裂变目标',   action:'2,000+ 海外采购商 · 工厂规模化接入', img:'assets/industry_m6_goal.jpg' }
   ];
   var curIdx = 0;
+
   function switchIndustry(idx) {
     var nodes = document.querySelectorAll('.ind-node');
     nodes.forEach(function(n){ n.classList.remove('active'); });
     nodes[idx].classList.add('active');
-    var imgEl = document.getElementById('industryImg');
+    var imgEl  = document.getElementById('industryImg');
     var nameEl = document.getElementById('industryName');
-    var actionEl = document.getElementById('industryAction');
+    var actEl  = document.getElementById('industryAction');
     imgEl.style.opacity = '0';
     setTimeout(function(){
       imgEl.src = industries[idx].img;
       nameEl.textContent = industries[idx].name;
-      actionEl.textContent = industries[idx].action;
-      imgEl.style.opacity = '0.85';
+      actEl.textContent  = industries[idx].action;
+      imgEl.style.opacity = '0.88';
     }, 250);
     curIdx = idx;
   }
+
+  // Click to switch
   document.querySelectorAll('.ind-node').forEach(function(n){
-    n.addEventListener('click', function(){ switchIndustry(parseInt(this.dataset.idx)); clearInterval(timer); });
+    n.addEventListener('click', function(){
+      clearInterval(timer);
+      switchIndustry(parseInt(this.dataset.idx));
+      timer = setInterval(autoNext, 3000);
+    });
   });
-  var timer = setInterval(function(){
-    switchIndustry((curIdx + 1) % 6);
-  }, 3000);
+
+  // Auto-rotate every 3 seconds
+  function autoNext(){ switchIndustry((curIdx + 1) % 6); }
+  var timer = setInterval(autoNext, 3000);
 </script>
 </body>
 </html>
