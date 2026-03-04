@@ -4,121 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RealSourcing - Funding Ask</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { overflow: hidden; background: #000; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
         .slide-container { width:1280px; height:720px; position:relative; background:#050510; color:#fff; overflow:hidden; }
 
-        .video-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.12; }
-        .bg-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
-            background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(79,110,247,0.12) 0%, transparent 70%),
-                        linear-gradient(180deg, rgba(5,5,16,0.9) 0%, rgba(5,5,16,0.7) 50%, rgba(5,5,16,0.95) 100%); }
-        .grid-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;
+        .bg-overlay { position:absolute; inset:0; z-index:1;
+            background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(79,110,247,0.1) 0%, transparent 70%),
+                        linear-gradient(180deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0.8) 50%, rgba(5,5,16,0.98) 100%); }
+        .grid-lines { position:absolute; inset:0; z-index:1;
             background-image: linear-gradient(rgba(79,110,247,0.04) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(79,110,247,0.04) 1px, transparent 1px);
             background-size:60px 60px; }
         .orb { position:absolute; border-radius:50%; z-index:1; filter:blur(80px); }
-        .orb-1 { width:500px; height:500px; background:rgba(79,110,247,0.1); top:-100px; right:-100px; animation:orbFloat 8s ease-in-out infinite; }
-        .orb-2 { width:400px; height:400px; background:rgba(139,92,246,0.08); bottom:-100px; left:-100px; animation:orbFloat 10s ease-in-out infinite reverse; }
-        @keyframes orbFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+        .orb-1 { width:480px; height:480px; background:rgba(79,110,247,0.09); top:-120px; right:-80px; animation:orbFloat 8s ease-in-out infinite; }
+        .orb-2 { width:360px; height:360px; background:rgba(139,92,246,0.07); bottom:-80px; left:-80px; animation:orbFloat 11s ease-in-out infinite reverse; }
+        @keyframes orbFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
 
-        /* Header */
-        .header { position:absolute; top:36px; left:0; right:0; text-align:center; z-index:10;
-            opacity:0; animation:fadeInDown 0.8s ease-out forwards 0.2s; }
+        /* ── Header ── */
+        .header { position:absolute; top:28px; left:0; right:0; text-align:center; z-index:10;
+            opacity:0; animation:fadeInDown 0.7s ease-out forwards 0.15s; }
         .section-tag { font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
-            color:#4F6EF7; margin-bottom:8px; }
-        .main-title { font-size:38px; font-weight:900; letter-spacing:-1px; }
+            color:#4F6EF7; margin-bottom:6px; }
+        .main-title { font-size:34px; font-weight:900; letter-spacing:-0.5px; }
         .title-em { background:linear-gradient(135deg,#4F6EF7,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .subtitle-tag { font-size:14px; color:rgba(255,255,255,0.4); margin-top:6px; }
+        .subtitle-tag { font-size:13px; color:rgba(255,255,255,0.38); margin-top:5px; }
 
-        /* Main layout */
-        .main-layout { position:absolute; top:120px; left:0; right:0; bottom:20px; z-index:10;
-            display:grid; grid-template-columns:1fr 1fr; gap:32px; padding:0 60px; align-items:start; }
+        /* ── Main 2-column layout ── */
+        .main-layout { position:absolute; top:108px; left:0; right:0; bottom:18px; z-index:10;
+            display:grid; grid-template-columns:1fr 1fr; gap:24px; padding:0 52px; align-items:start; }
 
-        /* Left: Funding Details */
-        .funding-zone { display:flex; flex-direction:column; gap:16px;
-            opacity:0; animation:slideInLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.5s; }
+        /* ── LEFT: Funding Details ── */
+        .funding-zone { display:flex; flex-direction:column; gap:12px;
+            opacity:0; animation:slideInLeft 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.4s; }
 
-        /* Big ask box */
+        /* Ask box */
         .ask-box { background:rgba(79,110,247,0.08); border:2px solid rgba(79,110,247,0.3);
-            border-radius:20px; padding:24px 28px; text-align:center;
-            box-shadow:0 0 40px rgba(79,110,247,0.15); }
-        .ask-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
-            color:#8BA4FF; margin-bottom:8px; }
-        .ask-amount { font-size:52px; font-weight:900; color:#fff; line-height:1; margin-bottom:4px; }
-        .ask-type { font-size:16px; color:rgba(255,255,255,0.6); }
-        .ask-val { font-size:14px; color:rgba(255,255,255,0.4); margin-top:8px; }
+            border-radius:18px; padding:20px 24px; text-align:center;
+            box-shadow:0 0 40px rgba(79,110,247,0.14); }
+        .ask-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+            color:#8BA4FF; margin-bottom:6px; }
+        .ask-amount { font-size:56px; font-weight:900; color:#fff; line-height:1; margin-bottom:3px;
+            font-family:'JetBrains Mono'; }
+        .ask-type { font-size:14px; color:rgba(255,255,255,0.55); }
+        .ask-val { font-size:12px; color:rgba(255,255,255,0.35); margin-top:6px; }
+        /* 估值 badge 行 */
+        .ask-badges { display:flex; gap:8px; justify-content:center; margin-top:10px; }
+        .ask-badge { background:rgba(79,110,247,0.12); border:1px solid rgba(79,110,247,0.25);
+            border-radius:8px; padding:4px 12px; font-size:11px; font-weight:700; color:#8BA4FF;
+            font-family:'JetBrains Mono'; }
 
         /* Use of funds */
-        .funds-title { font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:2px;
-            text-transform:uppercase; margin-bottom:8px; }
-        .fund-item { display:flex; align-items:center; gap:12px; padding:12px 16px;
+        .funds-title { font-size:10px; font-weight:700; color:rgba(255,255,255,0.35); letter-spacing:2px;
+            text-transform:uppercase; margin-bottom:6px; }
+        .fund-item { display:flex; align-items:center; gap:10px; padding:10px 14px;
             background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
-            border-radius:12px; margin-bottom:8px; }
-        .fund-pct { font-size:20px; font-weight:900; width:52px; text-align:center; flex-shrink:0; }
-        .pct-blue { color:#4F6EF7; }
-        .pct-green { color:#10B981; }
-        .pct-purple { color:#8B5CF6; }
+            border-radius:11px; margin-bottom:7px; }
+        .fund-pct { font-size:18px; font-weight:900; width:46px; text-align:center; flex-shrink:0;
+            font-family:'JetBrains Mono'; }
+        .pct-blue   { color:#4F6EF7; }
+        .pct-green  { color:#10B981; }
+        .pct-orange { color:#F97316; }
         .fund-bar-wrap { flex:1; }
-        .fund-name { font-size:13px; font-weight:700; color:#fff; margin-bottom:4px; }
-        .fund-desc { font-size:11px; color:rgba(255,255,255,0.35); }
-        .fund-bar { height:4px; border-radius:2px; margin-top:4px; }
-        .bar-blue { background:linear-gradient(90deg,#4F6EF7,transparent); }
-        .bar-green { background:linear-gradient(90deg,#10B981,transparent); }
-        .bar-purple { background:linear-gradient(90deg,#8B5CF6,transparent); }
+        .fund-name { font-size:12px; font-weight:700; color:#fff; margin-bottom:3px; }
+        .fund-desc { font-size:10px; color:rgba(255,255,255,0.32); }
+        .fund-bar { height:3px; border-radius:2px; margin-top:5px; }
+        .bar-blue   { background:linear-gradient(90deg,#4F6EF7,rgba(79,110,247,0.1)); }
+        .bar-green  { background:linear-gradient(90deg,#10B981,rgba(16,185,129,0.1)); }
+        .bar-orange { background:linear-gradient(90deg,#F97316,rgba(249,115,22,0.1)); }
 
-        /* Right: Milestones + Closing */
-        .right-zone { display:flex; flex-direction:column; gap:16px;
-            opacity:0; animation:slideInRight 0.9s cubic-bezier(0.16,1,0.3,1) forwards 0.7s; }
+        /* ── RIGHT: 项目现状 + CTA ── */
+        .right-zone { display:flex; flex-direction:column; gap:12px;
+            opacity:0; animation:slideInRight 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.6s; }
 
-        /* 18-month milestones */
-        .milestone-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
-            border-radius:16px; padding:20px; }
-        .milestone-title { font-size:12px; font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:2px;
-            text-transform:uppercase; margin-bottom:14px; }
-        .ms-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
-        .ms-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
-        .ms-dot-blue { background:#4F6EF7; box-shadow:0 0 8px #4F6EF7; }
-        .ms-dot-green { background:#10B981; box-shadow:0 0 8px #10B981; }
-        .ms-dot-purple { background:#8B5CF6; box-shadow:0 0 8px #8B5CF6; }
-        .ms-dot-orange { background:#F97316; box-shadow:0 0 8px #F97316; }
+        /* 项目现状 box */
+        .status-box { background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px; padding:16px 18px; }
+        .status-title { font-size:10px; font-weight:700; color:rgba(255,255,255,0.35); letter-spacing:2px;
+            text-transform:uppercase; margin-bottom:12px; }
+
+        /* 数字指标行 */
+        .status-kpi-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px; }
+        .status-kpi { background:rgba(79,110,247,0.07); border:1px solid rgba(79,110,247,0.15);
+            border-radius:10px; padding:10px 8px; text-align:center; }
+        .skpi-val { font-size:22px; font-weight:900; color:#8BA4FF; font-family:'JetBrains Mono'; line-height:1; }
+        .skpi-label { font-size:9px; color:rgba(255,255,255,0.35); margin-top:3px; }
+
+        /* 里程碑事件列表 */
+        .ms-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:9px; }
+        .ms-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+        .ms-dot-blue   { background:#4F6EF7; box-shadow:0 0 7px #4F6EF7; }
+        .ms-dot-green  { background:#10B981; box-shadow:0 0 7px #10B981; }
+        .ms-dot-amber  { background:#F59E0B; box-shadow:0 0 7px #F59E0B; }
+        .ms-dot-purple { background:#8B5CF6; box-shadow:0 0 7px #8B5CF6; }
         .ms-info { flex:1; }
-        .ms-period { font-size:10px; font-weight:700; color:rgba(255,255,255,0.3); letter-spacing:1px; }
-        .ms-text { font-size:13px; font-weight:700; color:#fff; margin-top:2px; }
-        .ms-num { font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; }
+        .ms-period { font-size:9px; font-weight:700; color:rgba(255,255,255,0.28); letter-spacing:1px; text-transform:uppercase; }
+        .ms-text { font-size:12px; font-weight:700; color:#fff; margin-top:1px; line-height:1.4; }
+        .ms-num { font-size:10px; color:rgba(255,255,255,0.38); margin-top:1px; }
+
+        /* 天使轮 next step */
+        .next-step { display:flex; align-items:center; gap:10px; padding:9px 14px;
+            background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2);
+            border-radius:10px; margin-top:4px; }
+        .next-icon { font-size:16px; flex-shrink:0; }
+        .next-text { font-size:11px; color:rgba(255,255,255,0.55); }
+        .next-text strong { color:#C084FC; }
 
         /* Closing CTA */
-        .cta-box { background:linear-gradient(135deg,rgba(79,110,247,0.12),rgba(139,92,246,0.08));
-            border:1px solid rgba(79,110,247,0.25); border-radius:20px; padding:24px 28px; text-align:center; }
-        .cta-headline { font-size:20px; font-weight:900; color:#fff; margin-bottom:8px; }
-        .cta-sub { font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:20px; line-height:1.6; }
-        .cta-buttons { display:flex; gap:12px; justify-content:center; }
-        .btn-primary { background:linear-gradient(135deg,#4F6EF7,#7C3AED); border-radius:12px;
-            padding:12px 24px; font-size:14px; font-weight:700; color:#fff;
-            box-shadow:0 8px 24px rgba(79,110,247,0.4); }
+        .cta-box { background:linear-gradient(135deg,rgba(79,110,247,0.1),rgba(139,92,246,0.07));
+            border:1px solid rgba(79,110,247,0.22); border-radius:18px; padding:18px 22px; text-align:center; }
+        .cta-headline { font-size:17px; font-weight:900; color:#fff; margin-bottom:6px; }
+        .cta-sub { font-size:11.5px; color:rgba(255,255,255,0.45); margin-bottom:14px; line-height:1.6; }
+        .cta-buttons { display:flex; gap:10px; justify-content:center; }
+        .btn-primary { background:linear-gradient(135deg,#4F6EF7,#7C3AED); border-radius:10px;
+            padding:10px 22px; font-size:13px; font-weight:700; color:#fff;
+            box-shadow:0 6px 20px rgba(79,110,247,0.38); cursor:pointer; }
         .btn-secondary { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
-            border-radius:12px; padding:12px 24px; font-size:14px; font-weight:600; color:rgba(255,255,255,0.7); }
-        .contact-row { display:flex; align-items:center; justify-content:center; gap:20px; margin-top:12px; }
-        .contact-item { font-size:12px; color:rgba(255,255,255,0.4); display:flex; align-items:center; gap:6px; }
+            border-radius:10px; padding:10px 22px; font-size:13px; font-weight:600;
+            color:rgba(255,255,255,0.65); cursor:pointer; }
+        .contact-row { display:flex; align-items:center; justify-content:center; gap:18px; margin-top:10px; }
+        .contact-item { font-size:11px; color:rgba(255,255,255,0.35); display:flex; align-items:center; gap:5px; }
         .contact-em { color:#8BA4FF; }
 
-        .slide-num { position:absolute; bottom:8px; right:40px; font-size:11px;
-            color:rgba(255,255,255,0.15); font-family:'JetBrains Mono',monospace; z-index:20; }
+        /* Decorations */
         .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:3px; z-index:20;
             background:linear-gradient(90deg,#4F6EF7,#8B5CF6,#06B6D4,#10B981); }
+        .slide-num { position:absolute; bottom:8px; right:40px; font-size:10px;
+            color:rgba(255,255,255,0.12); font-family:'JetBrains Mono'; z-index:20; }
 
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+        /* Animations */
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideInLeft { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(28px)} to{opacity:1;transform:translateX(0)} }
+
+        /* 进度条动画 */
+        .fund-bar { width:0; transition:width 1.2s cubic-bezier(0.16,1,0.3,1); }
     </style>
 </head>
 <body>
 <div class="slide-container">
-    <video class="video-bg" autoplay loop muted playsinline>
-        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
-    </video>
     <div class="bg-overlay"></div>
     <div class="grid-lines"></div>
     <div class="orb orb-1"></div>
@@ -128,77 +155,110 @@
     <div class="header">
         <div class="section-tag">Funding Ask &middot; 融资需求</div>
         <div class="main-title">加入 <span class="title-em">贸易3.0</span> 的早班车</div>
-        <div class="subtitle-tag">Seed Round &middot; 目标融资 ¥200 万 &middot; 18 个月加速计划</div>
+        <div class="subtitle-tag">Seed Round &middot; 目标融资 ¥100 万 &middot; 出让 10% 股权</div>
     </div>
 
     <!-- Main Layout -->
     <div class="main-layout">
-        <!-- Left: Funding Details -->
+
+        <!-- ═══ LEFT: 融资详情 ═══ -->
         <div class="funding-zone">
-            <!-- Big Ask -->
+
+            <!-- Ask Box -->
             <div class="ask-box">
                 <div class="ask-label">&#128640; Seed Round</div>
-                <div class="ask-amount">¥200万</div>
-                <div class="ask-type">Pre-A 轮前融资</div>
-                <div class="ask-val">估值 ¥2,000 万 &middot; 10% 股权</div>
+                <div class="ask-amount">¥100万</div>
+                <div class="ask-type">种子轮融资</div>
+                <div class="ask-badges">
+                    <div class="ask-badge">估值 ¥1,000 万</div>
+                    <div class="ask-badge">出让 10% 股权</div>
+                </div>
             </div>
 
             <!-- Use of Funds -->
             <div class="funds-title">&#128200; 资金用途</div>
+
             <div class="fund-item">
-                <span class="fund-pct pct-blue">50%</span>
+                <span class="fund-pct pct-orange">50%</span>
                 <div class="fund-bar-wrap">
-                    <div class="fund-name">产品技术研发</div>
-                    <div class="fund-desc">OpenClaw v2.0 &middot; AMR 模型升级 &middot; Commander OS</div>
-                    <div class="fund-bar bar-blue" style="width:50%;"></div>
+                    <div class="fund-name">国内获客 &amp; 工厂网络</div>
+                    <div class="fund-desc">产业带 Webinar 运营 &middot; 头部工厂签约 &middot; 地推团队</div>
+                    <div class="fund-bar bar-orange" id="bar1"></div>
                 </div>
             </div>
+
             <div class="fund-item">
-                <span class="fund-pct pct-green">30%</span>
+                <span class="fund-pct pct-blue">30%</span>
                 <div class="fund-bar-wrap">
-                    <div class="fund-name">工厂网络扩张</div>
-                    <div class="fund-desc">目标 500 家认证工厂 &middot; 深度合作协议</div>
-                    <div class="fund-bar bar-green" style="width:30%;"></div>
+                    <div class="fund-name">研发 &amp; 产品算力</div>
+                    <div class="fund-desc">Commander OS 迭代 &middot; AI 模型训练 &middot; 云算力</div>
+                    <div class="fund-bar bar-blue" id="bar2"></div>
                 </div>
             </div>
+
             <div class="fund-item">
-                <span class="fund-pct pct-purple">20%</span>
+                <span class="fund-pct pct-green">20%</span>
                 <div class="fund-bar-wrap">
                     <div class="fund-name">海外买家获客</div>
                     <div class="fund-desc">北美 / 欧洲市场 &middot; KOL 合作 &middot; 内容营销</div>
-                    <div class="fund-bar bar-purple" style="width:20%;"></div>
+                    <div class="fund-bar bar-green" id="bar3"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Milestones + CTA -->
+        <!-- ═══ RIGHT: 项目现状 + CTA ═══ -->
         <div class="right-zone">
-            <!-- 18-month milestones -->
-            <div class="milestone-box">
-                <div class="milestone-title">&#127942; 18 个月里程碑</div>
-                <div class="ms-item">
-                    <div class="ms-dot ms-dot-blue"></div>
-                    <div class="ms-info">
-                        <div class="ms-period">M1-M6 &middot; 产品升级</div>
-                        <div class="ms-text">OpenClaw v2.0 上线 &middot; 工厂扩至 200 家</div>
-                        <div class="ms-num">目标 GMV $500K</div>
+
+            <!-- 项目现状 -->
+            <div class="status-box">
+                <div class="status-title">&#128202; 项目现状</div>
+
+                <!-- 核心数字 -->
+                <div class="status-kpi-row">
+                    <div class="status-kpi">
+                        <div class="skpi-val">50</div>
+                        <div class="skpi-label">种子工厂</div>
+                    </div>
+                    <div class="status-kpi">
+                        <div class="skpi-val">250</div>
+                        <div class="skpi-label">验证海外用户</div>
+                    </div>
+                    <div class="status-kpi">
+                        <div class="skpi-val">9</div>
+                        <div class="skpi-label">大型采购商</div>
                     </div>
                 </div>
+
+                <!-- 里程碑事件 -->
                 <div class="ms-item">
                     <div class="ms-dot ms-dot-green"></div>
                     <div class="ms-info">
-                        <div class="ms-period">M7-M12 &middot; 规模扩张</div>
-                        <div class="ms-text">北美市场突破 &middot; 工厂扩至 500 家</div>
-                        <div class="ms-num">目标 GMV $2M &middot; ARR $300K</div>
+                        <div class="ms-period">已完成 &middot; 产品</div>
+                        <div class="ms-text">产品 Demo 已上线</div>
+                        <div class="ms-num">Commander OS &middot; 工厂 AI 档案 &middot; 采购仪表盘</div>
                     </div>
                 </div>
                 <div class="ms-item">
-                    <div class="ms-dot ms-dot-purple"></div>
+                    <div class="ms-dot ms-dot-amber"></div>
                     <div class="ms-info">
-                        <div class="ms-period">M13-M18 &middot; Pre-A 融资</div>
-                        <div class="ms-text">盈亏平衡 &middot; 启动 Pre-A 轮</div>
-                        <div class="ms-num">目标 GMV $5M &middot; ARR $800K</div>
+                        <div class="ms-period">即将 &middot; 2026.03.16</div>
+                        <div class="ms-text">首期 Webinar 正式开展</div>
+                        <div class="ms-num">家纺产业带 &middot; 首批海外采购商裂变启动</div>
                     </div>
+                </div>
+                <div class="ms-item" style="margin-bottom:0;">
+                    <div class="ms-dot ms-dot-blue"></div>
+                    <div class="ms-info">
+                        <div class="ms-period">验证中 &middot; 用户</div>
+                        <div class="ms-text">250 名海外用户 &middot; 9 名大采购商</div>
+                        <div class="ms-num">持续验证产品市场契合度（PMF）</div>
+                    </div>
+                </div>
+
+                <!-- 天使轮 next step -->
+                <div class="next-step">
+                    <div class="next-icon">&#128640;</div>
+                    <div class="next-text"><strong>天使轮</strong>计划于 <strong>2026 年 9 月</strong>启动 &middot; 完成 PMF 验证后加速融资</div>
                 </div>
             </div>
 
@@ -206,8 +266,8 @@
             <div class="cta-box">
                 <div class="cta-headline">&#9889; 现在是最佳入场时机</div>
                 <div class="cta-sub">
-                    AI 重构贸易的窗口期只有 18-24 个月<br>
-                    早期投资人将获得最大的价值捕获空间
+                    AI 重构贸易的窗口期只有 18&ndash;24 个月<br>
+                    种子轮投资人将获得最大的价值捕获空间
                 </div>
                 <div class="cta-buttons">
                     <div class="btn-primary">&#128222; 立即约谈</div>
@@ -224,5 +284,16 @@
     <div class="bottom-bar"></div>
     <div class="slide-num">16 / 16</div>
 </div>
+
+<script>
+  // 进度条动画：页面加载后触发
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      document.getElementById('bar1').style.width = '50%';
+      document.getElementById('bar2').style.width = '30%';
+      document.getElementById('bar3').style.width = '20%';
+    }, 900);
+  });
+</script>
 </body>
 </html>
