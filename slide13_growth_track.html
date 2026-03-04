@@ -367,7 +367,23 @@ html, body { width: 1280px; height: 720px; overflow: hidden; background: #050510
 .pipeline { animation: fadeUp 0.7s ease both; }
 .race-section { animation: fadeUp 0.7s ease 0.2s both; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+
+    /* === 全局性能优化 === */
+    /* 动画元素 GPU 加速 */
+    [class*="anim"], [class*="fade"], [class*="slide-in"],
+    [class*="float"], [class*="pulse"], [class*="glow"],
+    [class*="spin"], [class*="rotate"], [class*="bounce"],
+    .card, .metric-card, .track-card, .stat-box,
+    .nav-dot, .timeline-node {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+    }
+    /* 视频容器 GPU 加速 */
+    video { transform: translateZ(0); }
+    /* 减少字体渲染开销 */
+    body { text-rendering: optimizeSpeed; -webkit-font-smoothing: antialiased; }
+
+    </style>
 </head>
 <body>
 <div class="slide">

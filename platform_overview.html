@@ -136,12 +136,28 @@
         @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:translateX(0)} }
         @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+    
+    /* === 全局性能优化 === */
+    /* 动画元素 GPU 加速 */
+    [class*="anim"], [class*="fade"], [class*="slide-in"],
+    [class*="float"], [class*="pulse"], [class*="glow"],
+    [class*="spin"], [class*="rotate"], [class*="bounce"],
+    .card, .metric-card, .track-card, .stat-box,
+    .nav-dot, .timeline-node {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+    }
+    /* 视频容器 GPU 加速 */
+    video { transform: translateZ(0); }
+    /* 减少字体渲染开销 */
+    body { text-rendering: optimizeSpeed; -webkit-font-smoothing: antialiased; }
+
     </style>
 </head>
 <body>
 <div class="slide-container">
-    <video class="video-bg-static" autoplay loop muted playsinline>
-        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    <video class="video-bg-static" data-autoplay loop muted playsinline preload="none">
+        <source data-src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
     <div class="grid-lines"></div>
@@ -160,8 +176,8 @@
             <div class="panel-tag tag-blue">DEMAND SIDE &middot; 需求侧</div>
             
             <div class="video-container">
-                <video class="main-video" autoplay loop muted playsinline>
-                    <source src="assets/realsourcing_16s.mp4" type="video/mp4">
+                <video class="main-video" autoplay preload="none" loop muted playsinline>
+                    <source data-lazy-src="assets/realsourcing_16s.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -226,8 +242,8 @@
             <div class="panel-tag tag-green">SUPPLY SIDE &middot; 供给侧</div>
 
             <div class="video-container">
-                <video class="main-video" id="factory-video" autoplay muted playsinline>
-                    <source src="assets/factory_digital_v2.mp4" type="video/mp4">
+                <video class="main-video" id="factory-video" autoplay preload="none" muted playsinline>
+                    <source data-lazy-src="assets/factory_digital_v2.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -353,6 +369,27 @@
             showFactory(0);
         });
     }
+</script>
+
+<script>
+(function(){
+  // 延迟加载非背景视频（内容视频）
+  function lazyLoadVideos(){
+    document.querySelectorAll('video[data-lazy-src]').forEach(function(v){
+      var src = v.getAttribute('data-lazy-src');
+      if(src){ v.src = src; v.removeAttribute('data-lazy-src'); v.load(); }
+    });
+    document.querySelectorAll('video source[data-lazy-src]').forEach(function(s){
+      var src = s.getAttribute('data-lazy-src');
+      if(src){ s.src = src; s.removeAttribute('data-lazy-src'); s.parentElement.load(); }
+    });
+  }
+  if(document.readyState === 'complete'){
+    setTimeout(lazyLoadVideos, 500);
+  } else {
+    window.addEventListener('load', function(){ setTimeout(lazyLoadVideos, 500); });
+  }
+})();
 </script>
 </body>
 </html>

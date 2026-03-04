@@ -105,6 +105,22 @@
         .bub.jp { animation:pop .6s ease-out; }
         @keyframes flash { 0%{background:rgba(255,100,0,.25)} 100%{background:#fff} }
         .ci.fl { animation:flash .5s ease-out; }
+    
+    /* === 全局性能优化 === */
+    /* 动画元素 GPU 加速 */
+    [class*="anim"], [class*="fade"], [class*="slide-in"],
+    [class*="float"], [class*="pulse"], [class*="glow"],
+    [class*="spin"], [class*="rotate"], [class*="bounce"],
+    .card, .metric-card, .track-card, .stat-box,
+    .nav-dot, .timeline-node {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+    }
+    /* 视频容器 GPU 加速 */
+    video { transform: translateZ(0); }
+    /* 减少字体渲染开销 */
+    body { text-rendering: optimizeSpeed; -webkit-font-smoothing: antialiased; }
+
     </style>
 </head>
 <body>

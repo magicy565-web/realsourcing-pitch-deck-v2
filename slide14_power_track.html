@@ -279,7 +279,23 @@ html, body { width: 1280px; height: 720px; overflow: hidden; background: #050510
 /* ── BOTTOM ── */
 .bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 60; background: linear-gradient(90deg, #4F6EF7 0%, #6366F1 50%, #10B981 100%); }
 .slide-num { position: absolute; bottom: 8px; right: 36px; font-size: 10px; color: rgba(255,255,255,0.15); font-family: monospace; z-index: 60; }
-</style>
+
+    /* === 全局性能优化 === */
+    /* 动画元素 GPU 加速 */
+    [class*="anim"], [class*="fade"], [class*="slide-in"],
+    [class*="float"], [class*="pulse"], [class*="glow"],
+    [class*="spin"], [class*="rotate"], [class*="bounce"],
+    .card, .metric-card, .track-card, .stat-box,
+    .nav-dot, .timeline-node {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+    }
+    /* 视频容器 GPU 加速 */
+    video { transform: translateZ(0); }
+    /* 减少字体渲染开销 */
+    body { text-rendering: optimizeSpeed; -webkit-font-smoothing: antialiased; }
+
+    </style>
 </head>
 <body>
 <div class="slide">
