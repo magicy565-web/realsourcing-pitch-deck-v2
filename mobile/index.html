@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>RealSourcing Pitch Deck 2026 - 智能采购操作系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: #020208;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            touch-action: manipulation;
+        }
+
+        /* ═══════════════════════════════════
+           顶部导航栏
+        ═══════════════════════════════════ */
+        #top-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 44px;
+            padding-top: env(safe-area-inset-top, 0px);
+            background: rgba(5,5,16,0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+            padding-left: 16px; padding-right: 16px;
+            z-index: 1000; backdrop-filter: blur(12px);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #top-bar:hover, #top-bar.visible { opacity: 1; }
+
+        .tb-brand {
+            font-size: 12px; font-weight: 800; color: #fff;
+            display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+        }
+        .tb-brand-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #4F6EF7; box-shadow: 0 0 8px #4F6EF7;
+            animation: pulse 2s infinite; flex-shrink: 0;
+        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        .tb-slide-info {
+            font-size: 10px; color: rgba(255,255,255,0.4);
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            flex: 1; text-align: center; padding: 0 8px;
+        }
+
+        .tb-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .tb-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 6px 12px;
+            font-size: 13px; color: rgba(255,255,255,0.7);
+            cursor: pointer; transition: all 0.2s;
+            min-width: 36px; min-height: 32px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tb-btn:hover, .tb-btn:active { background: rgba(255,255,255,0.15); color: #fff; }
+        .tb-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* ═══════════════════════════════════
+           幻灯片视口
+        ═══════════════════════════════════ */
+        #slide-viewport {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: #020208; overflow: hidden;
+        }
+        #slide-frame {
+            width: 1280px; height: 720px;
+            border: none; display: block;
+            transform-origin: center center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        /* ═══════════════════════════════════
+           底部导航栏
+        ═══════════════════════════════════ */
+        #bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 52px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            background: rgba(5,5,16,0.95);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: flex-start;
+            gap: 4px; padding-left: 12px; padding-right: 12px;
+            z-index: 1000; backdrop-filter: blur(12px);
+            opacity: 0; transition: opacity 0.3s;
+            overflow-x: auto; overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        #bottom-nav::-webkit-scrollbar { display: none; }
+        #bottom-nav:hover, #bottom-nav.visible { opacity: 1; }
+
+        .nav-dot {
+            width: 28px; height: 28px; border-radius: 7px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.2s; font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0; min-width: 28px;
+        }
+        .nav-dot:hover, .nav-dot:active {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            border-color: rgba(255,255,255,0.15);
+        }
+        .nav-dot.active {
+            background: rgba(79,110,247,0.25);
+            border-color: rgba(79,110,247,0.6);
+            color: #8BA4FF;
+        }
+        .nav-section-label {
+            font-size: 8px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
+            text-transform: uppercase; padding: 0 5px; white-space: nowrap; flex-shrink: 0;
+        }
+        .nav-divider {
+            width: 1px; height: 18px;
+            background: rgba(255,255,255,0.06); margin: 0 3px; flex-shrink: 0;
+        }
+
+        /* ═══════════════════════════════════
+           进度条
+        ═══════════════════════════════════ */
+        #progress-bar {
+            position: fixed; bottom: 52px; left: 0; height: 2px;
+            background: linear-gradient(90deg, #4F6EF7, #8B5CF6, #10B981);
+            z-index: 1001; transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        /* ═══════════════════════════════════
+           键盘提示（桌面端）
+        ═══════════════════════════════════ */
+        #key-hint {
+            position: fixed; bottom: 64px; right: 20px;
+            font-size: 10px; color: rgba(255,255,255,0.2);
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        body:hover #key-hint { opacity: 1; }
+
+        /* ═══════════════════════════════════
+           过渡遮罩
+        ═══════════════════════════════════ */
+        #transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020208; z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        #transition-overlay.active { opacity: 1; pointer-events: all; }
+
+        /* ═══════════════════════════════════
+           竖屏旋转提示（手机端）
+        ═══════════════════════════════════ */
+        #swipe-hint {
+            position: fixed;
+            bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+            left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px; padding: 5px 14px;
+            font-size: 11px; color: rgba(255,255,255,0.45);
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0; transition: opacity 0.5s;
+            pointer-events: none; white-space: nowrap;
+            z-index: 1002;
+        }
+        #swipe-hint.visible { opacity: 1; }
+
+        /* ═══════════════════════════════════
+           手机端响应式调整
+        ═══════════════════════════════════ */
+        @media (max-width: 768px) {
+            #top-bar { height: 48px; }
+            #bottom-nav {
+                height: calc(52px + env(safe-area-inset-bottom, 0px));
+            }
+            #progress-bar {
+                bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+            }
+            #key-hint { display: none; }
+            .tb-brand-text { display: none; }
+            .tb-btn.fullscreen-btn { display: none; }
+            .nav-dot { width: 30px; height: 30px; font-size: 9px; }
+        }
+
+        /* 竖屏超窄手机：隐藏分组标签和分隔线 */
+        @media (max-width: 480px) and (orientation: portrait) {
+            .nav-section-label { display: none; }
+            .nav-divider { display: none; }
+            #top-bar { height: 44px; }
+        }
+
+        /* 横屏手机：压缩导航高度 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #top-bar { height: 36px; }
+            #bottom-nav {
+                height: calc(40px + env(safe-area-inset-bottom, 0px));
+            }
+            #progress-bar {
+                bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+            }
+            .nav-dot { width: 24px; height: 24px; font-size: 7px; }
+            .nav-section-label { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<div id="top-bar">
+    <div class="tb-brand">
+        <div class="tb-brand-dot"></div>
+        <span class="tb-brand-text">RealSourcing &middot; 2026</span>
+    </div>
+    <div class="tb-slide-info" id="slide-info">1 / 20</div>
+    <div class="tb-controls">
+        <button class="tb-btn" id="btn-prev" onclick="navigate(-1)" aria-label="上一页">&#8592;</button>
+        <button class="tb-btn" id="btn-next" onclick="navigate(1)" aria-label="下一页">&#8594;</button>
+        <button class="tb-btn fullscreen-btn" onclick="toggleFullscreen()" aria-label="全屏">&#9974;</button>
+    </div>
+</div>
+
+<!-- 幻灯片视口 -->
+<div id="slide-viewport">
+    <iframe id="slide-frame" src="../cover.html" scrolling="no" allow="autoplay"></iframe>
+</div>
+
+<!-- 进度条 -->
+<div id="progress-bar"></div>
+
+<!-- 底部导航 -->
+<div id="bottom-nav">
+    <span class="nav-section-label">开篇</span>
+    <div class="nav-dot active" onclick="goTo(0)" title="封面">01</div>
+    <div class="nav-dot" onclick="goTo(1)" title="范式转移">02</div>
+    <div class="nav-dot" onclick="goTo(2)" title="AI守门员">03</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">产品</span>
+    <div class="nav-dot" onclick="goTo(3)" title="老板数字分身">04</div>
+    <div class="nav-dot" onclick="goTo(4)" title="Commander OS">05</div>
+    <div class="nav-dot" onclick="goTo(5)" title="解决方案">06</div>
+    <div class="nav-dot" onclick="goTo(6)" title="多智能体部署">07</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">平台</span>
+    <div class="nav-dot" onclick="goTo(7)" title="平台全景">08</div>
+    <div class="nav-dot" onclick="goTo(8)" title="智能采购仪表盘">09</div>
+    <div class="nav-dot" onclick="goTo(9)" title="工厂档案">10</div>
+    <div class="nav-dot" onclick="goTo(10)" title="实时采购Webinar">11</div>
+    <div class="nav-dot" onclick="goTo(11)" title="新采购旅程">12</div>
+    <div class="nav-dot" onclick="goTo(12)" title="成长通道">13</div>
+    <div class="nav-dot" onclick="goTo(13)" title="高效率通道">14</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">商业</span>
+    <div class="nav-dot" onclick="goTo(14)" title="商业模式">15</div>
+    <div class="nav-dot" onclick="goTo(15)" title="牵引力">16</div>
+    <div class="nav-dot" onclick="goTo(16)" title="竞争格局">17</div>
+    <div class="nav-dot" onclick="goTo(17)" title="项目启动规划">18</div>
+    <div class="nav-divider"></div>
+    <span class="nav-section-label">融资</span>
+    <div class="nav-dot" onclick="goTo(18)" title="核心团队">19</div>
+    <div class="nav-dot" onclick="goTo(19)" title="融资需求">20</div>
+</div>
+
+<!-- 键盘提示（桌面端） -->
+<div id="key-hint">&#8592; &#8594; Arrow Keys &middot; Space to advance</div>
+
+<!-- 操作提示（手机端） -->
+<div id="swipe-hint">&#8592; 左右滑动切换 &#8594;</div>
+
+<!-- 过渡遮罩 -->
+<div id="transition-overlay"></div>
+
+<script>
+    /* ─── 幻灯片列表 ─── */
+    const slides = [
+        { file: '../cover.html',                  title: '封面' },
+        { file: '../paradigm_shift.html',          title: '范式转移' },
+        { file: '../ai_gatekeeper.html',           title: 'AI 守门员' },
+        { file: '../digital_twin_strategy.html',   title: '数字分身' },
+        { file: '../commander_os_product.html',    title: 'Commander OS' },
+        { file: '../solution_overview.html',       title: '解决方案' },
+        { file: '../factory_value.html',           title: '多智能体' },
+        { file: '../platform_overview.html',       title: '平台全景' },
+        { file: '../slide09_dashboard.html',       title: '采购仪表盘' },
+        { file: '../slide10_factory_profile.html', title: '工厂档案' },
+        { file: '../slide11_webinar.html',         title: 'Webinar' },
+        { file: '../slide12_new_journey.html',     title: '新采购旅程' },
+        { file: '../slide13_growth_track.html',    title: '成长通道' },
+        { file: '../slide14_power_track.html',     title: '高效率通道' },
+        { file: '../business_model.html',          title: '商业模式' },
+        { file: '../traction.html',                title: '牵引力' },
+        { file: '../competition.html',             title: '竞争格局' },
+        { file: '../roadmap.html',                 title: '启动规划' },
+        { file: '../team.html',                    title: '核心团队' },
+        { file: '../ask_closing.html',             title: '融资需求' },
+    ];
+
+    let current = 0;
+    const frame     = document.getElementById('slide-frame');
+    const overlay   = document.getElementById('transition-overlay');
+    const topBar    = document.getElementById('top-bar');
+    const bottomNav = document.getElementById('bottom-nav');
+    const progressBar = document.getElementById('progress-bar');
+    const slideInfo = document.getElementById('slide-info');
+    const btnPrev   = document.getElementById('btn-prev');
+    const btnNext   = document.getElementById('btn-next');
+    const swipeHint = document.getElementById('swipe-hint');
+    const viewport  = document.getElementById('slide-viewport');
+
+    /* ─── 判断是否为竖屏手机 ─── */
+    function isPortraitMobile() {
+        return window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
+    }
+
+    /* ─── 获取导航栏实际高度 ─── */
+    function getBarHeights() {
+        return {
+            top: topBar.getBoundingClientRect().height || 44,
+            bot: bottomNav.getBoundingClientRect().height || 52
+        };
+    }
+
+    /* ─── 核心缩放函数 ─── */
+    function scaleSlide() {
+        const { top: topH, bot: botH } = getBarHeights();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const availW = vw;
+        const availH = vh - topH - botH;
+
+        let scale, rotated = false;
+
+        if (isPortraitMobile()) {
+            // 竖屏手机：旋转 90° 让幻灯片充分利用屏幕高度
+            // 旋转后：幻灯片的宽(1280)对应手机的可用高(availH)
+            //         幻灯片的高(720)对应手机的宽(availW)
+            const sRotX = availH / 1280;
+            const sRotY = availW / 720;
+            scale = Math.min(sRotX, sRotY) * 0.98;
+            rotated = true;
+        } else {
+            // 横屏手机 / 桌面端 / iPad：正常缩放
+            const scaleX = availW / 1280;
+            const scaleY = availH / 720;
+            scale = Math.min(scaleX, scaleY) * 0.98;
+        }
+
+        if (rotated) {
+            // 旋转 -90° 并缩放
+            frame.style.transform = `rotate(-90deg) scale(${scale})`;
+            // 旋转后 iframe 的视觉中心需要重新定位
+            // iframe 本身是 1280×720，旋转后视觉上变为 720×1280
+            // 通过 viewport 的 flex 居中即可自动处理
+        } else {
+            frame.style.transform = `scale(${scale})`;
+        }
+
+        viewport.style.top    = topH + 'px';
+        viewport.style.height = availH + 'px';
+        progressBar.style.bottom = botH + 'px';
+    }
+
+    /* ─── 更新导航状态 ─── */
+    function updateNav() {
+        const dots = document.querySelectorAll('.nav-dot');
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        const activeDot = dots[current];
+        if (activeDot) {
+            activeDot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        slideInfo.textContent = `${current + 1} / ${slides.length} · ${slides[current].title}`;
+        btnPrev.disabled = (current === 0);
+        btnNext.disabled = (current === slides.length - 1);
+        progressBar.style.width = ((current + 1) / slides.length * 100) + '%';
+    }
+
+    /* ─── 跳转到指定幻灯片 ─── */
+    function goTo(index) {
+        if (index < 0 || index >= slides.length || index === current) return;
+        overlay.classList.add('active');
+        setTimeout(() => {
+            current = index;
+            frame.src = slides[index].file + '?t=' + Date.now();
+            updateNav();
+            setTimeout(() => overlay.classList.remove('active'), 100);
+        }, 180);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ─── 键盘导航（桌面端） ─── */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+            e.preventDefault(); navigate(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault(); navigate(-1);
+        } else if (e.key === 'Home') { goTo(0); }
+          else if (e.key === 'End')  { goTo(slides.length - 1); }
+    });
+
+    /* ─── 显示/隐藏 UI ─── */
+    let uiTimer;
+    function showUI(ms) {
+        topBar.classList.add('visible');
+        bottomNav.classList.add('visible');
+        clearTimeout(uiTimer);
+        uiTimer = setTimeout(() => {
+            topBar.classList.remove('visible');
+            bottomNav.classList.remove('visible');
+        }, ms || 3000);
+    }
+    document.addEventListener('mousemove', () => showUI(3000));
+
+    /* ─── 触摸滑动（手机端） ─── */
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX    = e.touches[0].clientX;
+        touchStartY    = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        showUI(4000);
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+
+        if (isPortraitMobile()) {
+            // 竖屏旋转模式：视觉上的"左右"对应实际的"上下"
+            // 用户向上滑 → 视觉向左 → 下一张；向下滑 → 视觉向右 → 上一张
+            if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2 && dt < 500) {
+                navigate(dy < 0 ? 1 : -1);
+            }
+        } else {
+            // 正常横屏模式：左右滑动
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2 && dt < 500) {
+                navigate(dx < 0 ? 1 : -1);
+            }
+        }
+    }, { passive: true });
+
+    /* ─── 全屏（桌面端） ─── */
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    /* ─── 初始化 ─── */
+    window.addEventListener('resize', scaleSlide);
+    window.addEventListener('orientationchange', () => setTimeout(scaleSlide, 150));
+
+    scaleSlide();
+    updateNav();
+    showUI(4000);
+
+    // 手机端显示操作提示
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        swipeHint.classList.add('visible');
+        setTimeout(() => swipeHint.classList.remove('visible'), 3500);
+    }
+</script>
+</body>
+</html>
