@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>产业带循环验证动画</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; background:#0a0a1a; overflow:hidden; }
+canvas { display:block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// 自适应父容器尺寸
+function resize() {
+  canvas.width = canvas.parentElement ? canvas.parentElement.offsetWidth : window.innerWidth;
+  canvas.height = canvas.parentElement ? canvas.parentElement.offsetHeight : window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ── 产业带数据 ──
+const industries = [
+  { name: '家纺产业带', en: 'Textile', color: '#4F6EF7', accent: '#8BA4FF', month: 'M1' },
+  { name: '家具产业带', en: 'Furniture', color: '#8B5CF6', accent: '#C084FC', month: 'M2' },
+  { name: '家电产业带', en: 'Appliance', color: '#06B6D4', accent: '#67E8F9', month: 'M3' },
+  { name: '服装产业带', en: 'Apparel', color: '#F59E0B', accent: '#FCD34D', month: 'M4' },
+  { name: '汽配产业带', en: 'Auto Parts', color: '#10B981', accent: '#34D399', month: 'M5' },
+];
+
+// ── 工厂剪影绘制函数 ──
+function drawFactory(ctx, x, y, w, h, type, color, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+
+  if (type === 0) { // 家纺：大厂房+烟囱
+    ctx.fillRect(x, y + h*0.3, w*0.7, h*0.7);
+    ctx.fillRect(x + w*0.75, y + h*0.1, w*0.12, h*0.9);
+    ctx.fillRect(x + w*0.88, y + h*0.2, w*0.12, h*0.8);
+    // 窗户
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    for (let i = 0; i < 4; i++) ctx.fillRect(x + w*0.08 + i*w*0.15, y + h*0.45, w*0.09, h*0.15);
+    for (let i = 0; i < 4; i++) ctx.fillRect(x + w*0.08 + i*w*0.15, y + h*0.68, w*0.09, h*0.15);
+  } else if (type === 1) { // 家具：仓库+坡屋顶
+    ctx.beginPath();
+    ctx.moveTo(x, y + h*0.4);
+    ctx.lineTo(x + w*0.5, y);
+    ctx.lineTo(x + w, y + h*0.4);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x, y + h);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(x + w*0.3, y + h*0.55, w*0.15, h*0.25);
+    ctx.fillRect(x + w*0.55, y + h*0.55, w*0.15, h*0.25);
+  } else if (type === 2) { // 家电：现代厂房+玻璃幕墙
+    ctx.fillRect(x, y + h*0.2, w, h*0.8);
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 3; j++) {
+        ctx.fillRect(x + w*0.05 + i*w*0.18, y + h*0.28 + j*h*0.2, w*0.12, h*0.14);
+      }
+    }
+    ctx.fillStyle = color;
+    ctx.fillRect(x + w*0.1, y, w*0.8, h*0.22);
+  } else if (type === 3) { // 服装：多层楼
+    ctx.fillRect(x + w*0.1, y, w*0.8, h);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    for (let j = 0; j < 4; j++) {
+      for (let i = 0; i < 3; i++) {
+        ctx.fillRect(x + w*0.18 + i*w*0.22, y + h*0.1 + j*h*0.2, w*0.14, h*0.12);
+      }
+    }
+    ctx.fillStyle = color;
+    ctx.fillRect(x + w*0.35, y + h*0.85, w*0.3, h*0.15);
+  } else { // 汽配：工业厂房+大门
+    ctx.fillRect(x, y + h*0.25, w*0.85, h*0.75);
+    ctx.fillRect(x + w*0.88, y + h*0.05, w*0.12, h*0.95);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(x + w*0.05, y + h*0.35, w*0.35, h*0.35);
+    ctx.fillRect(x + w*0.45, y + h*0.35, w*0.35, h*0.35);
+    ctx.fillStyle = color;
+    ctx.fillRect(x + w*0.3, y + h*0.7, w*0.25, h*0.3);
+  }
+  ctx.restore();
+}
+
+// ── 跑步小人 ──
+const runner = {
+  x: 0, y: 0,
+  frame: 0, frameTimer: 0, frameInterval: 80,
+  speed: 0,
+};
+
+function drawRunner(ctx, x, y, scale, color, frame) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const f = frame % 8;
+  // 头
+  ctx.beginPath();
+  ctx.arc(0, -28, 6, 0, Math.PI*2);
+  ctx.fill();
+  // 身体
+  ctx.beginPath();
+  ctx.moveTo(0, -22);
+  ctx.lineTo(0, -6);
+  ctx.stroke();
+  // 手臂
+  const armSwing = Math.sin(f / 8 * Math.PI * 2) * 18;
+  ctx.beginPath();
+  ctx.moveTo(0, -18);
+  ctx.lineTo(12 * Math.cos((armSwing + 30) * Math.PI/180), -18 + 12 * Math.sin((armSwing + 30) * Math.PI/180));
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, -18);
+  ctx.lineTo(-12 * Math.cos((armSwing + 30) * Math.PI/180), -18 + 12 * Math.sin((-armSwing + 30) * Math.PI/180));
+  ctx.stroke();
+  // 腿
+  const legSwing = Math.sin(f / 8 * Math.PI * 2) * 22;
+  // 右腿
+  ctx.beginPath();
+  ctx.moveTo(0, -6);
+  ctx.lineTo(8 * Math.sin(legSwing * Math.PI/180), 8);
+  ctx.lineTo(14 * Math.sin(legSwing * Math.PI/180) + 4, 20);
+  ctx.stroke();
+  // 左腿
+  ctx.beginPath();
+  ctx.moveTo(0, -6);
+  ctx.lineTo(-8 * Math.sin(legSwing * Math.PI/180), 8);
+  ctx.lineTo(-14 * Math.sin(legSwing * Math.PI/180) - 4, 20);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ── 状态 ──
+let currentIdx = 0;
+let nextIdx = 1;
+let transitionProgress = 0; // 0~1
+let stageTimer = 0;
+const STAGE_DURATION = 3000; // 每个产业带停留时间(ms)
+const TRANS_DURATION = 800;  // 切换过渡时间(ms)
+let isTransitioning = false;
+let lastTime = 0;
+let totalTime = 0;
+
+// 地面上的工厂位置
+const factoryPositions = [
+  { xRatio: 0.05, wRatio: 0.18 },
+  { xRatio: 0.26, wRatio: 0.14 },
+  { xRatio: 0.43, wRatio: 0.20 },
+  { xRatio: 0.66, wRatio: 0.16 },
+  { xRatio: 0.84, wRatio: 0.14 },
+];
+
+// 粒子
+const particles = [];
+function spawnParticle(x, y, color) {
+  for (let i = 0; i < 3; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 2,
+      vy: -Math.random() * 2 - 1,
+      life: 1, color,
+      size: Math.random() * 3 + 1,
+    });
+  }
+}
+
+function draw(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const dt = Math.min(timestamp - lastTime, 50);
+  lastTime = timestamp;
+  totalTime += dt;
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  // ── 背景 ──
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, W, H);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  const gs = 40;
+  for (let x = 0; x < W; x += gs) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += gs) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // ── 时间轴（上方）──
+  const tlY = H * 0.12;
+  const tlLeft = W * 0.08;
+  const tlRight = W * 0.92;
+  const tlW = tlRight - tlLeft;
+  const months = ['M1','M2','M3','M4','M5','M6'];
+  const monthX = months.map((_, i) => tlLeft + tlW * i / 5);
+
+  // 时间轴线
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(tlLeft, tlY);
+  ctx.lineTo(tlRight, tlY);
+  ctx.stroke();
+
+  // 进度高亮
+  const progressX = tlLeft + tlW * Math.min(totalTime / (STAGE_DURATION * 6), 1);
+  const grad = ctx.createLinearGradient(tlLeft, 0, progressX, 0);
+  grad.addColorStop(0, industries[0].color);
+  grad.addColorStop(0.25, industries[1].color);
+  grad.addColorStop(0.5, industries[2].color);
+  grad.addColorStop(0.75, industries[3].color);
+  grad.addColorStop(1, industries[4].color);
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(tlLeft, tlY);
+  ctx.lineTo(Math.min(progressX, tlRight), tlY);
+  ctx.stroke();
+
+  // 月份节点
+  months.forEach((m, i) => {
+    const mx = monthX[i];
+    const isDone = totalTime > STAGE_DURATION * i;
+    const isCurrent = i === currentIdx;
+    const ind = industries[Math.min(i, 4)];
+
+    ctx.beginPath();
+    ctx.arc(mx, tlY, isCurrent ? 8 : 6, 0, Math.PI*2);
+    ctx.fillStyle = isDone ? ind.color : 'rgba(255,255,255,0.15)';
+    ctx.fill();
+    if (isCurrent) {
+      ctx.strokeStyle = ind.accent;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(mx, tlY, 12, 0, Math.PI*2);
+      ctx.stroke();
+    }
+
+    // 月份标签
+    ctx.fillStyle = isDone ? ind.accent : 'rgba(255,255,255,0.3)';
+    ctx.font = `bold ${isCurrent ? 14 : 12}px "JetBrains Mono", monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(m, mx, tlY - 18);
+
+    // 产业带名称（当前高亮）
+    if (i < 5) {
+      ctx.fillStyle = isCurrent ? ind.color : 'rgba(255,255,255,0.2)';
+      ctx.font = `${isCurrent ? 'bold 12px' : '11px'} "Noto Sans SC", sans-serif`;
+      ctx.fillText(industries[i].name, mx, tlY + 24);
+    }
+  });
+
+  // ── 地面 ──
+  const groundY = H * 0.78;
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fillRect(0, groundY, W, 2);
+
+  // ── 工厂背景（当前 + 过渡）──
+  const factH = H * 0.42;
+  const factBaseY = groundY - factH;
+
+  // 当前产业带工厂
+  const curInd = industries[currentIdx];
+  const nxtInd = industries[nextIdx];
+
+  factoryPositions.forEach((fp, i) => {
+    const fx = W * fp.xRatio;
+    const fw = W * fp.wRatio;
+    const fh = factH * (0.7 + (i % 3) * 0.1);
+    const fy = groundY - fh;
+    const alpha = isTransitioning ? (1 - transitionProgress) * 0.6 : 0.6;
+    drawFactory(ctx, fx, fy, fw, fh, currentIdx % 5, curInd.color, alpha);
+  });
+
+  if (isTransitioning) {
+    factoryPositions.forEach((fp, i) => {
+      const fx = W * fp.xRatio;
+      const fw = W * fp.wRatio;
+      const fh = factH * (0.7 + (i % 3) * 0.1);
+      const fy = groundY - fh;
+      drawFactory(ctx, fx, fy, fw, fh, nextIdx % 5, nxtInd.color, transitionProgress * 0.6);
+    });
+  }
+
+  // 地面光晕
+  const glowGrad = ctx.createLinearGradient(0, groundY, 0, groundY + 60);
+  glowGrad.addColorStop(0, curInd.color + '30');
+  glowGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, groundY, W, 60);
+
+  // ── 跑步小人 ──
+  runner.frameTimer += dt;
+  if (runner.frameTimer >= runner.frameInterval) {
+    runner.frame++;
+    runner.frameTimer = 0;
+  }
+
+  // 小人位置：在画面内循环跑动
+  const runSpeed = W * 0.00018 * dt;
+  runner.x += runSpeed;
+  if (runner.x > W * 0.88) runner.x = W * 0.08;
+
+  // 脚步粒子
+  if (runner.frame % 4 === 0) {
+    spawnParticle(runner.x, groundY, curInd.color);
+  }
+
+  // 更新粒子
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.08;
+    p.life -= 0.04;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+    ctx.globalAlpha = p.life * 0.6;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  drawRunner(ctx, runner.x, groundY - 2, 1.2, curInd.accent, runner.frame);
+
+  // ── 当前产业带大标题 ──
+  ctx.save();
+  const titleAlpha = isTransitioning ? (1 - transitionProgress) : 1;
+  ctx.globalAlpha = titleAlpha * 0.9;
+  ctx.font = 'bold 32px "Noto Sans SC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = curInd.color;
+  ctx.fillText(curInd.name, W/2, H * 0.56);
+  ctx.font = '14px "Inter", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillText(curInd.en + ' Industry Belt', W/2, H * 0.62);
+  ctx.restore();
+
+  if (isTransitioning) {
+    ctx.save();
+    ctx.globalAlpha = transitionProgress * 0.9;
+    ctx.font = 'bold 32px "Noto Sans SC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = nxtInd.color;
+    ctx.fillText(nxtInd.name, W/2, H * 0.56);
+    ctx.font = '14px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText(nxtInd.en + ' Industry Belt', W/2, H * 0.62);
+    ctx.restore();
+  }
+
+  // ── 底部目标标签 ──
+  const labels = ['2,000+\n海外采购商', '50→∞\n工厂规模', '5\n产业带'];
+  const lx = [W*0.2, W*0.5, W*0.8];
+  labels.forEach((lb, i) => {
+    const parts = lb.split('\n');
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.beginPath();
+    ctx.roundRect(lx[i] - 60, H*0.86, 120, 48, 8);
+    ctx.fill();
+    ctx.fillStyle = curInd.accent;
+    ctx.font = 'bold 16px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(parts[0], lx[i], H*0.86 + 20);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '11px "Noto Sans SC", sans-serif';
+    ctx.fillText(parts[1], lx[i], H*0.86 + 38);
+  });
+
+  // ── 阶段计时器 ──
+  stageTimer += dt;
+  if (!isTransitioning && stageTimer >= STAGE_DURATION) {
+    isTransitioning = true;
+    stageTimer = 0;
+    transitionProgress = 0;
+  }
+  if (isTransitioning) {
+    transitionProgress += dt / TRANS_DURATION;
+    if (transitionProgress >= 1) {
+      transitionProgress = 1;
+      isTransitioning = false;
+      currentIdx = nextIdx;
+      nextIdx = (nextIdx + 1) % industries.length;
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+// 初始化小人位置
+runner.x = canvas.width * 0.1;
+runner.y = 0;
+
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
