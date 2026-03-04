@@ -17,11 +17,21 @@
             display: flex; align-items: center; justify-content: center;
             background: #020208;
         }
-        #slide-frame {
+
+        /* 所有 iframe 共享同一个容器，通过 visibility 切换显示 */
+        .slide-frame {
+            position: absolute;
             width: 1280px; height: 720px;
             border: none; display: block;
             transform-origin: center center;
             box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            visibility: hidden;
+            /* GPU 加速，避免重绘 */
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        .slide-frame.active {
+            visibility: visible;
         }
 
         /* ── Top Bar ── */
@@ -64,6 +74,11 @@
         }
         .nav-dot:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
         .nav-dot.active { background: rgba(79,110,247,0.2); border-color: rgba(79,110,247,0.5); color: #8BA4FF; }
+        /* 已预加载的幻灯片显示绿点 */
+        .nav-dot.loaded::after {
+            content: ''; display: block; width: 4px; height: 4px; border-radius: 50%;
+            background: #10B981; position: absolute; margin-top: 16px; margin-left: 16px;
+        }
         .nav-section-label {
             font-size: 8px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
             text-transform: uppercase; padding: 0 6px; white-space: nowrap; flex-shrink: 0;
@@ -87,14 +102,14 @@
         }
         body:hover #key-hint { opacity: 1; }
 
-        /* ── Transition overlay ── */
-        #transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #020208; z-index: 999;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.25s ease;
+        /* ── 加载状态指示 ── */
+        #loading-indicator {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.3); font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            z-index: 998; pointer-events: none;
+            opacity: 0; transition: opacity 0.2s;
         }
-        #transition-overlay.active { opacity: 1; pointer-events: all; }
+        #loading-indicator.visible { opacity: 1; }
     </style>
 </head>
 <body>
@@ -105,7 +120,7 @@
         <div class="tb-brand-dot"></div>
         RealSourcing &middot; Pitch Deck 2026
     </div>
-    <div class="tb-slide-info" id="slide-info">Slide 1 / 25</div>
+    <div class="tb-slide-info" id="slide-info">Slide 1 / 20</div>
     <div class="tb-controls">
         <button class="tb-btn" id="btn-prev" onclick="navigate(-1)">&#8592; Prev</button>
         <button class="tb-btn" id="btn-next" onclick="navigate(1)">Next &#8594;</button>
@@ -113,10 +128,8 @@
     </div>
 </div>
 
-<!-- Slide Viewport -->
-<div id="slide-viewport">
-    <iframe id="slide-frame" src="cover.html" scrolling="no"></iframe>
-</div>
+<!-- Slide Viewport：所有 iframe 在此容器内，通过 visibility 切换 -->
+<div id="slide-viewport"></div>
 
 <!-- Progress Bar -->
 <div id="progress-bar"></div>
@@ -157,21 +170,18 @@
 <!-- Keyboard Hint -->
 <div id="key-hint">&#8592; &#8594; Arrow Keys &middot; Space to advance</div>
 
-<!-- Transition Overlay -->
-<div id="transition-overlay"></div>
+<!-- Loading Indicator -->
+<div id="loading-indicator">Loading...</div>
 
 <script>
     const slides = [
-        // ── 开篇 ──
         { file: 'cover.html',                  title: '封面：智能采购操作系统' },
         { file: 'paradigm_shift.html',          title: '范式转移：全球贸易大洗牌' },
         { file: 'ai_gatekeeper.html',           title: 'AI 已成为采购守门员' },
-        // ── 产品 ──
         { file: 'digital_twin_strategy.html',   title: '老板的数字分身' },
         { file: 'commander_os_product.html',    title: 'Commander OS：开箱即用的外贸指挥部' },
         { file: 'solution_overview.html',       title: '解决方案 - Commander OS' },
         { file: 'factory_value.html',           title: 'Commander Agent 多智能体部署' },
-        // ── 平台 ──
         { file: 'platform_overview.html',       title: '平台全景：双核驱动' },
         { file: 'slide09_dashboard.html',       title: '智能采购仪表盘' },
         { file: 'slide10_factory_profile.html', title: '工厂 AI 档案' },
@@ -179,35 +189,61 @@
         { file: 'slide12_new_journey.html',     title: '新采购旅程' },
         { file: 'slide13_growth_track.html',    title: '成长通道 · Growth Track' },
         { file: 'slide14_power_track.html',     title: '高效率通道 · Power Track' },
-        // ── 商业 ──
         { file: 'business_model.html',          title: '商业模式：三条收入线' },
         { file: 'traction.html',                title: '牵引力：早期验证' },
         { file: 'competition.html',             title: '竞争格局' },
         { file: 'roadmap.html',                 title: '项目启动规划：三条业务验证路线' },
-        // ── 融资 ──
         { file: 'team.html',                    title: '核心团队' },
         { file: 'ask_closing.html',             title: '融资需求' },
     ];
 
     let current = 0;
-    const frame = document.getElementById('slide-frame');
-    const overlay = document.getElementById('transition-overlay');
+    let isTransitioning = false;
+    const viewport = document.getElementById('slide-viewport');
     const topBar = document.getElementById('top-bar');
     const bottomNav = document.getElementById('bottom-nav');
     const progressBar = document.getElementById('progress-bar');
     const slideInfo = document.getElementById('slide-info');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
+    const loadingIndicator = document.getElementById('loading-indicator');
+
+    // ── iframe 池：每张幻灯片对应一个持久 iframe，加载后不销毁 ──
+    const iframePool = new Array(slides.length).fill(null);
+    const loadedSet = new Set();
+
+    function getOrCreateIframe(index) {
+        if (iframePool[index]) return iframePool[index];
+
+        const iframe = document.createElement('iframe');
+        iframe.className = 'slide-frame';
+        iframe.scrolling = 'no';
+        iframe.setAttribute('allow', 'autoplay');
+        // 直接设置 src（不加时间戳），让浏览器缓存生效
+        iframe.src = slides[index].file;
+        viewport.appendChild(iframe);
+        iframePool[index] = iframe;
+
+        iframe.addEventListener('load', () => {
+            loadedSet.add(index);
+            // 更新导航点加载状态
+            const dots = document.querySelectorAll('.nav-dot');
+            if (dots[index]) dots[index].classList.add('loaded');
+        });
+
+        return iframe;
+    }
 
     function scaleSlide() {
         const vw = window.innerWidth;
-        const vh = window.innerHeight - 44 - 56; // minus top/bottom bars
-        const scaleX = vw / 1280;
-        const scaleY = vh / 720;
-        const scale = Math.min(scaleX, scaleY) * 0.98;
-        frame.style.transform = `scale(${scale})`;
-        document.getElementById('slide-viewport').style.top = '44px';
-        document.getElementById('slide-viewport').style.height = `calc(100% - 100px)`;
+        const vh = window.innerHeight - 44 - 56;
+        const scale = Math.min(vw / 1280, vh / 720) * 0.98;
+        // 对所有已创建的 iframe 应用相同缩放
+        document.querySelectorAll('.slide-frame').forEach(f => {
+            f.style.transform = `scale(${scale})`;
+        });
+        viewport.style.top = '44px';
+        viewport.style.height = 'calc(100% - 100px)';
     }
 
     function updateNav() {
@@ -216,20 +252,68 @@
         slideInfo.textContent = `Slide ${current + 1} / ${slides.length} · ${slides[current].title}`;
         btnPrev.disabled = current === 0;
         btnNext.disabled = current === slides.length - 1;
-        const pct = ((current + 1) / slides.length) * 100;
-        progressBar.style.width = pct + '%';
+        progressBar.style.width = ((current + 1) / slides.length * 100) + '%';
+    }
+
+    function showSlide(index) {
+        // 隐藏当前，显示目标
+        document.querySelectorAll('.slide-frame').forEach(f => f.classList.remove('active'));
+        const targetFrame = getOrCreateIframe(index);
+        scaleSlide(); // 确保新 iframe 也有正确缩放
+        targetFrame.classList.add('active');
     }
 
     function goTo(index) {
-        if (index < 0 || index >= slides.length || index === current) return;
-        overlay.classList.add('active');
-        setTimeout(() => {
+        if (index < 0 || index >= slides.length || index === current || isTransitioning) return;
+        isTransitioning = true;
+
+        const targetFrame = getOrCreateIframe(index);
+        const isLoaded = loadedSet.has(index);
+
+        if (isLoaded) {
+            // 已缓存：直接切换，无需等待
             current = index;
-            const timestamp = new Date().getTime();
-            frame.src = slides[index].file + '?t=' + timestamp;
+            showSlide(index);
             updateNav();
-            setTimeout(() => overlay.classList.remove('active'), 100);
-        }, 200);
+            isTransitioning = false;
+        } else {
+            // 未加载：显示加载指示，等待 load 事件
+            loadingIndicator.classList.add('visible');
+            const onLoad = () => {
+                loadingIndicator.classList.remove('visible');
+                current = index;
+                showSlide(index);
+                updateNav();
+                isTransitioning = false;
+                targetFrame.removeEventListener('load', onLoad);
+            };
+            targetFrame.addEventListener('load', onLoad);
+            // 超时保护：3s 后强制切换
+            setTimeout(() => {
+                if (isTransitioning) {
+                    loadingIndicator.classList.remove('visible');
+                    current = index;
+                    showSlide(index);
+                    updateNav();
+                    isTransitioning = false;
+                    targetFrame.removeEventListener('load', onLoad);
+                }
+            }, 3000);
+        }
+
+        // 预加载相邻幻灯片（后台静默加载）
+        preloadAdjacent(index);
+    }
+
+    function preloadAdjacent(index) {
+        // 预加载前后各 2 张
+        [-2, -1, 1, 2].forEach(offset => {
+            const i = index + offset;
+            if (i >= 0 && i < slides.length && !iframePool[i]) {
+                // 延迟 500ms 后台加载，避免抢占当前页面带宽
+                setTimeout(() => getOrCreateIframe(i), 500 + Math.abs(offset) * 300);
+            }
+        });
     }
 
     function navigate(dir) {
@@ -242,11 +326,8 @@
             e.preventDefault(); navigate(1);
         } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
             e.preventDefault(); navigate(-1);
-        } else if (e.key === 'Home') {
-            goTo(0);
-        } else if (e.key === 'End') {
-            goTo(slides.length - 1);
-        }
+        } else if (e.key === 'Home') { goTo(0); }
+        else if (e.key === 'End')   { goTo(slides.length - 1); }
     });
 
     // Show/hide UI on mouse move
@@ -263,7 +344,7 @@
 
     // Touch/swipe support
     let touchStartX = 0;
-    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
     document.addEventListener('touchend', e => {
         const dx = e.changedTouches[0].clientX - touchStartX;
         if (Math.abs(dx) > 60) navigate(dx < 0 ? 1 : -1);
@@ -271,18 +352,23 @@
 
     // Fullscreen
     function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
     }
 
-    // Init
+    // ── 初始化 ──
     window.addEventListener('resize', scaleSlide);
     scaleSlide();
     updateNav();
-    // Show UI briefly on load
+
+    // 立即加载第 1 张
+    showSlide(0);
+
+    // 预加载第 2、3 张（最常访问的相邻页）
+    setTimeout(() => getOrCreateIframe(1), 200);
+    setTimeout(() => getOrCreateIframe(2), 600);
+
+    // 显示 UI 4 秒后隐藏
     topBar.classList.add('visible');
     bottomNav.classList.add('visible');
     setTimeout(() => {
