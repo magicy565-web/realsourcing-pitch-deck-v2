@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>早期用户体验 · RealSourcing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         html, body { width:1280px; height:720px; overflow:hidden; background:#020208;
@@ -124,8 +126,8 @@
 </head>
 <body>
 <div class="slide-container">
-    <video class="video-bg" autoplay loop muted playsinline>
-        <source src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
+    <video class="video-bg" data-autoplay loop muted playsinline preload="none">
+        <source data-src="https://private-us-east-1.manuscdn.com/user_upload_by_module/session_file/310519663384920352/RJVzyHtxRWwdgQPi.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
     <div class="grid-lines"></div>
@@ -149,7 +151,7 @@
         <div class="user-card card-1">
             <div class="top-line"></div>
             <div class="card-avatar" style="width:120px;">
-                <img src="assets/avatar_jake.jpg" alt="Jake">
+                <img loading="lazy" decoding="async" src="assets/avatar_jake.jpg" alt="Jake">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -171,7 +173,7 @@
         <div class="user-card card-2">
             <div class="top-line"></div>
             <div class="card-avatar">
-                <img src="assets/avatar_marco_sofia.jpg" alt="Marco & Sofia">
+                <img loading="lazy" decoding="async" src="assets/avatar_marco_sofia.jpg" alt="Marco & Sofia">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -188,7 +190,7 @@
                 </div>
             </div>
             <div class="card-chat">
-                <img src="assets/chat_marco1.jpg" alt="WhatsApp chat">
+                <img loading="lazy" decoding="async" src="assets/chat_marco1.jpg" alt="WhatsApp chat">
             </div>
         </div>
 
@@ -196,7 +198,7 @@
         <div class="user-card card-3">
             <div class="top-line"></div>
             <div class="card-avatar">
-                <img src="assets/avatar_arman.jpg" alt="Arman">
+                <img loading="lazy" decoding="async" src="assets/avatar_arman.jpg" alt="Arman">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -213,7 +215,7 @@
                 </div>
             </div>
             <div class="card-chat">
-                <img src="assets/chat_arman.jpg" alt="WhatsApp chat">
+                <img loading="lazy" decoding="async" src="assets/chat_arman.jpg" alt="WhatsApp chat">
             </div>
         </div>
 
@@ -221,7 +223,7 @@
         <div class="user-card card-4">
             <div class="top-line"></div>
             <div class="card-avatar">
-                <img src="assets/avatar_youssef.jpg" alt="Youssef">
+                <img loading="lazy" decoding="async" src="assets/avatar_youssef.jpg" alt="Youssef">
             </div>
             <div class="card-body">
                 <div class="user-info">
@@ -238,7 +240,7 @@
                 </div>
             </div>
             <div class="card-chat">
-                <img src="assets/chat_youssef.jpg" alt="WhatsApp chat">
+                <img loading="lazy" decoding="async" src="assets/chat_youssef.jpg" alt="WhatsApp chat">
             </div>
         </div>
 
@@ -247,5 +249,28 @@
     <div class="slide-num">16 / 25</div>
     <div class="bottom-bar"></div>
 </div>
+
+<script>
+// 背景视频延迟加载：页面渲染完成后再加载视频
+(function(){
+  function loadBgVideos(){
+    document.querySelectorAll('video[data-autoplay]').forEach(function(v){
+      // 找到 source 子元素并赋值 src
+      var src = v.querySelector('source');
+      if(src && src.getAttribute('data-src')){
+        src.src = src.getAttribute('data-src');
+        src.removeAttribute('data-src');
+      }
+      v.load();
+      v.play().catch(function(){});
+    });
+  }
+  if(document.readyState === 'complete'){
+    setTimeout(loadBgVideos, 300);
+  } else {
+    window.addEventListener('load', function(){ setTimeout(loadBgVideos, 300); });
+  }
+})();
+</script>
 </body>
 </html>

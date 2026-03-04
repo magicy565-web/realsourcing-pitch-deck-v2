@@ -303,7 +303,7 @@ h1 span { color: #4F6EF7; }
 
       <!-- 图片轮播区 -->
       <div class="ind-img-wrap" id="industryImgWrap">
-        <img id="industryImg"
+        <img loading="lazy" decoding="async" id="industryImg"
              src="assets/industry_m1_textile.jpg"
              alt="家纺产业带"
              decoding="async">
@@ -338,7 +338,7 @@ h1 span { color: #4F6EF7; }
       </div>
       <div style="flex:1;min-height:0;border-radius:8px;overflow:hidden;margin-bottom:8px;position:relative;">
         <!-- 懒加载：data-src，JS 在卡片可见后赋值 -->
-        <img id="phoneImg"
+        <img loading="lazy" decoding="async" id="phoneImg"
              data-src="assets/hardware_commander_phone.jpg"
              alt="Commander AI Phone"
              style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;"

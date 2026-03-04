@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>解决方案 - Commander OS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { overflow:hidden; background:#000; will-change:transform; }
@@ -411,7 +413,7 @@
                     </div>
                     <div class="app-icon-wrap" data-idx="1">
                         <div class="app-icon" id="ai-1">
-                            <img src="assets/icons/google.png" alt="Google">
+                            <img loading="lazy" decoding="async" src="assets/icons/google.png" alt="Google">
                         </div>
                         <span class="app-label">Google</span>
                     </div>
@@ -442,19 +444,19 @@
                     </div>
                     <div class="app-icon-wrap" data-idx="5">
                         <div class="app-icon" id="ai-5">
-                            <img src="assets/icons/linkedin.png" alt="LinkedIn">
+                            <img loading="lazy" decoding="async" src="assets/icons/linkedin.png" alt="LinkedIn">
                         </div>
                         <span class="app-label">LinkedIn</span>
                     </div>
                     <div class="app-icon-wrap" data-idx="6">
                         <div class="app-icon" id="ai-6">
-                            <img src="assets/icons/alibaba.png" alt="Alibaba" style="border-radius:13px;">
+                            <img loading="lazy" decoding="async" src="assets/icons/alibaba.png" alt="Alibaba" style="border-radius:13px;">
                         </div>
                         <span class="app-label">Alibaba</span>
                     </div>
                     <div class="app-icon-wrap" data-idx="7">
                         <div class="app-icon" id="ai-7">
-                            <img src="assets/icons/feishu.png" alt="飞书" style="border-radius:13px;">
+                            <img loading="lazy" decoding="async" src="assets/icons/feishu.png" alt="飞书" style="border-radius:13px;">
                         </div>
                         <span class="app-label">飞书</span>
                     </div>
@@ -490,7 +492,7 @@
                             <div class="cos-pulse" id="cp2"></div>
                             <div class="cos-pulse" id="cp3"></div>
                             <div class="app-icon" id="ai-cos">
-                                <img src="assets/icons/commander_os.webp" alt="Commander OS" style="border-radius:13px;">
+                                <img loading="lazy" decoding="async" src="assets/icons/commander_os.webp" alt="Commander OS" style="border-radius:13px;">
                             </div>
                         </div>
                         <span class="app-label" style="color:#60a5fa;font-weight:600;">Commander</span>
@@ -515,7 +517,7 @@
                         </div>
                     </div>
                     <div class="dock-icon" id="di-3">
-                        <img src="assets/icons/feishu.png" alt="飞书" style="width:48px;height:48px;border-radius:12px;object-fit:cover;">
+                        <img loading="lazy" decoding="async" src="assets/icons/feishu.png" alt="飞书" style="width:48px;height:48px;border-radius:12px;object-fit:cover;">
                     </div>
                 </div>
 
@@ -525,7 +527,7 @@
                     <div class="cos-enlarged-pulse" id="cep2"></div>
                     <div class="cos-enlarged-pulse" id="cep3"></div>
                     <div class="cos-enlarged-icon">
-                        <img src="assets/icons/commander_os.webp" alt="Commander OS">
+                        <img loading="lazy" decoding="async" src="assets/icons/commander_os.webp" alt="Commander OS">
                     </div>
                     <div class="cos-enlarged-name">Commander OS</div>
                     <div class="cos-enlarged-tag">ALL CHANNELS · ONE OS</div>
@@ -540,20 +542,20 @@
     <div class="right-panel" id="right-panel">
         <!-- 大脑插画：铺满整个右侧 -->
         <div class="brain-wrap" id="brain-wrap">
-            <img class="brain-img" src="assets/brain_3x3_transparent.png" alt="Brain">
+            <img loading="lazy" decoding="async" class="brain-img" src="assets/brain_3x3_transparent.png" alt="Brain">
         </div>
 
         <!-- 技能图标（初始散落在大脑外围，带标签） -->
         <!-- 分布在大脑图片的周围边缘 -->
-        <div class="skill-icon-outer" id="sk-0" style="top:20px;left:20px;"><img src="assets/icons/skill_negotiation.webp"><span class="skill-label">业务谈判</span></div>
-        <div class="skill-icon-outer" id="sk-1" style="top:20px;left:calc(50% - 26px);"><img src="assets/icons/skill_pricing.webp"><span class="skill-label">报价处理</span></div>
-        <div class="skill-icon-outer" id="sk-2" style="top:20px;right:20px;"><img src="assets/icons/skill_prospecting.webp"><span class="skill-label">开发客户</span></div>
-        <div class="skill-icon-outer" id="sk-3" style="top:280px;left:10px;"><img src="assets/icons/skill_cost.webp"><span class="skill-label">成本管理</span></div>
-        <div class="skill-icon-outer" id="sk-4" style="top:280px;right:10px;"><img src="assets/icons/skill_hiring.webp"><span class="skill-label">人才招聘</span></div>
-        <div class="skill-icon-outer" id="sk-5" style="bottom:80px;left:10px;"><img src="assets/icons/skill_training.webp"><span class="skill-label">团队培训</span></div>
-        <div class="skill-icon-outer" id="sk-6" style="bottom:80px;right:10px;"><img src="assets/icons/skill_planning.webp"><span class="skill-label">组织规划</span></div>
-        <div class="skill-icon-outer" id="sk-7" style="bottom:20px;left:calc(50% - 26px);"><img src="assets/icons/skill_admin.webp"><span class="skill-label">行政办公</span></div>
-        <div class="skill-icon-outer" id="sk-8" style="top:calc(50% - 26px);right:10px;"><img src="assets/icons/skill_design.webp"><span class="skill-label">艺术设计</span></div>
+        <div class="skill-icon-outer" id="sk-0" style="top:20px;left:20px;"><img loading="lazy" decoding="async" src="assets/icons/skill_negotiation.webp"><span class="skill-label">业务谈判</span></div>
+        <div class="skill-icon-outer" id="sk-1" style="top:20px;left:calc(50% - 26px);"><img loading="lazy" decoding="async" src="assets/icons/skill_pricing.webp"><span class="skill-label">报价处理</span></div>
+        <div class="skill-icon-outer" id="sk-2" style="top:20px;right:20px;"><img loading="lazy" decoding="async" src="assets/icons/skill_prospecting.webp"><span class="skill-label">开发客户</span></div>
+        <div class="skill-icon-outer" id="sk-3" style="top:280px;left:10px;"><img loading="lazy" decoding="async" src="assets/icons/skill_cost.webp"><span class="skill-label">成本管理</span></div>
+        <div class="skill-icon-outer" id="sk-4" style="top:280px;right:10px;"><img loading="lazy" decoding="async" src="assets/icons/skill_hiring.webp"><span class="skill-label">人才招聘</span></div>
+        <div class="skill-icon-outer" id="sk-5" style="bottom:80px;left:10px;"><img loading="lazy" decoding="async" src="assets/icons/skill_training.webp"><span class="skill-label">团队培训</span></div>
+        <div class="skill-icon-outer" id="sk-6" style="bottom:80px;right:10px;"><img loading="lazy" decoding="async" src="assets/icons/skill_planning.webp"><span class="skill-label">组织规划</span></div>
+        <div class="skill-icon-outer" id="sk-7" style="bottom:20px;left:calc(50% - 26px);"><img loading="lazy" decoding="async" src="assets/icons/skill_admin.webp"><span class="skill-label">行政办公</span></div>
+        <div class="skill-icon-outer" id="sk-8" style="top:calc(50% - 26px);right:10px;"><img loading="lazy" decoding="async" src="assets/icons/skill_design.webp"><span class="skill-label">艺术设计</span></div>
 
         <!-- 技能图标（嵌入大脑后状态） -->
         <!-- 位置基于大脑插画的圆形槽位百分比坐标 -->
@@ -563,15 +565,15 @@
         <!-- 行2：(28%,27%), (43%,30%), (57%,25%), (73%,27%) -->
         <!-- 行3：(38%,52%), (57%,55%), (72%,52%) -->
         <!-- 将百分比转换为像素：区域710x720 -->
-        <div class="skill-icon-inner" id="ski-0" style="left:38.77%;top:34.52%;"><img src="assets/icons/skill_negotiation.webp"><span class="inner-label">业务谈判</span></div>
-        <div class="skill-icon-inner" id="ski-1" style="left:50.00%;top:34.52%;"><img src="assets/icons/skill_pricing.webp"><span class="inner-label">报价处理</span></div>
-        <div class="skill-icon-inner" id="ski-2" style="left:61.23%;top:34.52%;"><img src="assets/icons/skill_prospecting.webp"><span class="inner-label">开发客户</span></div>
-        <div class="skill-icon-inner" id="ski-3" style="left:38.77%;top:44.15%;"><img src="assets/icons/skill_cost.webp"><span class="inner-label">成本管理</span></div>
-        <div class="skill-icon-inner" id="ski-4" style="left:50.00%;top:44.15%;"><img src="assets/icons/skill_hiring.webp"><span class="inner-label">人才招聘</span></div>
-        <div class="skill-icon-inner" id="ski-5" style="left:61.23%;top:44.15%;"><img src="assets/icons/skill_training.webp"><span class="inner-label">团队培训</span></div>
-        <div class="skill-icon-inner" id="ski-6" style="left:38.77%;top:53.78%;"><img src="assets/icons/skill_planning.webp"><span class="inner-label">组织规划</span></div>
-        <div class="skill-icon-inner" id="ski-7" style="left:50.00%;top:53.78%;"><img src="assets/icons/skill_admin.webp"><span class="inner-label">行政办公</span></div>
-        <div class="skill-icon-inner" id="ski-8" style="left:61.23%;top:53.78%;"><img src="assets/icons/skill_design.webp"><span class="inner-label">艺术设计</span></div>
+        <div class="skill-icon-inner" id="ski-0" style="left:38.77%;top:34.52%;"><img loading="lazy" decoding="async" src="assets/icons/skill_negotiation.webp"><span class="inner-label">业务谈判</span></div>
+        <div class="skill-icon-inner" id="ski-1" style="left:50.00%;top:34.52%;"><img loading="lazy" decoding="async" src="assets/icons/skill_pricing.webp"><span class="inner-label">报价处理</span></div>
+        <div class="skill-icon-inner" id="ski-2" style="left:61.23%;top:34.52%;"><img loading="lazy" decoding="async" src="assets/icons/skill_prospecting.webp"><span class="inner-label">开发客户</span></div>
+        <div class="skill-icon-inner" id="ski-3" style="left:38.77%;top:44.15%;"><img loading="lazy" decoding="async" src="assets/icons/skill_cost.webp"><span class="inner-label">成本管理</span></div>
+        <div class="skill-icon-inner" id="ski-4" style="left:50.00%;top:44.15%;"><img loading="lazy" decoding="async" src="assets/icons/skill_hiring.webp"><span class="inner-label">人才招聘</span></div>
+        <div class="skill-icon-inner" id="ski-5" style="left:61.23%;top:44.15%;"><img loading="lazy" decoding="async" src="assets/icons/skill_training.webp"><span class="inner-label">团队培训</span></div>
+        <div class="skill-icon-inner" id="ski-6" style="left:38.77%;top:53.78%;"><img loading="lazy" decoding="async" src="assets/icons/skill_planning.webp"><span class="inner-label">组织规划</span></div>
+        <div class="skill-icon-inner" id="ski-7" style="left:50.00%;top:53.78%;"><img loading="lazy" decoding="async" src="assets/icons/skill_admin.webp"><span class="inner-label">行政办公</span></div>
+        <div class="skill-icon-inner" id="ski-8" style="left:61.23%;top:53.78%;"><img loading="lazy" decoding="async" src="assets/icons/skill_design.webp"><span class="inner-label">艺术设计</span></div>
     </div>
     
     <!-- "数字分身"文案（压轴入场） -->
